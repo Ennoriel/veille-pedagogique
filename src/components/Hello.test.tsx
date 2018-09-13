@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import App from './App';
+import Hello from './Hello';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
+  ReactDOM.render(<Hello name="TypeScript" enthusiasmLevel={1} />, div);
   ReactDOM.unmountComponentAtNode(div);
 });
