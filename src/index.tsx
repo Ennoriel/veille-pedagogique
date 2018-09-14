@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 import { enthusiasm } from './reducers/index';
 import { StoreState } from './types/index';
 
-import Hello from './containers/Hello';
+import Router from './router';
 import { Provider } from 'react-redux';
 
 const store = createStore<StoreState, any, any, any>(enthusiasm, {
@@ -15,7 +15,7 @@ const store = createStore<StoreState, any, any, any>(enthusiasm, {
 
 ReactDOM.render(
     <Provider store={store}>
-        <Hello />
+        <Router />
     </Provider>,
     document.getElementById('root') as HTMLElement
 );
