@@ -1,5 +1,6 @@
 import * as React from "react";
 import axios from 'axios';
+import helloService from './../service/hello.service';
 
 import './Hello.css';
 
@@ -11,14 +12,39 @@ export interface Props {
 }
 
 interface State {
-    persons: Array<{name: string}>
+    persons: Array<{name: string}>,
+    personsAfterClick: Array<{name: string}>,
+    isToggleOn: boolean
 }
 
 // ({ name, enthusiasmLevel = 1, onIncrement, onDecrement }: Props)
 class Hello extends React.Component<Props> {
+    constructor(props: Props) {
+        super(props);
+
+        this.handleClick = this.handleClick.bind(this);
+        this.handlePersonClick = this.handlePersonClick.bind(this);
+    }
+    
     readonly state: State = {
-        persons: []
-      }
+        persons: [],
+        personsAfterClick: [],
+        isToggleOn: true
+    };
+
+    handleClick() {
+        this.setState(state => ({
+            isToggleOn: !this.state.isToggleOn
+        }));
+    }
+
+    handlePersonClick() {
+        helloService().then(
+            res => {
+                this.setState({ personsAfterClick : res.data });
+            }
+        )
+    }
 
     componentDidMount() {
         axios.get(`https://jsonplaceholder.typicode.com/users`)
@@ -26,7 +52,7 @@ class Hello extends React.Component<Props> {
                 const persons = res.data;
                 this.setState({ persons });
             })
-      }
+    }
 
     render() {
         if (this.props.enthusiasmLevel <= 0) {
@@ -44,6 +70,19 @@ class Hello extends React.Component<Props> {
                 </div>
                 <ul>
                     { this.state.persons.map(person => <li>{person.name}</li>)}
+                </ul>
+                <div className="button-group">
+                    <button onClick={this.handleClick}>
+                        {this.state.isToggleOn ? 'ON' : 'OFF'}
+                    </button>
+                </div>
+                <div className="button-group">
+                    <button onClick={this.handlePersonClick}>
+                        Chargez des données
+                    </button>
+                </div>
+                <ul>
+                    { this.state.personsAfterClick.map(person => <li>{person.name}</li>)}
                 </ul>
             </div>
         );
