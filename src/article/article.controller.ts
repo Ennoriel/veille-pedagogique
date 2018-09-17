@@ -2,8 +2,6 @@ import * as mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import { ArticleModel } from './article.types'
 
-// const Article = mongoose.model('ArticleModel', ArticleSchema);
-
 export class ArticleController{
 
     public addNewArticle (req: Request, res: Response) {                
@@ -34,8 +32,8 @@ export class ArticleController{
     }
 
     public getArticleWithID (req: Request, res: Response) {
-        console.log(req.params.articleId);           
-        ArticleModel.findById(req.params.articleId, (err, article) => {
+        console.log(req.params._id);           
+        ArticleModel.findById(req.params._id, (err, article) => {
             if(err){
                 res.send(err);
             }
@@ -44,9 +42,9 @@ export class ArticleController{
     }
 
     public updateArticle (req: Request, res: Response) {
-        console.log(req.params.articleId);
+        console.log(req.params._id);
         console.log(req.body.lien);
-        ArticleModel.findOneAndUpdate({ _id: req.params.articleId }, req.body, { new: true }, (err, article) => {
+        ArticleModel.findOneAndUpdate({ _id: req.params._id }, req.body, { new: true }, (err, article) => {
             if(err){
                 res.send(err);
             }
@@ -55,7 +53,7 @@ export class ArticleController{
     }
 
     public deleteArticle (req: Request, res: Response) {           
-        ArticleModel.remove({ _id: req.params.articleId }, (err) => {
+        ArticleModel.remove({ _id: req.params._id }, (err) => {
             if(err){
                 res.send(err);
             }

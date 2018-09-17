@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from "express";
+import { Request, Response, NextFunction } from "express";
 import { ArticleController } from "./article.controller";
 
 export class Routes { 
@@ -32,7 +32,7 @@ export class Routes {
         .post(this.articleController.addNewArticle);
 
         // Article detail
-        app.route('/article/:articleId')
+        app.route('/article/:_id')
         // get specific article
         .get(this.articleController.getArticleWithID)
         .put(this.articleController.updateArticle)
