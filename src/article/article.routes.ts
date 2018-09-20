@@ -1,3 +1,4 @@
+import { Application } from "express";
 import { Request, Response, NextFunction } from "express";
 import { ArticleController } from "./article.controller";
 
@@ -5,7 +6,7 @@ export class Routes {
     
     public articleController: ArticleController = new ArticleController();
     
-    public routes(app): void {   
+    public routes(app: Application): void {   
         
         app.route('/')
         .get((req: Request, res: Response) => {            

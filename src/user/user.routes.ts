@@ -1,11 +1,18 @@
-import { Request, Response, NextFunction } from "express";
+import { Application } from "express";
 import { UserController } from "./user.controller";
 
+/**
+ * Classe de définition des routes liés à un utilisateur
+ */
 export class Routes { 
     
     public userController: UserController = new UserController();
     
-    public routes(app): void {
+    /**
+     * Définition des routes liés à un utilisateur
+     * @param app contexte de l'application express
+     */
+    public routes(app: Application): void {
         
         app.route('/user')
         .get(this.userController.getUsers)
