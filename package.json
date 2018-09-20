@@ -6,20 +6,19 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "tsc",
         "dev": "ts-node ./src/server.ts",
-        "start": "nodemon ./dist/server.js",
+        "start": "nodemon ./build/server.js",
         "prod": "npm run build && npm run start"
     },
     "dependencies": {
-        "bcryptjs": "^2.4.3",
-        "body-parser": "^1.18.3",
         "express": "^4.16.3",
-        "jsonwebtoken": "^8.3.0",
-        "mongoose": "^5.2.15"
+        "body-parser": "^1.18.3",
+        "mongoose": "^5.2.15",
+        "bcryptjs": "^2.4.3",
+        "jsonwebtoken": "^8.3.0"
     },
     "devDependencies": {
         "@types/express": "^4.16.0",
-        "@types/mongoose": "^5.2.13",
-        "nodemon": "^1.18.4",
-        "reflect-metadata": "^0.1.12"
+        "@types/mongoose": "^5.2.16",
+        "nodemon": "^1.18.4"
     }
 }

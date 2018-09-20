@@ -3,55 +3,62 @@ import * as bodyParser from "body-parser";
 import { Routes as ArticleRoutes } from "./article/article.routes";
 import { Routes as UserRoutes } from "./user/user.routes";
 import * as mongoose from "mongoose";
-import { networkInterfaces } from "os";
-var jwt = require('jsonwebtoken');
+import { AutorisationService } from "./config/autorisation.service";
 
+/**
+ * Serveur de l'application
+ */
 class Server {
 
     public app: express.Application;
+    public authorizationSerivce: AutorisationService = new AutorisationService();
     public articleRoute: ArticleRoutes = new ArticleRoutes();
     public userRoute: UserRoutes = new UserRoutes();
 
     public mongoUrl: string = 'mongodb://veille-pedago-dc8ab820:529269fb1459@ds117158.mlab.com:17158/veille-pedago';
 
+    /**
+     * Initialisation du contexte du serveur
+     */
     constructor() {
-        this.app = express();
-        this.config();
-        this.articleRoute.routes(this.app);
-        this.userRoute.routes(this.app);
-        this.mongoSetup();
 
-        this.app.listen(3001, () => {
-            // Success callback
-            console.log(`Listening at http://localhost:${3001}/`);
-        });
+        this.serverConfig();
+        this.dbConfig();
+        this.serveurLaunch();
+
     }
 
-    private config(): void{
+    /**
+     * Configuration du serveur
+     */
+    private serverConfig(): void {
+
+        this.app = express();
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
-        // serving static files 
         this.app.use(express.static('public'));
 
-        this.app.use((req, res, next) => {
-            if(req.url === '/authenticate' && req.method === 'POST' ||
-                req.url === '/user' && req.method === 'POST') {
-                    next();
-            } else {
-                let token = req.get('Authorization');
-                console.log(token);
-                if(token == null || !jwt.verify(token, 'SECRET')) {
-                    res.status(400).send({message: 'you shall not pass!'});
-                } else {
-                    next();
-                }
-            }
-        });
+        this.app.use(this.authorizationSerivce.jwtFilter);
+
+        this.articleRoute.routes(this.app);
+        this.userRoute.routes(this.app);
     }
 
-    private mongoSetup(): void{
+    /**
+     * Configuration du client de gestion de base de données
+     */
+    private dbConfig(): void {
         (<any>mongoose).Promise = global.Promise;
         mongoose.connect(this.mongoUrl);        
+    }
+
+    /**
+     * Lancement du serveur
+     */
+    private serveurLaunch(): void {
+        this.app.listen(3001, () => {
+            console.log(`Listening at http://localhost:${3001}/`);
+        });
     }
 
 }
