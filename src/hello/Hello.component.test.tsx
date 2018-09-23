@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as enzyme from 'enzyme';
-import Hello from './Hello';
+import Hello from './Hello.component';
 
 it('renders the correct text with an explicit enthusiasm of 1', () => {
     const hello = enzyme.shallow(<Hello name='Daniel' enthusiasmLevel={1}/>);

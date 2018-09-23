@@ -1,8 +1,8 @@
 import * as React from "react";
 import axios from 'axios';
-import helloService from './../service/hello.service';
+import helloService from './hello.service';
 
-import './Hello.css';
+import './Hello.component.css';
 
 export interface Props {
     name: string;

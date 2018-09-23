@@ -1,4 +1,4 @@
-import * as constants from '../constants'
+import * as constants from './index.constants'
 
 export interface IncrementEnthusiasm {
     type: constants.INCREMENT_ENTHUSIASM;
