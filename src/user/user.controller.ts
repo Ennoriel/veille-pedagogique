@@ -23,6 +23,7 @@ export class UserController{
         newUser.save((err: MongoError, user: User) => {
             if(err){
                 res.send(err);
+                return;
             }
             user.password = null;
             res.json(user);
@@ -39,6 +40,7 @@ export class UserController{
         UserModel.find({}, (err: MongoError, user: User) => {
             if(err){
                 res.send(err);
+                return;
             }
             res.json(user);
         });
@@ -54,6 +56,7 @@ export class UserController{
         UserModel.findById(req.params._id, (err: MongoError, user: User) => {
             if(err){
                 res.send(err);
+                return;
             }
             res.json(user);
         });
@@ -69,6 +72,7 @@ export class UserController{
         UserModel.findOneAndUpdate({ _id: req.params._id }, req.body, { new: true }, (err: MongoError, user: User) => {
             if(err){
                 res.send(err);
+                return;
             }
             res.json(user);
         });
@@ -84,6 +88,7 @@ export class UserController{
         UserModel.remove({ _id: req.params._id }, (err: MongoError) => {
             if(err){
                 res.send(err);
+                return;
             }
             res.json({ message: 'Successfully deleted User!'});
         });
@@ -101,10 +106,11 @@ export class UserController{
                 res.send({ message : "Unable to authenticate user"});
                 return;
             }
-            if(!bcrypt.compareSync(req.body.password, user.password)) {
+            if(user == null || !bcrypt.compareSync(req.body.password, user.password)) {
                 res.send({ message : "Unable to authenticate user"});
                 return;
             }
+            user['password'] = undefined;
             res.set('Authorization', jwt.sign({_id : user._id}, 'SECRET')).send(user);
         });
     }
