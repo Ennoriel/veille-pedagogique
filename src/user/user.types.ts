@@ -20,7 +20,7 @@ export class User {
  */
 var userSchema = new Schema({
 
-    username: {type: String, unique: true},
+    username: {type: String, unique: true, require},
     lastname: String,
     firstname: String,
     password: String
