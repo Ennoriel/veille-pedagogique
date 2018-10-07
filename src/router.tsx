@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-import Hello from './containers/Hello';
+import Hello from './hello/Hello.container';
 
 const Home = () => (<h2>Home</h2>);
 
