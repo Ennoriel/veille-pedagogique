@@ -3,7 +3,7 @@ import * as bodyParser from "body-parser";
 import { Routes as ArticleRoutes } from "./article/article.routes";
 import { Routes as UserRoutes } from "./user/user.routes";
 import * as mongoose from "mongoose";
-import { AutorisationService } from "./config/autorisation.service";
+import { AuthorizationService } from "./config/authorization.service";
 import { CorsService } from "./config/cors.service";
 
 /**
@@ -13,10 +13,10 @@ class Server {
 
     public app: express.Application;
 
-    public authorizationSerivce: AutorisationService = new AutorisationService();
-    public articleRoute: ArticleRoutes = new ArticleRoutes();
+    public authorizationSerivce: AuthorizationService = new AuthorizationService();
     public corsService: CorsService = new CorsService();
 
+    public articleRoute: ArticleRoutes = new ArticleRoutes();
     public userRoute: UserRoutes = new UserRoutes();
 
     public mongoUrl: string = 'mongodb://veille-pedago-dc8ab820:529269fb1459@ds117158.mlab.com:17158/veille-pedago';

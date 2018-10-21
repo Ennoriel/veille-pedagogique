@@ -1,10 +1,10 @@
-import { Application, Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 var jwt = require('jsonwebtoken');
 
 /**
  * Service d'autorisation
  */
-export class AutorisationService {
+export class AuthorizationService {
 
     /**
      * filtre permettant de laisse passer un appel webservice d'un utilisateur habilité.
@@ -16,8 +16,9 @@ export class AutorisationService {
      * @param next fonction next()
      */
     public jwtFilter(req: Request, res: Response, next: NextFunction) {
-        if(req.url === '/authenticate' && req.method === 'POST' ||
-            req.url === '/user' && req.method === 'POST') {
+        if(req.url === '/authenticate' && (req.method === 'POST' || req.method === 'OPTIONS') ||
+            req.url === '/user' && (req.method === 'POST' || req.method === 'OPTIONS')) {
+                console.log('no JWT Token verification');
                 next();
         } else {
             let token = req.get('Authorization');
