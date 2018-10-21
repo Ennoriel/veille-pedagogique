@@ -3,7 +3,7 @@ import * as bodyParser from "body-parser";
 import { Routes as ArticleRoutes } from "./article/article.routes";
 import { Routes as UserRoutes } from "./user/user.routes";
 import * as mongoose from "mongoose";
-import { AutorisationService } from "./config/autorisation.service";
+import { AuthorizationService } from "./config/authorization.service";
 
 /**
  * Serveur de l'application
@@ -11,7 +11,7 @@ import { AutorisationService } from "./config/autorisation.service";
 class Server {
 
     public app: express.Application;
-    public authorizationSerivce: AutorisationService = new AutorisationService();
+    public authorizationSerivce: AuthorizationService = new AuthorizationService();
     public articleRoute: ArticleRoutes = new ArticleRoutes();
     public userRoute: UserRoutes = new UserRoutes();
 
