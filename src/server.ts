@@ -4,6 +4,7 @@ import { Routes as ArticleRoutes } from "./article/article.routes";
 import { Routes as UserRoutes } from "./user/user.routes";
 import * as mongoose from "mongoose";
 import { AutorisationService } from "./config/autorisation.service";
+import { CorsService } from "./config/cors.service";
 
 /**
  * Serveur de l'application
@@ -11,8 +12,11 @@ import { AutorisationService } from "./config/autorisation.service";
 class Server {
 
     public app: express.Application;
+
     public authorizationSerivce: AutorisationService = new AutorisationService();
     public articleRoute: ArticleRoutes = new ArticleRoutes();
+    public corsService: CorsService = new CorsService();
+
     public userRoute: UserRoutes = new UserRoutes();
 
     public mongoUrl: string = 'mongodb://veille-pedago-dc8ab820:529269fb1459@ds117158.mlab.com:17158/veille-pedago';
@@ -37,6 +41,8 @@ class Server {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
         this.app.use(express.static('public'));
+
+        this.app.use(this.corsService.corsConfig);
 
         this.app.use(this.authorizationSerivce.jwtFilter);
 
