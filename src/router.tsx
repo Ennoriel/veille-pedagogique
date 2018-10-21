@@ -3,6 +3,7 @@ import * as React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import Hello from './hello/Hello.container';
+import Register from './user/register/Register.components';
 
 const Home = () => (<h2>Home</h2>);
 
@@ -23,15 +24,20 @@ const routes = [
         path: '/hello',
         label: 'Hello',
         component: Hello
+    },
+    {
+        path: '/register',
+        label: 'Register',
+        component: Register
     }
 ]
 
 const CustomLinkExample = () => (
     <Router>
         <div>
-            {routes.map((route, i) => <MenuLink activeOnlyWhenExact={i === 0} to={route.path} label={route.label} />)}
+            {routes.map((route, i) => <MenuLink key={i} activeOnlyWhenExact={i === 0} to={route.path} label={route.label} />)}
             <hr />
-            {routes.map((route, i) => <Route exact path={route.path} component={route.component} />)}
+            {routes.map((route, i) => <Route key={i} exact path={route.path} component={route.component} />)}
         </div>
     </Router>
 );
