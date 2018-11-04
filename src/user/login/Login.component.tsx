@@ -5,6 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import { User } from '../User.types';
 import { Grid, Button } from '@material-ui/core';
 import { UserService } from '../User.service';
+import store from 'src/redux.services/index.store';
+import { saveUserData } from 'src/redux.services/action/user.action';
 
 export interface Props {
 }
@@ -82,9 +84,9 @@ export default class Login extends React.Component<Props> {
         if(this.isRequiredTextOk(this.state.user.username) &&
                 this.isPasswordOk(this.state.user.password)) {
             userService.authenticate(this.state.user).then(value => {
-                console.log(value);
+                store.dispatch(saveUserData(value.headers.authorization));
             }, reason => {
-                // gestion de l'erreur
+                // TODO gestion de l'erreur
             });
         }
     }

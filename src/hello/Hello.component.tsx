@@ -3,13 +3,10 @@ import axios from 'axios';
 import helloService from './hello.service';
 
 import './Hello.component.css';
+import store from "src/redux.services/index.store";
+import { decrementEnthusiasm, incrementEnthusiasm } from "src/redux.services/action/enthusiasm.action";
 
-export interface Props {
-    name: string;
-    enthusiasmLevel: number;
-    onIncrement?: () => void;
-    onDecrement?: () => void;
-}
+export interface Props {}
 
 interface State {
     persons: Array<{name: string}>,
@@ -17,7 +14,6 @@ interface State {
     isToggleOn: boolean
 }
 
-// ({ name, enthusiasmLevel = 1, onIncrement, onDecrement }: Props)
 class Hello extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
@@ -49,24 +45,23 @@ class Hello extends React.Component<Props> {
     componentDidMount() {
         axios.get(`https://jsonplaceholder.typicode.com/users`)
             .then(res => {
-                const persons = res.data;
-                this.setState({ persons });
+                this.setState({ persons: res.data });
             })
     }
 
     render() {
-        if (this.props.enthusiasmLevel <= 0) {
+        if (store.getState().enthusiasm.enthusiasmLevel <= 0) {
             throw new Error('You could be a little more enthusiastic. :D');
         }
       
         return (
             <div className="hello">
                 <div className="greeting">
-                    Hello {this.props.name + getExclamationMarks(this.props.enthusiasmLevel)}
+                    Hello {store.getState().enthusiasm.languageName + getExclamationMarks(store.getState().enthusiasm.enthusiasmLevel)}
                 </div>
                 <div className="button-group">
-                    <button onClick={this.props.onDecrement}>-</button>
-                    <button onClick={this.props.onIncrement}>+</button>
+                    <button onClick={() => store.dispatch(decrementEnthusiasm())}>-</button>
+                    <button onClick={() => store.dispatch(incrementEnthusiasm())}>+</button>
                 </div>
                 <ul>
                     { this.state.persons.map((person, i) => <li key={i}>{person.name}</li>)}

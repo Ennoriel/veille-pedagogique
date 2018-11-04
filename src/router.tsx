@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-import Hello from './hello/Hello.container';
+import Hello from './hello/Hello.component';
 import Register from './user/register/Register.components';
 import Login from './user/login/Login.component';
 
