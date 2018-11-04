@@ -111,6 +111,7 @@ export class UserController{
                 return;
             }
             user['password'] = undefined;
+            user['_id'] = undefined;
             res.set('Authorization', jwt.sign({_id : user._id}, 'SECRET')).send(user);
         });
     }
