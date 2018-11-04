@@ -20,14 +20,14 @@ const OK = '';
 let userService: UserService;
 
 /**
- * Composant permettant à un utilisateur de s'enregistrer
+ * Composant permettant à un utilisateur de se connecter
  */
-export default class Register extends React.Component<Props> {
+export default class Login extends React.Component<Props> {
     
     constructor (props: Props) {
         super (props);
 
-        this.handleRegisterClick = this.handleRegisterClick.bind(this);
+        this.handleLoginClick = this.handleLoginClick.bind(this);
         this.handleResetClick = this.handleResetClick.bind(this);
     
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -60,47 +60,34 @@ export default class Register extends React.Component<Props> {
             error: {
                 ...this.state.error,
                 username : name == 'username' && this.isRequiredTextOk(value) ? OK : this.state.error.username,
-                firstname : name == 'firstname' && this.isRequiredTextOk(value) ? OK : this.state.error.firstname,
-                lastname : name == 'lastname' && this.isRequiredTextOk(value) ? OK : this.state.error.lastname,
                 password : name == 'password' && this.isPasswordOk(value) ? OK : this.state.error.password,
-                passwordBis : name == 'passwordBis' && this.isPasswordBisOk(this.state.user.password, value) ? OK : 
-                        name == 'password' && this.isPasswordBisOk(value, this.state.user.passwordBis) ? OK : this.state.error.passwordBis
             }
         });
     }
 
     /**
-     * Méthode déclenché au clic sur le bouton Register.
-     * Gère l'enregistrement d'un nouvel utilisateur
+     * Méthode déclenché au clic sur le bouton Login.
+     * Gère la connexion d'un nouvel utilisateur
      */
-    handleRegisterClick () {
+    handleLoginClick () {
 
         this.setState({
             error: {
                 ...this.state.error,
                 username : this.isRequiredTextOk(this.state.user.username) ? OK : ERREUR,
-                firstname : this.isRequiredTextOk(this.state.user.firstname) ? OK : ERREUR,
-                lastname : this.isRequiredTextOk(this.state.user.lastname) ? OK : ERREUR,
                 password : this.isPasswordOk(this.state.user.password) ? OK : ERREUR,
-                passwordBis : this.isPasswordBisOk(this.state.user.password, this.state.user.passwordBis) ? OK : ERREUR
             }
         })
 
-        if(this.isUsernameOk(this.state.user.username) &&
-                this.isRequiredTextOk(this.state.user.firstname) &&
-                this.isRequiredTextOk(this.state.user.lastname) &&
-                this.isPasswordOk(this.state.user.password) &&
-                this.isPasswordBisOk(this.state.user.password, this.state.user.passwordBis)) {
-            userService.register(this.state.user);
+        if(this.isRequiredTextOk(this.state.user.username) &&
+                this.isPasswordOk(this.state.user.password)) {
+            userService.authenticate(this.state.user).then(value => {
+                console.log(value);
+            }, reason => {
+                // gestion de l'erreur
+            });
         }
     }
-
-    /**
-     * Méthode de vérification de l'identifiant
-     * TODO : implémentation de la recherche de l'existence du username
-     * @param username Username
-     */
-    private isUsernameOk = (username: string) => true;
 
     /**
      * Méthode de vérification d'un champ recquis
@@ -113,13 +100,6 @@ export default class Register extends React.Component<Props> {
      * @param password mot de passe
      */
     private isPasswordOk = (password: string) => password.length >= 12;
-
-    /**
-     * Méthode de vérification du deuxième mot de passe
-     * @param password premier mot de passe
-     * @param passwordBis deuxième mot de passe
-     */
-    private isPasswordBisOk = (password: string, passwordBis: string) => password === passwordBis;
 
     /**
      * Méthode déclenchée au clic sur le bouton 'Reset Fields'.
@@ -136,7 +116,7 @@ export default class Register extends React.Component<Props> {
         return (
             <div>
                 <h1>
-                    Register
+                    Login
                 </h1>
                 <Grid container justify='center'>
                     <Grid item xs={8}>
@@ -153,30 +133,6 @@ export default class Register extends React.Component<Props> {
                             variant="outlined"
                         />
                         <TextField
-                            id="firstname"
-                            label="Firstname"
-                            name="firstname"
-                            value={this.state.user.firstname}
-                            onChange={this.handleInputChange}
-                            required
-                            error={this.state.error.firstname.length > 0}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="lastname"
-                            label="Lastname"
-                            name="lastname"
-                            value={this.state.user.lastname}
-                            onChange={this.handleInputChange}
-                            required
-                            error={this.state.error.lastname.length > 0}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
                             id="password"
                             type="password"
                             label="Password"
@@ -185,20 +141,7 @@ export default class Register extends React.Component<Props> {
                             value={this.state.user.password}
                             onChange={this.handleInputChange}
                             required
-                            helperText="Please write a minimum of 12 characters."
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="passwordBis"
-                            label="Password"
-                            name="passwordBis"
-                            error={this.state.error.passwordBis.length > 0}
-                            value={this.state.user.passwordBis}
-                            onChange={this.handleInputChange}
-                            required
-                            helperText="Should (obviously) be the same."
+                            helperText="Just a reminder that we forced you to chose a 12 characters password ;)"
                             fullWidth
                             margin="normal"
                             variant="outlined"
@@ -206,11 +149,11 @@ export default class Register extends React.Component<Props> {
                         <Grid container spacing={16} justify='center'>
                             <Grid item>
                                 <Button
-                                    onClick={this.handleRegisterClick}
+                                    onClick={this.handleLoginClick}
                                     variant="outlined" 
                                     size="large" 
                                     color="primary">
-                                        register
+                                        login
                                 </Button>
                             </Grid>
                             <Grid item>
