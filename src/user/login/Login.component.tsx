@@ -84,7 +84,7 @@ export default class Login extends React.Component<Props> {
         if(this.isRequiredTextOk(this.state.user.username) &&
                 this.isPasswordOk(this.state.user.password)) {
             userService.authenticate(this.state.user).then(value => {
-                store.dispatch(saveUserData(value.headers.authorization));
+                store.dispatch(saveUserData(value.data, value.headers.authorization));
             }, reason => {
                 // TODO gestion de l'erreur
             });
