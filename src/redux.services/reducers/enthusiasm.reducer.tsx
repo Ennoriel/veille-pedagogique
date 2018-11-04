@@ -1,12 +1,12 @@
 import { INCREMENT_ENTHUSIASM, DECREMENT_ENTHUSIASM } from "../constants/enthusiasm.types";
 import { EnthusiasmAction } from "../action/enthusiasm.action";
 
-const enthusiasm = {
+const defaultEnthusiasmState = {
     enthusiasmLevel: 1,
     languageName: 'TypeScript',
 }
 
-export default (state: any = enthusiasm, action: EnthusiasmAction) => {
+export default (state: any = defaultEnthusiasmState, action: EnthusiasmAction) => {
     switch (action.type) {
         case INCREMENT_ENTHUSIASM:
             return { ...state, enthusiasmLevel: state.enthusiasmLevel + action.payload.amount };
