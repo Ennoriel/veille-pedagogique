@@ -70,7 +70,7 @@ export default class Register extends React.Component<Props> {
     }
 
     /**
-     * Méthode déclenché au clic sur le bouton Register.
+     * Méthode déclenchée au clic sur le bouton Register.
      * Gère l'enregistrement d'un nouvel utilisateur
      */
     handleRegisterClick () {

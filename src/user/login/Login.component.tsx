@@ -66,7 +66,7 @@ export default class Login extends React.Component<Props> {
     }
 
     /**
-     * Méthode déclenché au clic sur le bouton Login.
+     * Méthode déclenchée au clic sur le bouton Login.
      * Gère la connexion d'un nouvel utilisateur
      */
     handleLoginClick () {
