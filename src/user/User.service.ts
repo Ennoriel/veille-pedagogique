@@ -30,8 +30,8 @@ export class UserService  {
         return axios.delete(URI_USER_SLASH + _id);
     }
 
-    authenticate(username: String, password: String) {
-        return axios.post(URI_AUTHENTICATE, {"uername": username, "password": password});
+    authenticate(user: User) {
+        return axios.post(URI_AUTHENTICATE, user);
     }
     
 }

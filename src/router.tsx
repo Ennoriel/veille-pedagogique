@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 import Hello from './hello/Hello.container';
 import Register from './user/register/Register.components';
+import Login from './user/login/Login.component';
 
 const Home = () => (<h2>Home</h2>);
 
@@ -29,6 +30,11 @@ const routes = [
         path: '/register',
         label: 'Register',
         component: Register
+    },
+    {
+        path: '/login',
+        label: 'Login',
+        component: Login
     }
 ]
 

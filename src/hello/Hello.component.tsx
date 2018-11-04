@@ -69,7 +69,7 @@ class Hello extends React.Component<Props> {
                     <button onClick={this.props.onIncrement}>+</button>
                 </div>
                 <ul>
-                    { this.state.persons.map(person => <li>{person.name}</li>)}
+                    { this.state.persons.map((person, i) => <li key={i}>{person.name}</li>)}
                 </ul>
                 <div className="button-group">
                     <button onClick={this.handleClick}>
@@ -82,7 +82,7 @@ class Hello extends React.Component<Props> {
                     </button>
                 </div>
                 <ul>
-                    { this.state.personsAfterClick.map(person => <li>{person.name}</li>)}
+                    { this.state.personsAfterClick.map((person, i) => <li key={i}>{person.name}</li>)}
                 </ul>
             </div>
         );
