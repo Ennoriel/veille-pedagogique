@@ -7,7 +7,7 @@ var jwt = require('jsonwebtoken');
 export class AuthorizationService {
 
     /**
-     * filtre permettant de laisse passer un appel webservice d'un utilisateur habilité.
+     * filtre permettant de laisser passer un appel webservice d'un utilisateur habilité.
      * i.e. appel webservice avec un jeton JWT valide,
      * sauf pour les webservice d'autentification et de création de compte
      * 
