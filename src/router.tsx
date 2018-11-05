@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Hello from './hello/Hello.component';
 import Register from './user/register/Register.components';
 import Login from './user/login/Login.component';
+import Article from './article/Article.component';
 
 const Home = () => (<h2>Home</h2>);
 
@@ -35,6 +36,11 @@ const routes = [
         path: '/login',
         label: 'Login',
         component: Login
+    },
+    {
+        path: '/articles',
+        label: 'Articles',
+        component: Article
     }
 ]
 
