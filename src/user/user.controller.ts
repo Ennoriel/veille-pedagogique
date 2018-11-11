@@ -18,11 +18,17 @@ export class UserController{
      */
     public addNewUser (req: Request, res: Response) {                
         let newUser = new UserModel(req.body);
+
+        if (newUser.password == null || newUser.password.length < 12) {
+            res.status(400).send({code:"erreur", message: "Le mot de passse doit contenir au moins 12 caractères."});
+            return;
+        }
+
         newUser.password = bcrypt.hashSync(newUser.password, 10);
     
         newUser.save((err: MongoError, user: User) => {
             if(err){
-                res.send(err);
+                res.status(400).send(err);
                 return;
             }
             user.password = null;
