@@ -5,7 +5,7 @@ export default (state = {}, action: any) => {
         case SAVE_USER_DATA:
             return {
                 ...state,
-                uer: action.payload.user,
+                ...action.payload.user,
                 token: action.payload.token
             };
     }
