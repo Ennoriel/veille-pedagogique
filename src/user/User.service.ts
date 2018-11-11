@@ -3,7 +3,8 @@ import { BASE_URI_SERVER } from './../shared/uri.constants';
 import { User } from './User.types';
 
 const URI_USER = '/user';
-const URI_USER_SLASH = '/user/';
+const URI_USER_SLASH = URI_USER + '/';
+const URI_USER_EXISTS_SLASH = URI_USER + '/exists/'
 const URI_AUTHENTICATE = '/authenticate';
 
 axios.defaults.baseURL = BASE_URI_SERVER;
@@ -18,8 +19,12 @@ export class UserService  {
         return axios.post(URI_USER, newUser);
     }
 
-    getUserWithID(_id: String) {
+    getUserById(_id: String) {
         return axios.get(URI_USER_SLASH + _id);
+    }
+
+    existsUser(username: String) {
+        return axios.get(URI_USER_EXISTS_SLASH + username);
     }
 
     updateUser(_id: String, updatedUser: User) {
