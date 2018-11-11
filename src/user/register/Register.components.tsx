@@ -107,12 +107,8 @@ export default class Register extends React.Component<Props> {
      * TODO : implémentation de la recherche de l'existence du username
      * @param username Username
      */
-    private isUsernameOk = async (username: string) => {
-        const res = await userService.existsUser(username)
-        console.log('2.');
-        console.log(await res);
-        return res.data;
-    };
+    private isUsernameOk = async (username: string) => await userService.existsUser(username);
+    ;
 
     /**
      * Méthode de vérification d'un champ recquis
