@@ -11,7 +11,8 @@ export interface Props {
 
 interface State {
     user: User,
-    error: User
+    error: User,
+    usernameHelperText: string
 }
 
 const ERREUR = 'o';
@@ -40,7 +41,8 @@ export default class Register extends React.Component<Props> {
      */
     readonly state: State = {
         user : new User(),
-        error: new User()
+        error: new User(),
+        usernameHelperText: ''
     };
   
     /**
@@ -65,7 +67,8 @@ export default class Register extends React.Component<Props> {
                 password : name == 'password' && this.isPasswordOk(value) ? OK : this.state.error.password,
                 passwordBis : name == 'passwordBis' && this.isPasswordBisOk(this.state.user.password, value) ? OK : 
                         name == 'password' && this.isPasswordBisOk(value, this.state.user.passwordBis) ? OK : this.state.error.passwordBis
-            }
+            },
+            usernameHelperText: this.isRequiredTextOk(value) ? '' : this.state.usernameHelperText
         });
     }
 
@@ -73,12 +76,16 @@ export default class Register extends React.Component<Props> {
      * Méthode déclenchée au clic sur le bouton Register.
      * Gère l'enregistrement d'un nouvel utilisateur
      */
-    handleRegisterClick () {
+    async handleRegisterClick () {
+
+        const isUserNameOk = this.isRequiredTextOk(this.state.user.username)
+                            && await this.isUsernameOk(this.state.user.username);
+        this.setState({usernameHelperText: isUserNameOk ? '' : 'Ce nom de username est déjà pris ou est vide.'})
 
         this.setState({
             error: {
                 ...this.state.error,
-                username : this.isRequiredTextOk(this.state.user.username) ? OK : ERREUR,
+                username : isUserNameOk ? OK : ERREUR,
                 firstname : this.isRequiredTextOk(this.state.user.firstname) ? OK : ERREUR,
                 lastname : this.isRequiredTextOk(this.state.user.lastname) ? OK : ERREUR,
                 password : this.isPasswordOk(this.state.user.password) ? OK : ERREUR,
@@ -86,7 +93,7 @@ export default class Register extends React.Component<Props> {
             }
         })
 
-        if(this.isUsernameOk(this.state.user.username) &&
+        if(isUserNameOk &&
                 this.isRequiredTextOk(this.state.user.firstname) &&
                 this.isRequiredTextOk(this.state.user.lastname) &&
                 this.isPasswordOk(this.state.user.password) &&
@@ -100,7 +107,8 @@ export default class Register extends React.Component<Props> {
      * TODO : implémentation de la recherche de l'existence du username
      * @param username Username
      */
-    private isUsernameOk = (username: string) => true;
+    private isUsernameOk = async (username: string) => await userService.existsUser(username);
+    ;
 
     /**
      * Méthode de vérification d'un champ recquis
@@ -149,6 +157,7 @@ export default class Register extends React.Component<Props> {
                             required
                             error={this.state.error.username.length > 0}
                             fullWidth
+                            helperText={this.state.usernameHelperText}
                             margin="normal"
                             variant="outlined"
                         />
