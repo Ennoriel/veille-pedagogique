@@ -52,13 +52,36 @@ export class UserController{
      * @param req requête
      * @param res réponse
      */
-    public getUserWithID (req: Request, res: Response) {
+    public getUserByID (req: Request, res: Response) {
         UserModel.findById(req.params._id, (err: MongoError, user: User) => {
             if(err){
                 res.send(err);
                 return;
             }
             res.json(user);
+        });
+    }
+
+    /**
+     * Réccupération d'un utilisateur par son identifiant technique
+     * 
+     * @param req requête
+     * @param res réponse
+     */
+    public existsUser (req: Request, res: Response) {
+        UserModel.findOne({'username' : req.params.username}, (err: MongoError, user: User) => {
+            if(err){
+                console.log('erreur grave');
+                res.status(400).send(err);
+                return;
+            }
+            if(user == null) {
+                console.log('erreur');
+                res.status(200).send(false);
+                return;
+            }
+            console.log('ok');
+            res.status(200).send(true);
         });
     }
 

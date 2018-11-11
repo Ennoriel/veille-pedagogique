@@ -19,9 +19,12 @@ export class Routes {
         .post(this.userController.addNewUser);
 
         app.route('/user/:_id')
-        .get(this.userController.getUserWithID)
+        .get(this.userController.getUserByID)
         .put(this.userController.updateUser)
         .delete(this.userController.deleteUser);
+
+        app.route('/user/exists/:username')
+        .get(this.userController.existsUser)
 
         app.route('/authenticate')
         .post(this.userController.authenticate)
