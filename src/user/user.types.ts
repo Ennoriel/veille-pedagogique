@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+require('mongoose-type-email');
 
 var Schema = mongoose.Schema;
 
@@ -12,6 +13,7 @@ export class User {
     username: string;
     lastname: string;
     firstname: string;
+    email: string;
     password: string;
 }
 
@@ -23,6 +25,7 @@ var userSchema = new Schema({
     username: {type: String, unique: true, require},
     lastname: String,
     firstname: String,
+    email: {type: mongoose.SchemaTypes.Email, unique: true, require},
     password: String
 
 });
