@@ -7,6 +7,7 @@ export class User {
         this.username = '';
         this.lastname = '';
         this.firstname = '';
+        this.email = '';
         this.password = '';
         this.passwordBis = '';
     }
@@ -15,6 +16,7 @@ export class User {
     username: string;
     lastname: string;
     firstname: string;
+    email: string;
     password: string;
     passwordBis: string;
 }
@@ -26,3 +28,5 @@ export interface UserState {
     user: User,
     token: string
 }
+
+export const EMAIL_REGEXP = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
