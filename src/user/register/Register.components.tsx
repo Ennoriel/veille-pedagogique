@@ -2,9 +2,11 @@
 import * as React from 'react';
 
 import TextField from '@material-ui/core/TextField';
-import { User } from '../User.types';
+import { User, EMAIL_REGEXP } from '../User.types';
 import { Grid, Button } from '@material-ui/core';
 import { UserService } from '../User.service';
+
+import './Register.style.css';
 
 export interface Props {
 }
@@ -63,6 +65,7 @@ export default class Register extends React.Component<Props> {
                 ...this.state.error,
                 username : name == 'username' && this.isRequiredTextOk(value) ? OK : this.state.error.username,
                 firstname : name == 'firstname' && this.isRequiredTextOk(value) ? OK : this.state.error.firstname,
+                email : name == 'email' && this.isEmailOk(value) ? OK : this.state.error.email,
                 lastname : name == 'lastname' && this.isRequiredTextOk(value) ? OK : this.state.error.lastname,
                 password : name == 'password' && this.isPasswordOk(value) ? OK : this.state.error.password,
                 passwordBis : name == 'passwordBis' && this.isPasswordBisOk(this.state.user.password, value) ? OK : 
@@ -78,24 +81,26 @@ export default class Register extends React.Component<Props> {
      */
     async handleRegisterClick () {
 
-        const isUserNameOk = this.isRequiredTextOk(this.state.user.username)
+        const isUsernameOk = this.isRequiredTextOk(this.state.user.username)
                             && await this.isUsernameOk(this.state.user.username);
-        this.setState({usernameHelperText: isUserNameOk ? '' : 'Ce nom de username est déjà pris ou est vide.'})
+        this.setState({usernameHelperText: isUsernameOk ? '' : 'Ce nom de username est déjà pris ou est vide.'})
 
         this.setState({
             error: {
                 ...this.state.error,
-                username : isUserNameOk ? OK : ERREUR,
+                username : isUsernameOk ? OK : ERREUR,
                 firstname : this.isRequiredTextOk(this.state.user.firstname) ? OK : ERREUR,
                 lastname : this.isRequiredTextOk(this.state.user.lastname) ? OK : ERREUR,
+                email : this.isEmailOk(this.state.user.email) ? OK : ERREUR,
                 password : this.isPasswordOk(this.state.user.password) ? OK : ERREUR,
                 passwordBis : this.isPasswordBisOk(this.state.user.password, this.state.user.passwordBis) ? OK : ERREUR
             }
         })
 
-        if(isUserNameOk &&
+        if(isUsernameOk &&
                 this.isRequiredTextOk(this.state.user.firstname) &&
                 this.isRequiredTextOk(this.state.user.lastname) &&
+                this.isEmailOk(this.state.user.email) &&
                 this.isPasswordOk(this.state.user.password) &&
                 this.isPasswordBisOk(this.state.user.password, this.state.user.passwordBis)) {
             userService.register(this.state.user);
@@ -104,17 +109,21 @@ export default class Register extends React.Component<Props> {
 
     /**
      * Méthode de vérification de l'identifiant
-     * TODO : implémentation de la recherche de l'existence du username
      * @param username Username
      */
     private isUsernameOk = async (username: string) => await userService.existsUser(username);
-    ;
 
     /**
      * Méthode de vérification d'un champ recquis
      * @param text texte
      */
     private isRequiredTextOk = (text: string) => text.length > 0;
+
+    /**
+     * Méthode de vérification de l'email
+     * @param email email
+     */
+    private isEmailOk = (email: string) => EMAIL_REGEXP.test(email);
 
     /**
      * Méthode de vérification du premier mot de passe
@@ -147,73 +156,98 @@ export default class Register extends React.Component<Props> {
                     Register
                 </h1>
                 <Grid container justify='center'>
-                    <Grid item xs={8}>
-                        <TextField
-                            id="username"
-                            label="Username"
-                            name="username"
-                            value={this.state.user.username}
-                            onChange={this.handleInputChange}
-                            required
-                            error={this.state.error.username.length > 0}
-                            fullWidth
-                            helperText={this.state.usernameHelperText}
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="firstname"
-                            label="Firstname"
-                            name="firstname"
-                            value={this.state.user.firstname}
-                            onChange={this.handleInputChange}
-                            required
-                            error={this.state.error.firstname.length > 0}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="lastname"
-                            label="Lastname"
-                            name="lastname"
-                            value={this.state.user.lastname}
-                            onChange={this.handleInputChange}
-                            required
-                            error={this.state.error.lastname.length > 0}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="password"
-                            type="password"
-                            label="Password"
-                            name="password"
-                            error={this.state.error.password.length > 0}
-                            value={this.state.user.password}
-                            onChange={this.handleInputChange}
-                            required
-                            helperText="Please write a minimum of 12 characters."
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="passwordBis"
-                            label="Password"
-                            name="passwordBis"
-                            error={this.state.error.passwordBis.length > 0}
-                            value={this.state.user.passwordBis}
-                            onChange={this.handleInputChange}
-                            required
-                            helperText="Should (obviously) be the same."
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <Grid container spacing={16} justify='center'>
-                            <Grid item>
+                    <Grid item xs={10} lg={8}>
+                        <Grid container justify='center'>
+                            <Grid item xs={12} className='grid-input'>
+                                <TextField
+                                    id="username"
+                                    label="Username"
+                                    name="username"
+                                    value={this.state.user.username}
+                                    onChange={this.handleInputChange}
+                                    required
+                                    error={this.state.error.username.length > 0}
+                                    fullWidth
+                                    helperText={this.state.usernameHelperText}
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={12} lg={6} className='grid-input'>
+                                <TextField
+                                    id="firstname"
+                                    label="Firstname"
+                                    name="firstname"
+                                    value={this.state.user.firstname}
+                                    onChange={this.handleInputChange}
+                                    required
+                                    error={this.state.error.firstname.length > 0}
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={12} lg={6} className='grid-input'>
+                                <TextField
+                                    id="lastname"
+                                    label="Lastname"
+                                    name="lastname"
+                                    value={this.state.user.lastname}
+                                    onChange={this.handleInputChange}
+                                    required
+                                    error={this.state.error.lastname.length > 0}
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={12} className='grid-input'>
+                                <TextField
+                                    id="email"
+                                    label="Email"
+                                    name="email"
+                                    value={this.state.user.email}
+                                    onChange={this.handleInputChange}
+                                    required
+                                    error={this.state.error.email.length > 0}
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={12} lg={6} className='grid-input'>
+                                <TextField
+                                    id="password"
+                                    type="password"
+                                    label="Password"
+                                    name="password"
+                                    error={this.state.error.password.length > 0}
+                                    value={this.state.user.password}
+                                    onChange={this.handleInputChange}
+                                    required
+                                    helperText="Please write a minimum of 12 characters."
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item xs={12} lg={6} className='grid-input'>
+                                <TextField
+                                    id="passwordBis"
+                                    type="password"
+                                    label="Password"
+                                    name="passwordBis"
+                                    error={this.state.error.passwordBis.length > 0}
+                                    value={this.state.user.passwordBis}
+                                    onChange={this.handleInputChange}
+                                    required
+                                    helperText="Should (obviously) be the same."
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item className='grid-button'>
                                 <Button
                                     onClick={this.handleRegisterClick}
                                     variant="outlined" 
@@ -222,7 +256,7 @@ export default class Register extends React.Component<Props> {
                                         register
                                 </Button>
                             </Grid>
-                            <Grid item>
+                            <Grid item className='grid-button'>
                                 <Button
                                     onClick={this.handleResetClick}
                                     variant="outlined" 
