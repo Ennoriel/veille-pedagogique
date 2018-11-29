@@ -55,31 +55,31 @@ class Hello extends React.Component<Props> {
         }
       
         return (
-            <div className="hello">
-                <div className="greeting">
-                    Hello {store.getState().enthusiasm.languageName + getExclamationMarks(store.getState().enthusiasm.enthusiasmLevel)}
+                <div className="hello">
+                    <div className="greeting">
+                        Hello {store.getState().enthusiasm.languageName + getExclamationMarks(store.getState().enthusiasm.enthusiasmLevel)}
+                    </div>
+                    <div className="button-group">
+                        <button onClick={() => store.dispatch(decrementEnthusiasm())}>-</button>
+                        <button onClick={() => store.dispatch(incrementEnthusiasm())}>+</button>
+                    </div>
+                    <ul>
+                        {this.state.persons.map((person, i) => <li key={i}>{person.name}</li>)}
+                    </ul>
+                    <div className="button-group">
+                        <button onClick={this.handleClick}>
+                            {this.state.isToggleOn ? 'ON' : 'OFF'}
+                        </button>
+                    </div>
+                    <div className="button-group">
+                        <button onClick={this.handlePersonClick}>
+                            Chargez des données
+                        </button>
+                    </div>
+                    <ul>
+                        {this.state.personsAfterClick.map((person, i) => <li key={i}>{person.name}</li>)}
+                    </ul>
                 </div>
-                <div className="button-group">
-                    <button onClick={() => store.dispatch(decrementEnthusiasm())}>-</button>
-                    <button onClick={() => store.dispatch(incrementEnthusiasm())}>+</button>
-                </div>
-                <ul>
-                    { this.state.persons.map((person, i) => <li key={i}>{person.name}</li>)}
-                </ul>
-                <div className="button-group">
-                    <button onClick={this.handleClick}>
-                        {this.state.isToggleOn ? 'ON' : 'OFF'}
-                    </button>
-                </div>
-                <div className="button-group">
-                    <button onClick={this.handlePersonClick}>
-                        Chargez des données
-                    </button>
-                </div>
-                <ul>
-                    { this.state.personsAfterClick.map((person, i) => <li key={i}>{person.name}</li>)}
-                </ul>
-            </div>
         );
     }
 }
