@@ -12,7 +12,6 @@ import VideoCamIcon from '@material-ui/icons/Videocam'
 import NotesIcon from '@material-ui/icons/Notes'
 import LinkIcon from '@material-ui/icons/Link'
 import CreateIcon from '@material-ui/icons/Create'
-import Title from 'src/shared/title.component';
 
 export interface Props {
 }
@@ -25,7 +24,6 @@ export default class Article extends React.Component<Props> {
     render() {
         return (
             <div>
-                <Title title="Articles" />
                 {_.values(this.articles).map((article: ArticleItem, index: number) => 
                     <Card key={index} className="card">
                         <CardHeader
