@@ -152,9 +152,6 @@ export default class Register extends React.Component<Props> {
     render() {
         return (
             <div>
-                <h1>
-                    Register
-                </h1>
                 <Grid container justify='center'>
                     <Grid item xs={10} lg={8}>
                         <Grid container justify='center'>

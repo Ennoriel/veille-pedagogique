@@ -117,9 +117,6 @@ export default class Login extends React.Component<Props> {
     render() {
         return (
             <div>
-                <h1>
-                    Login
-                </h1>
                 <Grid container justify='center'>
                     <Grid item xs={8}>
                         <TextField
