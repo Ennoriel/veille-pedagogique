@@ -10,13 +10,15 @@ var jwt = require('jsonwebtoken');
  */
 export class UserController{
 
+    constructor () { }
+
     /**
      * Création d'un nouvel utilisateur
      * 
      * @param req requête
      * @param res réponse
      */
-    public addNewUser (req: Request, res: Response) {                
+    public addNewUser = (req: Request, res: Response) => {                
         let newUser = new UserModel(req.body);
 
         if (newUser.password == null || newUser.password.length < 12) {
@@ -31,8 +33,8 @@ export class UserController{
                 res.status(400).send(err);
                 return;
             }
-            user.password = null;
-            res.json(user);
+            
+            res.set('Authorization', this.getAuthToken(user)).send(this.removeCredentials(user));
         });
     }
 
@@ -43,7 +45,7 @@ export class UserController{
      * @param res réponse
      */
     public getUsers (req: Request, res: Response) {           
-        UserModel.find({}, (err: MongoError, user: User) => {
+        UserModel.find({}, (err: MongoError, user: Array<User>) => {
             if(err){
                 res.send(err);
                 return;
@@ -129,7 +131,7 @@ export class UserController{
      * @param req requête
      * @param res réponse
      */
-    public authenticate (req: Request, res: Response) {           
+    public authenticate = (req: Request, res: Response) => {           
         UserModel.findOne({ username: req.body.username }, (err: MongoError, user: User) => {
             if(err){
                 res.send({ message : "Unable to authenticate user"});
@@ -139,10 +141,27 @@ export class UserController{
                 res.send({ message : "Unable to authenticate user"});
                 return;
             }
-            user['password'] = undefined;
-            user['_id'] = undefined;
-            res.set('Authorization', jwt.sign({_id : user._id}, 'SECRET')).send(user);
+            
+            res.set('Authorization', this.getAuthToken(user)).send(this.removeCredentials(user));
         });
     }
     
+    /**
+     * Define Authentication Token
+     * @param user User
+     */
+    private getAuthToken(user: User) {
+        return jwt.sign({_id : user._id}, 'SECRET');
+    }
+
+    /**
+     * remove the _id and password fields
+     * @param user User
+     */
+    private removeCredentials(user: User) {
+        let newUser = JSON.parse(JSON.stringify(user));
+        delete newUser._id;
+        delete newUser.password;
+        return newUser;
+    }
 }
