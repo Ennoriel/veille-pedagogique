@@ -20,6 +20,8 @@ class Hello extends React.Component<Props> {
 
         this.handleClick = this.handleClick.bind(this);
         this.handlePersonClick = this.handlePersonClick.bind(this);
+
+        console.log(this);
     }
     
     readonly state: State = {

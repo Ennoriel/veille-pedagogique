@@ -7,6 +7,10 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { routes } from './routes';
 import { MenuRoute } from './menu.types';
+import { UserService } from 'src/user/User.service';
+
+import MailIcon from '@material-ui/icons/Mail';
+import { UserRight } from 'src/user/User.types';
 
 const drawerWidth = 240;
 
@@ -24,6 +28,14 @@ const styles = (theme: any) => ({
         padding: '0 8px',
         ...theme.mixins.toolbar,
         justifyContent: 'flex-end',
+    },
+    routeList: {
+        position: 'relative' as 'relative',
+        height: '100%'
+    },
+    logout: {
+        position: 'absolute' as 'absolute',
+        bottom: '10px'
     }
 })
 
@@ -35,13 +47,22 @@ interface Props {
     theme: any;
 }
 
+let userService: UserService;
+
 /**
  * Drawer principal de l'application
  */
 class MenuDrawer extends React.Component<Props> {
+
+    constructor (props: Props) {
+        super(props);
+
+        userService = new UserService;
+    }
     
     render() {
         const { classes, theme, open } = this.props;
+        const userRignt = userService.getUserRight();
         
         return (
             <Drawer
@@ -59,8 +80,9 @@ class MenuDrawer extends React.Component<Props> {
                     </IconButton>
                 </div>
                 <Divider />
-                <List>
-                    {routes.map((route, index) => (
+                <List className={classes.routeList}>
+                    {routes.filter(route => route.userRights.some(routeRight => routeRight === userRignt))
+                           .map((route, index) => (
                         <Route
                             path={route.path}
                             key={index}
@@ -77,6 +99,14 @@ class MenuDrawer extends React.Component<Props> {
                             )}
                         />
                     ))}
+                    {
+                        userRignt === UserRight.BEARER ?
+                            <ListItem button className={classes.logout}>
+                                <ListItemIcon><MailIcon/></ListItemIcon>
+                                <ListItemText primary="Logout" />
+                            </ListItem>
+                            : ""
+                    }
                 </List>
             </Drawer>
         );

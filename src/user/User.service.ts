@@ -1,42 +1,13 @@
-import axios from 'axios';
-import { BASE_URI_SERVER } from './../shared/uri.constants';
-import { User } from './User.types';
+import store from "src/redux.services/index.store";
+import { UserRight } from "./User.types";
 
-const URI_USER = '/user';
-const URI_USER_SLASH = URI_USER + '/';
-const URI_USER_EXISTS_SLASH = URI_USER + '/exists/'
-const URI_AUTHENTICATE = '/authenticate';
+export class UserService {
 
-axios.defaults.baseURL = BASE_URI_SERVER;
-
-export class UserService  {
-
-    public getUsers() {
-        return axios.get(URI_USER);
+    isAuthenticated(): boolean {
+        return store.getState().user.userRight === UserRight.BEARER;
     }
 
-    register(newUser: User) {
-        return axios.post(URI_USER, newUser);
+    getUserRight(): UserRight {
+        return store.getState().user.userRight;
     }
-
-    getUserById(_id: String) {
-        return axios.get(URI_USER_SLASH + _id);
-    }
-
-    existsUser(username: String) {
-        return axios.get(URI_USER_EXISTS_SLASH + username);
-    }
-
-    updateUser(_id: String, updatedUser: User) {
-        return axios.post(URI_USER_SLASH + _id, updatedUser);
-    }
-
-    deleteUser(_id: String) {
-        return axios.delete(URI_USER_SLASH + _id);
-    }
-
-    authenticate(user: User) {
-        return axios.post(URI_AUTHENTICATE, user);
-    }
-    
 }

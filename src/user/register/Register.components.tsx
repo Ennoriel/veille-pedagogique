@@ -4,9 +4,13 @@ import * as React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { User, EMAIL_REGEXP } from '../User.types';
 import { Grid, Button } from '@material-ui/core';
-import { UserService } from '../User.service';
+import { UserRepositoryService } from '../User.repositoryService';
 
 import './Register.style.css';
+import store from 'src/redux.services/index.store';
+import { saveUserData } from 'src/redux.services/action/user.action';
+import { saveActiveRoute } from 'src/redux.services/action/route.action';
+import { Redirect } from 'react-router';
 
 export interface Props {
 }
@@ -14,13 +18,14 @@ export interface Props {
 interface State {
     user: User,
     error: User,
-    usernameHelperText: string
+    usernameHelperText: string,
+    redirectToHello: boolean
 }
 
 const ERREUR = 'o';
 const OK = '';
 
-let userService: UserService;
+let userRepositoryService: UserRepositoryService;
 
 /**
  * Composant permettant à un utilisateur de s'enregistrer
@@ -35,7 +40,7 @@ export default class Register extends React.Component<Props> {
     
         this.handleInputChange = this.handleInputChange.bind(this);
 
-        userService = new UserService;
+        userRepositoryService = new UserRepositoryService;
     }
 
     /**
@@ -44,7 +49,8 @@ export default class Register extends React.Component<Props> {
     readonly state: State = {
         user : new User(),
         error: new User(),
-        usernameHelperText: ''
+        usernameHelperText: '',
+        redirectToHello: false
     };
   
     /**
@@ -103,7 +109,13 @@ export default class Register extends React.Component<Props> {
                 this.isEmailOk(this.state.user.email) &&
                 this.isPasswordOk(this.state.user.password) &&
                 this.isPasswordBisOk(this.state.user.password, this.state.user.passwordBis)) {
-            userService.register(this.state.user);
+            userRepositoryService.register(this.state.user).then(value => {
+                store.dispatch(saveUserData(value.data, value.headers.authorization));
+                store.dispatch(saveActiveRoute({path: '/hello', label: "Hello"}));
+                this.setState({"redirectToHello": true})
+            }, reason => {
+                // TODO gestion de l'erreur
+            });
         }
     }
 
@@ -111,7 +123,7 @@ export default class Register extends React.Component<Props> {
      * Méthode de vérification de l'identifiant
      * @param username Username
      */
-    private isUsernameOk = async (username: string) => await userService.existsUser(username);
+    private isUsernameOk = async (username: string) => await userRepositoryService.existsUser(username);
 
     /**
      * Méthode de vérification d'un champ recquis
@@ -150,6 +162,8 @@ export default class Register extends React.Component<Props> {
     }
 
     render() {
+        if (this.state.redirectToHello) return <Redirect to="/hello"/>
+        
         return (
             <div>
                 <Grid container justify='center'>

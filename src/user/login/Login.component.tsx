@@ -4,21 +4,26 @@ import * as React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { User } from '../User.types';
 import { Grid, Button } from '@material-ui/core';
-import { UserService } from '../User.service';
+import { UserRepositoryService } from '../User.repositoryService';
 import store from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
+import { Redirect } from 'react-router';
+import { UserService } from '../User.service';
+import { saveActiveRoute } from 'src/redux.services/action/route.action';
 
 export interface Props {
 }
 
 interface State {
     user: User,
-    error: User
+    error: User,
+    redirectToHello: boolean
 }
 
 const ERREUR = 'o';
 const OK = '';
 
+let userRepositoryService: UserRepositoryService;
 let userService: UserService;
 
 /**
@@ -34,16 +39,23 @@ export default class Login extends React.Component<Props> {
     
         this.handleInputChange = this.handleInputChange.bind(this);
 
+        userRepositoryService = new UserRepositoryService;
         userService = new UserService;
+
+        /**
+         * initialisation de l'état du composant
+         */
+        this.state = {
+            user : new User(),
+            error: new User(),
+            redirectToHello: userService.isAuthenticated()
+        };
     }
 
     /**
      * initialisation de l'état du composant
      */
-    readonly state: State = {
-        user : new User(),
-        error: new User()
-    };
+    readonly state: State;
   
     /**
      * Gestion des valeurs et erreurs
@@ -83,8 +95,10 @@ export default class Login extends React.Component<Props> {
 
         if(this.isRequiredTextOk(this.state.user.username) &&
                 this.isPasswordOk(this.state.user.password)) {
-            userService.authenticate(this.state.user).then(value => {
+            userRepositoryService.authenticate(this.state.user).then(value => {
                 store.dispatch(saveUserData(value.data, value.headers.authorization));
+                store.dispatch(saveActiveRoute({path: '/hello', label: "Hello"}));
+                this.setState({"redirectToHello": true})
             }, reason => {
                 // TODO gestion de l'erreur
             });
@@ -115,6 +129,8 @@ export default class Login extends React.Component<Props> {
     }
 
     render() {
+        if (this.state.redirectToHello) return <Redirect to="/hello"/>
+
         return (
             <div>
                 <Grid container justify='center'>
