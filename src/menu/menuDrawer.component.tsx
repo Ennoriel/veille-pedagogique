@@ -62,7 +62,7 @@ class MenuDrawer extends React.Component<Props> {
     
     render() {
         const { classes, theme, open } = this.props;
-        const userRignt = userService.getUserRight();
+        const userRight = userService.getUserRight();
         
         return (
             <Drawer
@@ -81,7 +81,7 @@ class MenuDrawer extends React.Component<Props> {
                 </div>
                 <Divider />
                 <List className={classes.routeList}>
-                    {routes.filter(route => route.userRights.some(routeRight => routeRight === userRignt))
+                    {routes.filter(route => route.userRights.some(routeRight => routeRight === userRight))
                            .map((route, index) => (
                         <Route
                             path={route.path}
@@ -100,7 +100,7 @@ class MenuDrawer extends React.Component<Props> {
                         />
                     ))}
                     {
-                        userRignt === UserRight.BEARER ?
+                        userRight === UserRight.BEARER ?
                             <ListItem button className={classes.logout}>
                                 <ListItemIcon><MailIcon/></ListItemIcon>
                                 <ListItemText primary="Logout" />
