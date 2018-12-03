@@ -51,7 +51,7 @@ class MainFrame extends React.Component<Props> {
                 })}
             >
                 <div className={classes.drawerHeader} />
-                {routes.map((route, i) => 
+                {routes.map((route, i) =>
                     <Route
                         key={i}
                         exact path={route.path}

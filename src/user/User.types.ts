@@ -29,4 +29,9 @@ export interface UserState {
     token: string
 }
 
+export enum UserRight {
+    NOT_AUTH,
+    BEARER
+}
+
 export const EMAIL_REGEXP = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
