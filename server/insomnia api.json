@@ -1,0 +1,357 @@
+{
+	"_type": "export",
+	"__export_format": 3,
+	"__export_date": "2018-09-22T17:08:39.760Z",
+	"__export_source": "insomnia.desktop.app:v6.0.2",
+	"resources": [
+		{
+			"_id": "wrk_d10190ebbc3d45d8b585cfcf8a2c46ab",
+			"created": 1537092555521,
+			"description": "",
+			"modified": 1537092555521,
+			"name": "veille pedago",
+			"parentId": null,
+			"_type": "workspace"
+		},
+		{
+			"_id": "env_d918fcb940754bac8f746cda09a8abfc",
+			"color": null,
+			"created": 1537092555546,
+			"data": {
+				"base_url": "localhost:3001"
+			},
+			"isPrivate": false,
+			"metaSortKey": 1537092670511,
+			"modified": 1537092673038,
+			"name": "New Environment",
+			"parentId": "wrk_d10190ebbc3d45d8b585cfcf8a2c46ab",
+			"_type": "environment"
+		},
+		{
+			"_id": "jar_b0a90fbefe9648dbbeff9d8caf9a9b09",
+			"cookies": [],
+			"created": 1537092555548,
+			"modified": 1537092555548,
+			"name": "Default Jar",
+			"parentId": "wrk_d10190ebbc3d45d8b585cfcf8a2c46ab",
+			"_type": "cookie_jar"
+		},
+		{
+			"_id": "fld_b6e14fb48b504539a71df492e88ccb0b",
+			"created": 1537212196576,
+			"description": "",
+			"environment": {},
+			"metaSortKey": -1537212196576,
+			"modified": 1537212196576,
+			"name": "user",
+			"parentId": "wrk_d10190ebbc3d45d8b585cfcf8a2c46ab",
+			"_type": "request_group"
+		},
+		{
+			"_id": "fld_d11d2af7d8a44bfc8c01cb20ea3f6bb6",
+			"created": 1537212204772,
+			"description": "",
+			"environment": {},
+			"metaSortKey": -1537212204772,
+			"modified": 1537212204772,
+			"name": "article",
+			"parentId": "wrk_d10190ebbc3d45d8b585cfcf8a2c46ab",
+			"_type": "request_group"
+		},
+		{
+			"_id": "req_9f4f89424ab841e4b91cfcad431deea6",
+			"authentication": {},
+			"body": {},
+			"created": 1537092564367,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_42f71c89878049948c17b500fe7b4306",
+					"name": "Authorization",
+					"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmEwMDVkNGJkNjQ3ZjA3OTg1Y2NmNmUiLCJpYXQiOjE1MzcyMTM5MzZ9.aAh-yhIaW9vy_AYwrrMSFGLYYbMc_iDG9Lh3E2w1hLc"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1537212204822,
+			"method": "GET",
+			"modified": 1537636095563,
+			"name": "/",
+			"parameters": [],
+			"parentId": "wrk_d10190ebbc3d45d8b585cfcf8a2c46ab",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ base_url  }}/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_0ea6d0525cec4f2c82a1ea55a13f9f25",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n    \"username\": \"Etienne\",\n    \"lastname\": \"\",\n    \"firstname\": \"Etienne\",\n    \"password\": \"pass\"\n}"
+			},
+			"created": 1537211835054,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_a9b84ded258b40fd823fd1e238066e81",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1537211835054,
+			"method": "POST",
+			"modified": 1537213923188,
+			"name": "user",
+			"parameters": [],
+			"parentId": "fld_b6e14fb48b504539a71df492e88ccb0b",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ base_url  }}/user",
+			"_type": "request"
+		},
+		{
+			"_id": "req_2a179fb62f0a42e39b405e70deac21f1",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": ""
+			},
+			"created": 1537212104004,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_a9b84ded258b40fd823fd1e238066e81",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1537211835029,
+			"method": "DELETE",
+			"modified": 1537213412324,
+			"name": "user/id",
+			"parameters": [],
+			"parentId": "fld_b6e14fb48b504539a71df492e88ccb0b",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ base_url  }}/user/5b9fff04fb76e617486b6170",
+			"_type": "request"
+		},
+		{
+			"_id": "req_8464eebc47a54cfb81018384b115b9f9",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n    \"username\": \"Etienne\",\n    \"password\": \"pass\"\n}"
+			},
+			"created": 1537212187943,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_a9b84ded258b40fd823fd1e238066e81",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1537211835004,
+			"method": "POST",
+			"modified": 1537213933641,
+			"name": "authenticate",
+			"parameters": [],
+			"parentId": "fld_b6e14fb48b504539a71df492e88ccb0b",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ base_url  }}/authenticate",
+			"_type": "request"
+		},
+		{
+			"_id": "req_a255460b04714dd0bbefbf593574f1d7",
+			"authentication": {},
+			"body": {},
+			"created": 1537092661231,
+			"description": "",
+			"headers": [
+				{
+					"disabled": false,
+					"id": "pair_0d9b972cc3db4dc6b69389e8558c037e",
+					"name": "Authorization",
+					"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmEwMDVkNGJkNjQ3ZjA3OTg1Y2NmNmUiLCJpYXQiOjE1MzcyMTM5MzZ9.aAh-yhIaW9vy_AYwrrMSFGLYYbMc_iDG9Lh3E2w1hLc"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1537212200674,
+			"method": "GET",
+			"modified": 1537299276380,
+			"name": "article",
+			"parameters": [
+				{
+					"id": "pair_5a51e7f65a1b45fc907fec594db76bda",
+					"name": "key",
+					"value": "78942ef2c1c98bf10fca09c808d718fa3734703e"
+				},
+				{
+					"disabled": true,
+					"id": "pair_8ecb6301bf544b97ba1ea1859e266778",
+					"name": "titre",
+					"value": "titre_10"
+				}
+			],
+			"parentId": "fld_d11d2af7d8a44bfc8c01cb20ea3f6bb6",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ base_url  }}/article",
+			"_type": "request"
+		},
+		{
+			"_id": "req_ae9e388c73314590ba1ca0bc82e6d1d5",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n    \"titre\": \"pasteque\",\n    \"lien\": \"http://patesque.comi\",\n\t\t\"themes\": [\"dffdsfs\"]\n}"
+			},
+			"created": 1537092693420,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_dfba732cf7874be4b38add91137c2e39",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1537212200624,
+			"method": "POST",
+			"modified": 1537299261502,
+			"name": "article",
+			"parameters": [],
+			"parentId": "fld_d11d2af7d8a44bfc8c01cb20ea3f6bb6",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ base_url  }}/article",
+			"_type": "request"
+		},
+		{
+			"_id": "req_3d73bc2398bf4bf59adb279a3bb3e94a",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n    \"titre\": \"pasteque\",\n    \"lien\": \"UPDATE\",\n\t\t\"themes\": [\"pedagogie\"]\n}"
+			},
+			"created": 1537109744187,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_dfba732cf7874be4b38add91137c2e39",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1537212200524,
+			"method": "PUT",
+			"modified": 1537212217140,
+			"name": "article/articleId",
+			"parameters": [],
+			"parentId": "fld_d11d2af7d8a44bfc8c01cb20ea3f6bb6",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ base_url  }}/article/5b9ff8518330b31c806edfcc",
+			"_type": "request"
+		},
+		{
+			"_id": "req_f773242049f5467b85b0cfb215bfb2bd",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": ""
+			},
+			"created": 1537181979313,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_dfba732cf7874be4b38add91137c2e39",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1537212200574,
+			"method": "GET",
+			"modified": 1537212215209,
+			"name": "article/articleId",
+			"parameters": [],
+			"parentId": "fld_d11d2af7d8a44bfc8c01cb20ea3f6bb6",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ base_url  }}/article/5b9e69028ac2a82a7832686e",
+			"_type": "request"
+		},
+		{
+			"_id": "req_3999199b75b24bcb8877580b6552bb7c",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": ""
+			},
+			"created": 1537182246679,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_dfba732cf7874be4b38add91137c2e39",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1537212200474,
+			"method": "DELETE",
+			"modified": 1537212220442,
+			"name": "article/articleId",
+			"parameters": [],
+			"parentId": "fld_d11d2af7d8a44bfc8c01cb20ea3f6bb6",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "{{ base_url  }}/article/5b9ff8518330b31c806edfcc",
+			"_type": "request"
+		}
+	]
+}

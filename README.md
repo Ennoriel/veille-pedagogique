@@ -1,7 +1,3 @@
-# veille-pedago
-
-=======
-
 # Projet sans nom
 
 > Make knowledge valuable.
@@ -48,5 +44,10 @@ All rights reserved
 * [Axios Typescript](https://github.com/axios/axios/blob/master/test/typescript/axios.ts)
 * [Statefull Component Typescript](https://levelup.gitconnected.com/ultimate-react-component-patterns-with-typescript-2-8-82990c516935)
 * [Redux](https://medium.com/coding-artist/practical-redux-chapter-1-core-concepts-f5a53f74505c)
+<<<<<<< HEAD
 * [Redux - 2](https://medium.freecodecamp.org/understanding-redux-the-worlds-easiest-guide-to-beginning-redux-c695f45546f6)
 
+=======
+* [Redux - 2](https://medium.freecodecamp.org/understanding-redux-the-worlds-easiest-guide-to-beginning-redux-c695f45546f6)# Veille Pédago
+
+Projet en cours de développement. Partie client.
