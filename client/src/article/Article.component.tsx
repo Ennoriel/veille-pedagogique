@@ -60,7 +60,6 @@ export default class Article extends React.Component<Props> {
                             <Typography>
                                 sur {article.siteInternet}
                             </Typography>
-                            {/* <div  */}
                             {article.auteur.map((auteurId, index) => 
                                 <div key={index} className={index === 0 ? "icone-droite" : ""}>
                                     <Tooltip title="Accès à la page auteur" placement="top">
@@ -73,7 +72,6 @@ export default class Article extends React.Component<Props> {
                                     </Typography>
                                 </div>
                             )}
-                            {/* </div> */}
                         </CardActions>
                     </Card>
                 )}
