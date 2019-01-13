@@ -134,11 +134,11 @@ export class UserController{
     public authenticate = (req: Request, res: Response) => {           
         UserModel.findOne({ username: req.body.username }, (err: MongoError, user: User) => {
             if(err){
-                res.send({ message : "Unable to authenticate user"});
+                res.status(400).send({ message : "Unable to authenticate you with the username and password provided."});
                 return;
             }
             if(user == null || !bcrypt.compareSync(req.body.password, user.password)) {
-                res.send({ message : "Unable to authenticate user"});
+                res.status(400).send({ message : "Unable to authenticate you with the username and password provided."});
                 return;
             }
             

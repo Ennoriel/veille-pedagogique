@@ -10,6 +10,7 @@ import { saveUserData } from 'src/redux.services/action/user.action';
 import { Redirect } from 'react-router';
 import { UserService } from '../User.service';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
+import ErrorDialog from 'src/shared/ErrorDialog.component';
 
 export interface Props {
 }
@@ -18,6 +19,7 @@ interface State {
     user: User,
     error: User,
     redirectToHello: boolean
+    messageErreur: string
 }
 
 const ERREUR = 'o';
@@ -48,7 +50,8 @@ export default class Login extends React.Component<Props> {
         this.state = {
             user : new User(),
             error: new User(),
-            redirectToHello: userService.isAuthenticated()
+            redirectToHello: userService.isAuthenticated(),
+            messageErreur: ""
         };
     }
 
@@ -99,8 +102,8 @@ export default class Login extends React.Component<Props> {
                 store.dispatch(saveUserData(value.data, value.headers.authorization));
                 store.dispatch(saveActiveRoute({path: '/hello', label: "Hello"}));
                 this.setState({"redirectToHello": true})
-            }, reason => {
-                // TODO gestion de l'erreur
+            }).catch(error => {
+                this.setState({"messageErreur": error.response.data.message});
             });
         }
     }
@@ -183,6 +186,10 @@ export default class Login extends React.Component<Props> {
                         </Grid>
                     </Grid>
                 </Grid>
+                <ErrorDialog
+                    onClose={() => this.setState({"messageErreur": ""})}
+                    message={this.state.messageErreur}
+                />
             </div>
         );
     }
