@@ -1,4 +1,3 @@
-import * as mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import { ArticleModel } from './article.types'
 
@@ -22,13 +21,6 @@ export class ArticleController{
             }
             res.json(article);
         });
-        // ArticleModel.findByTitle(req.query.titre, (err, article) => {
-        //     console.log(article);
-        //     if(err){
-        //         res.send(err);
-        //     }
-        //     res.json(article);
-        // });
     }
 
     public getArticleWithID (req: Request, res: Response) {
@@ -42,8 +34,6 @@ export class ArticleController{
     }
 
     public updateArticle (req: Request, res: Response) {
-        console.log(req.params._id);
-        console.log(req.body.lien);
         ArticleModel.findOneAndUpdate({ _id: req.params._id }, req.body, { new: true }, (err, article) => {
             if(err){
                 res.send(err);

@@ -17,17 +17,7 @@ export class Routes {
         
         // Article
         app.route('/article')
-        .get((req: Request, res: Response, next: NextFunction) => {
-            // middleware
-            console.log(`Request from: ${req.originalUrl}`);
-            console.log(`Request type: ${req.method}`);
-            console.log(`Request query: ${req.query}`);
-            if(req.query.key !== '78942ef2c1c98bf10fca09c808d718fa3734703e'){
-                res.status(401).send('You shall not pass!');
-            } else {
-                next();
-            }                        
-        }, this.articleController.getArticles)        
+        .get(this.articleController.getArticles)        
 
         // POST endpoint
         .post(this.articleController.addNewArticle);

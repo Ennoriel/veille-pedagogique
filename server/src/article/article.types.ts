@@ -3,14 +3,16 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var articleSchema = new Schema({
-    titre: String,
-    lien: {type: String, trim: true},
+    title: String,
+    url: {type: String, trim: true},
+    language: {type: String, unique: true, enum:['fr']},
+    medium: {type: String, unique: true, enum:['video', 'article presse', 'article blog']},
+    description: String,
+    siteInternet: String,
     themes: [{type: String, unique: true, enum:['pedagogie']}],
-    dateEnregistrement: {type: Date, default: new Date()}
+    auteur: [{type: Number}],
+    tweetId: [{type: Number}],
+    createdAt: {type: Date, default: new Date()}
 });
-
-articleSchema.query.byTitre = function(titre: string) {
-    return this.where({ titre: new RegExp(titre, 'i') });
-};
 
 export var ArticleModel = mongoose.model('Article', articleSchema);
