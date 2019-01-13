@@ -7,9 +7,10 @@ export interface ArticleItem {
     url: string,
     language: string,
     medium: string,
-    date: Date,
+    createdAt: Date,
     description: string,
     themes: Array<string>
     siteInternet: string,
-    auteur: number
+    auteur: Array<number>,
+    tweetId?: Array<number>
 }
