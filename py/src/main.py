@@ -24,15 +24,19 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 
-def print_first_tweet(tweet):
-	print(tweet.full_text)
-	print(str(tweet))
+def bulk_replace(text, tab):
+	if not tab:
+		return text
+	else:
+		rep = dict((re.escape(k), v) for k, v in tab.items())
+		pattern = re.compile("|".join(rep.keys()))
+		return pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
 
 
 def get_tweet_model(tweet):
 	return {
 		"id": tweet._json["id"],
-		"text": tweet.full_text,
+		"text": bulk_replace(tweet.full_text, {url["url"]: url["expanded_url"] for url in tweet.entities["urls"]}),
 		"created_at": tweet._json["created_at"],
 		"user": {
 			"id": tweet.author._json["id"],
@@ -50,7 +54,9 @@ def get_article_models(tweet):
 
 	for url in tweet.entities["urls"]:
 
-		if articlemongo.exists(url["expanded_url"]):
+		unshorten_url = url_utils.unshorten(url["expanded_url"])
+
+		if articlemongo.exists(unshorten_url):
 			# TODO feature : dans ce cas, il faut lier l'article existant au tweet
 			continue
 
@@ -62,15 +68,15 @@ def get_article_models(tweet):
 
 		article = {
 			"title": "",
-			"url": url_utils.unshorten(url["expanded_url"]),
+			"url": unshorten_url,
 			"language": tweet.lang,
 			"medium": "",
 			"createdAt": "",
 			"description": "",
 			"themes": [hashtag["text"] for hashtag in tweet.entities["hashtags"]],
-			"siteInternet": re.findall("\\w+\.[\\w\.]+", url["expanded_url"])[0],
-			"auteur": tweet.author._json["id"],
-			"tweetId": tweet._json["id"]
+			"siteInternet": re.findall("[\\w-]+\.[\\w\.-]+", unshorten_url)[0],
+			"auteur": [],
+			"tweetId": [tweet._json["id"]]
 		}
 
 		articles.append(article)
@@ -79,7 +85,7 @@ def get_article_models(tweet):
 
 
 def main():
-	pedagogy_tweets = api.search(q='#pedagogie', result_type='recent', tweet_mode='extended', lang='fr', count=100)
+	pedagogy_tweets = api.search(q='#pedagogie', result_type='recent', tweet_mode='extended', lang='fr', count=5)
 
 	nb_tweet_enregistre = 0
 	nbarticle_enregistre = 0
