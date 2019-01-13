@@ -28,7 +28,7 @@ export default class Article extends React.Component<Props> {
                     <Card key={index} className="card">
                         <CardHeader
                             title={article.title}
-                            subheader={article.date.toDateString()}
+                            subheader={article.createdAt.toDateString()}
                         />
                         <Divider />
                         <CardContent>
@@ -60,14 +60,20 @@ export default class Article extends React.Component<Props> {
                             <Typography>
                                 sur {article.siteInternet}
                             </Typography>
-                            <Tooltip title="Accès à la page auteur" placement="top">
-                                <IconButton className="icone-droite">
-                                    <CreateIcon />
-                                </IconButton>
-                            </Tooltip>
-                                <Typography>
-                                    par {this.auteurs[article.auteur].nom}
-                                </Typography>
+                            {/* <div  */}
+                            {article.auteur.map((auteurId, index) => 
+                                <div key={index} className={index === 0 ? "icone-droite" : ""}>
+                                    <Tooltip title="Accès à la page auteur" placement="top">
+                                        <IconButton>
+                                            <CreateIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Typography className="inline-flex">
+                                        par {this.auteurs[auteurId].nom}
+                                    </Typography>
+                                </div>
+                            )}
+                            {/* </div> */}
                         </CardActions>
                     </Card>
                 )}
