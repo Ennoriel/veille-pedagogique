@@ -1,8 +1,8 @@
 # List of installed dependencies:
-#	sudo apt-get install python3-dev
-# 	pip install tweepy
-# 	pip install pymongo
-# 	pip install twisted
+#    sudo apt-get install python3-dev
+# 	 pip install tweepy
+# 	 pip install pymongo
+# 	 pip install twisted
 
 import tweepy
 import tweetmongo
@@ -10,6 +10,7 @@ import articlemongo
 import re
 from twisted.internet import task, reactor
 import datetime
+import url_utils
 
 
 consumer_key = "AXuCZQkAfoThsLg0Jp7I0UNJ5"
@@ -28,7 +29,7 @@ def print_first_tweet(tweet):
 	print(str(tweet))
 
 
-def getModel(tweet):
+def get_tweet_model(tweet):
 	return {
 		"id": tweet._json["id"],
 		"text": tweet.full_text,
@@ -53,18 +54,21 @@ def get_article_models(tweet):
 			# TODO feature : dans ce cas, il faut lier l'article existant au tweet
 			continue
 
-		if re.search("^https://twitter.com/\w+/status/\d+$", url["expanded_url"]):
+		if re.search("^https://twitter.com/\\w+/status/\\d+$", url["expanded_url"]):
 			continue
+
+		# TODO feature : si l'url est un site, ne pas l'enregistrer en tant qu'article
+		# la regex (?<!\/)\/(?!\/) permet de trouver le premier caractère après la fin de l'url du site
 
 		article = {
 			"title": "",
-			"url": url["expanded_url"],
+			"url": url_utils.unshorten(url["expanded_url"]),
 			"language": tweet.lang,
 			"medium": "",
 			"createdAt": "",
 			"description": "",
 			"themes": [hashtag["text"] for hashtag in tweet.entities["hashtags"]],
-			"siteInternet": re.findall("\w+\.[\w\.]+", url["expanded_url"])[0],
+			"siteInternet": re.findall("\\w+\.[\\w\.]+", url["expanded_url"])[0],
 			"auteur": tweet.author._json["id"],
 			"tweetId": tweet._json["id"]
 		}
@@ -75,44 +79,40 @@ def get_article_models(tweet):
 
 
 def main():
-	pedagogy_tweets = api.search(q='#pedagogie', result_type='recent', tweet_mode='extended', lang='fr', count=5)
+	pedagogy_tweets = api.search(q='#pedagogie', result_type='recent', tweet_mode='extended', lang='fr', count=100)
 
-	nbTweetEnregistre = 0
-	nbArticleEnregistre = 0
+	nb_tweet_enregistre = 0
+	nbarticle_enregistre = 0
 
 	for index, tweet in enumerate(pedagogy_tweets):
 		# print_first_tweet(tweet)
 
 		if not tweetmongo.exists(tweet._json["id"]):
 
-			tweetModel = getModel(tweet)
-			tweetmongo.saves(tweetModel)
-			articleModels = get_article_models(tweet)
+			tweet_model = get_tweet_model(tweet)
+			tweetmongo.saves(tweet_model)
+			article_models = get_article_models(tweet)
 
-			if len(articleModels) > 0:
-				articlemongo.saves(articleModels)
+			if len(article_models) > 0:
+				articlemongo.saves(article_models)
 
-			nbTweetEnregistre = nbTweetEnregistre + 1
-			nbArticleEnregistre = nbArticleEnregistre + len(articleModels)
+			nb_tweet_enregistre = nb_tweet_enregistre + 1
+			nbarticle_enregistre = nbarticle_enregistre + len(article_models)
 
-	print(str(nbTweetEnregistre) + " tweets enregistrés.")
-	print(str(nbArticleEnregistre) + " articles enregistrés.")
-
-
-
-
+	print(str(nb_tweet_enregistre) + " tweets enregistrés.")
+	print(str(nbarticle_enregistre) + " articles enregistrés.")
 
 
 timeout = 300.0
 
 
-def doWork():
+def do_work():
 	print("\n\n")
 	print(datetime.datetime.now())
 	main()
 
 
-loop = task.LoopingCall(doWork)
+loop = task.LoopingCall(do_work)
 loop.start(timeout)
 
 reactor.run()
