@@ -17,10 +17,10 @@ const styles = (theme : any) => ({
     },
     contentShift: {
         transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
         }),
-            marginLeft: drawerWidth,
+        marginLeft: drawerWidth,
     },
     drawerHeader: {
         display: 'flex',
