@@ -10,6 +10,7 @@ import MenuBar from './menuBar.component';
 import MenuDrawer from './menuDrawer.component';
 import MainFrame from './mainFrame.component';
 import { MenuRoute } from './menu.types';
+import { logout } from 'src/redux.services/action/user.action';
 
 const styles = (theme : any) => ({
     root: {
@@ -39,6 +40,12 @@ class App extends React.Component<Props> {
         store.dispatch(saveActiveRoute(route));
         this.handleDrawerClose();
     }
+
+    handleLogout(): void {
+        store.dispatch(logout());
+        store.dispatch(saveActiveRoute({path: '/hello', label: "Hello"}));
+        this.handleDrawerClose();
+    }
     
     render() {
         const { classes } = this.props;
@@ -57,6 +64,7 @@ class App extends React.Component<Props> {
                             open={open}
                             handleDrawerClose={this.handleDrawerClose}
                             handleRouteChange={this.handleRouteChange}
+                            handleLogout={this.handleLogout}
                         />
                         <MainFrame open={open}/>
                     </div>

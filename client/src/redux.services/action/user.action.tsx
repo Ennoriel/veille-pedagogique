@@ -7,6 +7,10 @@ export interface SaveUserData {
     payload: constants.UserState
 }
 
+export interface LogoutData {
+    type: constants.LOGOUT
+}
+
 export function saveUserData(user: constants.User, token: string): SaveUserData {
 
     const decipheredToken = jwt.decode(token);
@@ -18,5 +22,12 @@ export function saveUserData(user: constants.User, token: string): SaveUserData 
             user,
             token
         }
+    }
+}
+
+export function logout(): LogoutData {
+
+    return {
+        type: constants.LOGOUT,
     }
 }

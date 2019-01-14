@@ -24,6 +24,9 @@ export class User {
 export const SAVE_USER_DATA = 'SAVE_USER_DATA';
 export type SAVE_USER_DATA = typeof SAVE_USER_DATA;
 
+export const LOGOUT = 'LOGOUT';
+export type LOGOUT = typeof LOGOUT;
+
 export interface UserState {
     user: User,
     token: string
