@@ -1,6 +1,6 @@
 export interface MenuRoute {
     path: string,
     label: string,
-    component?: new (props: any) => React.Component
+    component?: any
     icon?: any
 }

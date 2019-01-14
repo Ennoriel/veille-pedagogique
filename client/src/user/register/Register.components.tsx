@@ -1,18 +1,32 @@
 
 import * as React from 'react';
 
-import TextField from '@material-ui/core/TextField';
 import { User, EMAIL_REGEXP } from '../User.types';
-import { Grid, Button } from '@material-ui/core';
+import { Grid, Button, TextField, withStyles } from '@material-ui/core';
 import { UserRepositoryService } from '../User.repositoryService';
 
-import './Register.style.css';
 import store from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import { Redirect } from 'react-router';
 
+const styles = (theme : any) => ({
+    root: {
+      flexGrow: 1,
+    },
+    buttonWidth: {
+        width: '175px'
+    },
+    gridInput: {
+        padding: "0 8px"
+    },
+    gridButton: {
+        padding: "16px"
+    }
+});
+
 export interface Props {
+    classes?: any;
 }
 
 interface State {
@@ -30,7 +44,7 @@ let userRepositoryService: UserRepositoryService;
 /**
  * Composant permettant à un utilisateur de s'enregistrer
  */
-export default class Register extends React.Component<Props> {
+class Register extends React.Component<Props> {
     
     constructor (props: Props) {
         super (props);
@@ -162,14 +176,16 @@ export default class Register extends React.Component<Props> {
     }
 
     render() {
+        const { classes } = this.props;
+
         if (this.state.redirectToHello) return <Redirect to="/hello"/>
         
         return (
-            <div>
+            <div className={classes.root}>
                 <Grid container justify='center'>
                     <Grid item xs={10} lg={8}>
                         <Grid container justify='center'>
-                            <Grid item xs={12} className='grid-input'>
+                            <Grid item xs={12} className={classes.gridInput}>
                                 <TextField
                                     id="username"
                                     label="Username"
@@ -184,7 +200,7 @@ export default class Register extends React.Component<Props> {
                                     variant="outlined"
                                 />
                             </Grid>
-                            <Grid item xs={12} lg={6} className='grid-input'>
+                            <Grid item xs={12} lg={6} className={classes.gridInput}>
                                 <TextField
                                     id="firstname"
                                     label="Firstname"
@@ -198,7 +214,7 @@ export default class Register extends React.Component<Props> {
                                     variant="outlined"
                                 />
                             </Grid>
-                            <Grid item xs={12} lg={6} className='grid-input'>
+                            <Grid item xs={12} lg={6} className={classes.gridInput}>
                                 <TextField
                                     id="lastname"
                                     label="Lastname"
@@ -212,7 +228,7 @@ export default class Register extends React.Component<Props> {
                                     variant="outlined"
                                 />
                             </Grid>
-                            <Grid item xs={12} className='grid-input'>
+                            <Grid item xs={12} className={classes.gridInput}>
                                 <TextField
                                     id="email"
                                     label="Email"
@@ -226,7 +242,7 @@ export default class Register extends React.Component<Props> {
                                     variant="outlined"
                                 />
                             </Grid>
-                            <Grid item xs={12} lg={6} className='grid-input'>
+                            <Grid item xs={12} lg={6} className={classes.gridInput}>
                                 <TextField
                                     id="password"
                                     type="password"
@@ -242,7 +258,7 @@ export default class Register extends React.Component<Props> {
                                     variant="outlined"
                                 />
                             </Grid>
-                            <Grid item xs={12} lg={6} className='grid-input'>
+                            <Grid item xs={12} lg={6} className={classes.gridInput}>
                                 <TextField
                                     id="passwordBis"
                                     type="password"
@@ -258,21 +274,23 @@ export default class Register extends React.Component<Props> {
                                     variant="outlined"
                                 />
                             </Grid>
-                            <Grid item className='grid-button'>
+                            <Grid item className={classes.gridButton}>
                                 <Button
                                     onClick={this.handleRegisterClick}
                                     variant="outlined" 
                                     size="large" 
-                                    color="primary">
+                                    color="primary"
+                                    className={classes.buttonWidth}>
                                         register
                                 </Button>
                             </Grid>
-                            <Grid item className='grid-button'>
+                            <Grid item className={classes.gridButton}>
                                 <Button
                                     onClick={this.handleResetClick}
                                     variant="outlined" 
                                     size="large" 
-                                    color="primary">
+                                    color="primary"
+                                    className={classes.buttonWidth}>
                                         empty fields
                                 </Button>
                             </Grid>
@@ -283,3 +301,5 @@ export default class Register extends React.Component<Props> {
         );
     }
 }
+
+export default withStyles(styles, { withTheme: true })(Register);

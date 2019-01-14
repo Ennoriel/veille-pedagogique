@@ -1,9 +1,8 @@
 
 import * as React from 'react';
 
-import TextField from '@material-ui/core/TextField';
 import { User } from '../User.types';
-import { Grid, Button } from '@material-ui/core';
+import { Button, Grid, TextField, withStyles } from '@material-ui/core';
 import { UserRepositoryService } from '../User.repositoryService';
 import store from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
@@ -12,7 +11,23 @@ import { UserService } from '../User.service';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import ErrorDialog from 'src/shared/ErrorDialog.component';
 
+const styles = (theme : any) => ({
+    root: {
+      flexGrow: 1,
+    },
+    buttonWidth: {
+        width: '175px'
+    },
+    gridInput: {
+        padding: "0 8px"
+    },
+    gridButton: {
+        padding: "16px"
+    }
+});
+
 export interface Props {
+    classes?: any;
 }
 
 interface State {
@@ -31,7 +46,7 @@ let userService: UserService;
 /**
  * Composant permettant à un utilisateur de se connecter
  */
-export default class Login extends React.Component<Props> {
+class Login extends React.Component<Props> {
     
     constructor (props: Props) {
         super (props);
@@ -132,58 +147,66 @@ export default class Login extends React.Component<Props> {
     }
 
     render() {
+        const { classes } = this.props;
+
         if (this.state.redirectToHello) return <Redirect to="/hello"/>
 
         return (
-            <div>
+            <div className={classes.root}>
                 <Grid container justify='center'>
-                    <Grid item xs={8}>
-                        <TextField
-                            id="username"
-                            label="Username"
-                            name="username"
-                            value={this.state.user.username}
-                            onChange={this.handleInputChange}
-                            required
-                            error={this.state.error.username.length > 0}
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="password"
-                            type="password"
-                            label="Password"
-                            name="password"
-                            error={this.state.error.password.length > 0}
-                            value={this.state.user.password}
-                            onChange={this.handleInputChange}
-                            required
-                            helperText="Just a reminder that we forced you to chose a 12 characters password ;)"
-                            fullWidth
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <Grid container spacing={16} justify='center'>
-                            <Grid item>
+                    <Grid item xs={10} lg={8}>
+                        <Grid container justify='center'>
+                            <Grid item xs={12} className={classes.gridInput}>
+                                <TextField
+                                        id="username"
+                                        label="Username"
+                                        name="username"
+                                        value={this.state.user.username}
+                                        onChange={this.handleInputChange}
+                                        required
+                                        error={this.state.error.username.length > 0}
+                                        fullWidth
+                                        margin="normal"
+                                        variant="outlined"
+                                    />
+                            </Grid>
+                            <Grid item xs={12} className={classes.gridInput}>
+                                <TextField
+                                    id="password"
+                                    type="password"
+                                    label="Password"
+                                    name="password"
+                                    error={this.state.error.password.length > 0}
+                                    value={this.state.user.password}
+                                    onChange={this.handleInputChange}
+                                    required
+                                    helperText="Just a reminder that we forced you to chose a 12 characters password ;)"
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid item className={classes.gridButton}>
                                 <Button
                                     onClick={this.handleLoginClick}
                                     variant="outlined" 
                                     size="large" 
-                                    color="primary">
+                                    color="primary"
+                                    className={classes.buttonWidth}>
                                         login
                                 </Button>
                             </Grid>
-                            <Grid item>
+                            <Grid item className={classes.gridButton}>
                                 <Button
                                     onClick={this.handleResetClick}
                                     variant="outlined" 
                                     size="large" 
-                                    color="primary">
+                                    color="primary"
+                                    className={classes.buttonWidth}>
                                         empty fields
                                 </Button>
                             </Grid>
-                        </Grid>
+                        </Grid> 
                     </Grid>
                 </Grid>
                 <ErrorDialog
@@ -194,3 +217,5 @@ export default class Login extends React.Component<Props> {
         );
     }
 }
+
+export default withStyles(styles, { withTheme: true })(Login);
