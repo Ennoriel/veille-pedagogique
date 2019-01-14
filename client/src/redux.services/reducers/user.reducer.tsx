@@ -1,4 +1,4 @@
-import { SAVE_USER_DATA, UserRight } from "src/user/User.types";
+import { SAVE_USER_DATA, UserRight, LOGOUT } from "src/user/User.types";
 
 const defaultUser = {
     userRight: UserRight.NOT_AUTH
@@ -13,6 +13,9 @@ export default (state = defaultUser, action: any) => {
                 token: action.payload.token,
                 userRight: action.payload.token === undefined ? UserRight.NOT_AUTH : UserRight.BEARER
             };
+            break;
+        case LOGOUT:
+            return defaultUser;
     }
     return state;
 }

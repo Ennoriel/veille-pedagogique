@@ -43,6 +43,7 @@ interface Props {
     open: boolean;
     handleDrawerClose: () => void;
     handleRouteChange: (route: MenuRoute) => void;
+    handleLogout: () => void;
     classes: any;
     theme: any;
 }
@@ -81,8 +82,9 @@ class MenuDrawer extends React.Component<Props> {
                 </div>
                 <Divider />
                 <List className={classes.routeList}>
-                    {routes.filter(route => route.userRights.some(routeRight => routeRight === userRight))
-                           .map((route, index) => (
+                    {routes.filter(route => route.userRights
+                            .some(routeRight => routeRight === userRight))
+                            .map((route, index) => (
                         <Route
                             path={route.path}
                             key={index}
@@ -101,11 +103,21 @@ class MenuDrawer extends React.Component<Props> {
                     ))}
                     {
                         userRight === UserRight.BEARER ?
-                            <ListItem button className={classes.logout}>
-                                <ListItemIcon><MailIcon/></ListItemIcon>
-                                <ListItemText primary="Logout" />
-                            </ListItem>
-                            : ""
+                        <Route
+                            path="/hello"
+                            children={({ match }) => (
+                                <Link
+                                    to="/hello"
+                                    onClick={() => this.props.handleLogout()}
+                                >
+                                    <ListItem button className={classes.logout}>
+                                        <ListItemIcon><MailIcon/></ListItemIcon>
+                                        <ListItemText primary="Logout" />
+                                    </ListItem>
+                                </Link>
+                            )}
+                        />
+                        : ""
                     }
                 </List>
             </Drawer>
