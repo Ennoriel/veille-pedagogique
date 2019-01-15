@@ -127,8 +127,8 @@ class Register extends React.Component<Props> {
                 store.dispatch(saveUserData(value.data, value.headers.authorization));
                 store.dispatch(saveActiveRoute({path: '/hello', label: "Hello"}));
                 this.setState({"redirectToHello": true})
-            }, reason => {
-                // TODO gestion de l'erreur
+            }).catch(error => {
+                this.setState({"messageErreur": error.response.data.message});
             });
         }
     }
@@ -171,7 +171,8 @@ class Register extends React.Component<Props> {
     handleResetClick () {
         this.setState({
             user : new User(),
-            error: new User()
+            error: new User(),
+            usernameHelperText: ''
         });
     }
 
