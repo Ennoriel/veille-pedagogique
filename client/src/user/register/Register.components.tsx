@@ -9,6 +9,7 @@ import store from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import { Redirect } from 'react-router';
+import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
 
 const styles = (theme : any) => ({
     root: {
@@ -33,7 +34,7 @@ interface State {
     user: User,
     error: User,
     usernameHelperText: string,
-    redirectToHello: boolean
+    redirectToHome: boolean
 }
 
 const ERREUR = 'o';
@@ -64,7 +65,7 @@ class Register extends React.Component<Props> {
         user : new User(),
         error: new User(),
         usernameHelperText: '',
-        redirectToHello: false
+        redirectToHome: false
     };
   
     /**
@@ -125,8 +126,8 @@ class Register extends React.Component<Props> {
                 this.isPasswordBisOk(this.state.user.password, this.state.user.passwordBis)) {
             userRepositoryService.register(this.state.user).then(value => {
                 store.dispatch(saveUserData(value.data, value.headers.authorization));
-                store.dispatch(saveActiveRoute({path: '/hello', label: "Hello"}));
-                this.setState({"redirectToHello": true})
+                store.dispatch(saveActiveRoute(DEFAULT_ROUTE));
+                this.setState({"redirectToHome": true})
             }, reason => {
                 // TODO gestion de l'erreur
             });
@@ -178,7 +179,7 @@ class Register extends React.Component<Props> {
     render() {
         const { classes } = this.props;
 
-        if (this.state.redirectToHello) return <Redirect to="/hello"/>
+        if (this.state.redirectToHome) return <Redirect to={DEFAULT_ROUTE.path}/>
         
         return (
             <div className={classes.root}>

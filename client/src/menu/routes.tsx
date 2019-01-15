@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Hello from '../hello/Hello.component';
+import Home from '../home/Home.component';
 import Register from '../user/register/Register.components';
 import Login from '../user/login/Login.component';
 import Article from '../article/Article.component';
@@ -11,13 +11,13 @@ import { UserRight } from 'src/user/User.types';
 
 export const routes = [
     {
-        path: '/hello',
-        label: 'Hello',
+        path: '/home',
+        label: 'Home',
         userRights: [
             UserRight.NOT_AUTH,
             UserRight.BEARER
         ],
-        component: Hello,
+        component: Home,
         icon: <InboxIcon/>
     },
     {

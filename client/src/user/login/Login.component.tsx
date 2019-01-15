@@ -10,6 +10,7 @@ import { Redirect } from 'react-router';
 import { UserService } from '../User.service';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import ErrorDialog from 'src/shared/ErrorDialog.component';
+import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
 
 const styles = (theme : any) => ({
     root: {
@@ -33,7 +34,7 @@ export interface Props {
 interface State {
     user: User,
     error: User,
-    redirectToHello: boolean
+    redirectToHome: boolean
     messageErreur: string
 }
 
@@ -65,7 +66,7 @@ class Login extends React.Component<Props> {
         this.state = {
             user : new User(),
             error: new User(),
-            redirectToHello: userService.isAuthenticated(),
+            redirectToHome: userService.isAuthenticated(),
             messageErreur: ""
         };
     }
@@ -115,8 +116,8 @@ class Login extends React.Component<Props> {
                 this.isPasswordOk(this.state.user.password)) {
             userRepositoryService.authenticate(this.state.user).then(value => {
                 store.dispatch(saveUserData(value.data, value.headers.authorization));
-                store.dispatch(saveActiveRoute({path: '/hello', label: "Hello"}));
-                this.setState({"redirectToHello": true})
+                store.dispatch(saveActiveRoute(DEFAULT_ROUTE));
+                this.setState({"redirectToHome": true})
             }).catch(error => {
                 this.setState({"messageErreur": error.response.data.message});
             });
@@ -149,7 +150,7 @@ class Login extends React.Component<Props> {
     render() {
         const { classes } = this.props;
 
-        if (this.state.redirectToHello) return <Redirect to="/hello"/>
+        if (this.state.redirectToHome) return <Redirect to={DEFAULT_ROUTE.path}/>
 
         return (
             <div className={classes.root}>
