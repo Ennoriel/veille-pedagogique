@@ -11,6 +11,7 @@ import { UserService } from 'src/user/User.service';
 
 import MailIcon from '@material-ui/icons/Mail';
 import { UserRight } from 'src/user/User.types';
+import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
 
 const drawerWidth = 240;
 
@@ -104,10 +105,10 @@ class MenuDrawer extends React.Component<Props> {
                     {
                         userRight === UserRight.BEARER ?
                         <Route
-                            path="/hello"
+                            path={DEFAULT_ROUTE.path}
                             children={({ match }) => (
                                 <Link
-                                    to="/hello"
+                                    to={DEFAULT_ROUTE.path}
                                     onClick={() => this.props.handleLogout()}
                                 >
                                     <ListItem button className={classes.logout}>

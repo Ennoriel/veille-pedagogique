@@ -7,7 +7,7 @@ export interface SaveUserData {
     payload: constants.UserState
 }
 
-export interface LogoutData {
+export interface Logout {
     type: constants.LOGOUT
 }
 
@@ -25,7 +25,7 @@ export function saveUserData(user: constants.User, token: string): SaveUserData 
     }
 }
 
-export function logout(): LogoutData {
+export function logout(): Logout {
 
     return {
         type: constants.LOGOUT,
