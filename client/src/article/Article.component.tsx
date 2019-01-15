@@ -2,10 +2,19 @@ import * as React from 'react';
 
 import store from 'src/redux.services/index.store';
 
-import './Article.component.css';
+import * as _ from "lodash"
+import {
+    CardHeader,
+    Card,
+    CardContent,
+    Typography,
+    Chip,
+    CardActions,
+    IconButton,
+    Divider,
+    Tooltip,
+    withStyles } from '@material-ui/core';
 
-import * as _ from "lodash";
-import { CardHeader, Card, CardContent, Typography, Chip, CardActions, IconButton, Divider, Tooltip, withStyles } from '@material-ui/core';
 import { ArticleItem } from 'src/redux.services/constants/article.types';
 
 import VideoCamIcon from '@material-ui/icons/Videocam';
