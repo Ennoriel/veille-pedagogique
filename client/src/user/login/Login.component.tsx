@@ -11,6 +11,7 @@ import { UserService } from '../User.service';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import ErrorDialog from 'src/shared/ErrorDialog.component';
 import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
+import { WithStyleComponent } from 'src/shared/standard.types';
 
 const styles = (theme : any) => ({
     root: {
@@ -219,4 +220,4 @@ class Login extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(Login);
+export default withStyles(styles, { withTheme: true })(Login) as WithStyleComponent;

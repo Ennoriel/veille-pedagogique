@@ -1,8 +1,12 @@
 import * as React from 'react';
 import { withStyles } from '@material-ui/core';
-import { Route } from 'react-router';
+import { Route, Redirect, RouteProps } from 'react-router';
 import { routes } from './routes';
 import classNames from 'classnames';
+import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
+import store from 'src/redux.services/index.store';
+import { UserRight } from 'src/user/User.types';
+import { WithStyleComponent } from 'src/shared/standard.types';
 
 const drawerWidth = 240;
 
@@ -52,14 +56,48 @@ class MainFrame extends React.Component<Props> {
             >
                 <div className={classes.drawerHeader} />
                 {routes.map((route, i) =>
-                    <Route
+                    <CustomRoute
+                        component={route.component}
+                        privilege={route.userRights}
                         key={i}
                         exact path={route.path}
-                        component={route.component}
                     />
                 )}
             </main>
         );
+    }
+}
+
+interface CustomRouteProps {
+    component: WithStyleComponent,
+    privilege: Array<UserRight>
+}
+
+class CustomRoute extends React.Component<CustomRouteProps & RouteProps> {
+
+    isAuthenticated(routePrivilege: Array<UserRight>) {
+        return routePrivilege.includes(store.getState().user.userRight);
+    }
+
+    render() {
+       const {component: Component, privilege, ...rest} = this.props;
+
+       const renderRoute = (props: any) => {
+           console.log(this.isAuthenticated(privilege))
+           if (this.isAuthenticated(privilege)) {
+              return (
+                  <Component {...props} />
+              );
+           }
+
+           return (
+               <Redirect to={DEFAULT_ROUTE.path} />
+           );
+       }
+
+       return (
+           <Route {...rest} render={renderRoute}/>
+       );
     }
 }
 

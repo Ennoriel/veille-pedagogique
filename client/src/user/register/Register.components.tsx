@@ -10,6 +10,7 @@ import { saveUserData } from 'src/redux.services/action/user.action';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import { Redirect } from 'react-router';
 import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
+import { WithStyleComponent } from 'src/shared/standard.types';
 
 const styles = (theme : any) => ({
     root: {
@@ -42,10 +43,12 @@ const OK = '';
 
 let userRepositoryService: UserRepositoryService;
 
+type ClassNames = { classes?: { [className in keyof typeof styles]: string } };
+
 /**
  * Composant permettant à un utilisateur de s'enregistrer
  */
-class Register extends React.Component<Props> {
+class Register extends React.Component<Props & ClassNames> {
     
     constructor (props: Props) {
         super (props);
@@ -304,4 +307,4 @@ class Register extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(Register);
+export default withStyles(styles, { withTheme: true })(Register) as WithStyleComponent;

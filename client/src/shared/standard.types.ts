@@ -1,0 +1,1 @@
+export type WithStyleComponent = (new (...args: any[]) => React.Component<any, any, any>);

@@ -5,7 +5,7 @@ export interface Props {
 
 class Home extends React.Component<Props> {
 
-    render() {
+    render(): JSX.Element {
         return (
             <div>
                 <h1>Home Page</h1>
