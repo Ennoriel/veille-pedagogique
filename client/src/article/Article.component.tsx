@@ -22,6 +22,7 @@ import NotesIcon from '@material-ui/icons/Notes';
 import LinkIcon from '@material-ui/icons/Link';
 import CreateIcon from '@material-ui/icons/Create';
 import classNames from 'classnames';
+import { WithStyleComponent } from 'src/shared/standard.types';
 
 const styles = (theme : any) => ({
     card: {
@@ -118,4 +119,4 @@ class Article extends React.Component<Props> {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(Article);
+export default withStyles(styles, { withTheme: true })(Article) as WithStyleComponent;
