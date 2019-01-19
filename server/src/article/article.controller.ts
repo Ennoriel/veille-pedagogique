@@ -14,8 +14,17 @@ export class ArticleController{
         });
     }
 
-    public getArticles (req: Request, res: Response) {           
-        ArticleModel.find({}, (err, article) => {
+    public getArticles (req: Request, res: Response) {
+
+        var perPage = 3
+        , page = Math.min(10, Math.max(0, parseInt(req.body.page)));
+
+        ArticleModel
+                .find({})
+                .limit(perPage)
+                .skip(perPage * page)
+                .sort({"indexedAt": "desc"})
+                .exec((err, article) => {
             if(err){
                 res.send(err);
             }
