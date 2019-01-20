@@ -41,9 +41,10 @@ export class AuthorizationService {
 
         const regExpUrlGet = [/^\/user\/exists\/.*/];
         const regExpUrlPost = [/^\/authenticate$/, /^\/user$/];
+        const REGEXP_EVERYTHING = [/.*/];
 
         map.set('GET', regExpUrlGet);
-        map.set('OPTIONS', regExpUrlPost);
+        map.set('OPTIONS', REGEXP_EVERYTHING);
         map.set('POST', regExpUrlPost);
 
         return map.get(method) != null && map.get(method).filter(regexUrl => url.match(regexUrl)).length > 0;
