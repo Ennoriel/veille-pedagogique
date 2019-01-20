@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import store from 'src/redux.services/index.store';
 
-import * as _ from "lodash"
+import * as _ from "lodash";
 import {
     CardHeader,
     Card,
@@ -13,9 +13,11 @@ import {
     IconButton,
     Divider,
     Tooltip,
-    withStyles } from '@material-ui/core';
+    withStyles, 
+    Grid,
+    Button} from '@material-ui/core';
 
-import { ArticleItem } from 'src/redux.services/constants/article.types';
+import { ArticleItem, articleState } from 'src/redux.services/constants/article.types';
 
 import VideoCamIcon from '@material-ui/icons/Videocam';
 import NotesIcon from '@material-ui/icons/Notes';
@@ -23,6 +25,9 @@ import LinkIcon from '@material-ui/icons/Link';
 import CreateIcon from '@material-ui/icons/Create';
 import classNames from 'classnames';
 import { WithStyleComponent } from 'src/shared/standard.types';
+import { SaveArticles } from 'src/redux.services/action/article.action';
+import { ArticleRepositoryService } from './Article.repositoryService';
+import { IncrementArticlePage } from 'src/redux.services/action/config.action';
 
 const styles = (theme : any) => ({
     card: {
@@ -45,29 +50,62 @@ const styles = (theme : any) => ({
     },
     inlineFlex: {
         display: "inline-flex !important"
+    },
+    buttonWidth: {
+        width: '350px'
     }
-    
 });
 
 export interface Props {
     classes?: any;
 }
 
+let articleRepositoryService: ArticleRepositoryService;
+let articles: articleState;
+
+/**
+ * Composant d'affichage des articles
+ */
 class Article extends React.Component<Props> {
 
-    articles = store.getState().article;
+    constructor (props: Props) {
+        super (props);
+
+        articleRepositoryService = new ArticleRepositoryService;
+
+        if (store.getState().config.articlePage === 0){
+            this.handleLoadMoreArticles();
+        }
+
+        this.handleLoadMoreArticles = this.handleLoadMoreArticles.bind(this);
+    }
+
+    /**
+     * Chargement d'une page d'article supplémentaire dans le store
+     */
+    handleLoadMoreArticles() {
+        articleRepositoryService.getArticles(store.getState().config.articlePage).then(value => {
+            store.dispatch(IncrementArticlePage());
+            store.dispatch(SaveArticles(value.data))
+        }).catch(error => {
+            // TODO gérer l'erreur
+        });
+    }
+
+    // réccupération des auteurs
     auteurs = store.getState().auteur;
 
     render() {
         const { classes } = this.props;
+        articles = store.getState().article as articleState;
 
         return (
             <div>
-                {_.values(this.articles).map((article: ArticleItem, index: number) => 
+                {_.values(articles).map((article: ArticleItem, index: number) => 
                     <Card key={index} className={classes.card}>
                         <CardHeader
                             title={article.title}
-                            subheader={article.createdAt.toDateString()}
+                            subheader={new Date(article.indexedAt).toDateString()}
                         />
                         <Divider />
                         <CardContent>
@@ -114,6 +152,18 @@ class Article extends React.Component<Props> {
                         </CardActions>
                     </Card>
                 )}
+                <Grid container justify='center'>
+                    <Grid item>
+                        <Button
+                            onClick={this.handleLoadMoreArticles}
+                            variant="outlined" 
+                            size="large" 
+                            color="primary"
+                            className={classes.buttonWidth}>
+                                Load more articles
+                        </Button>
+                    </Grid>
+                </Grid>
             </div>
         );
     }

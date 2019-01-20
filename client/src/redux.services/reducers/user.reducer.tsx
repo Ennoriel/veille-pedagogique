@@ -1,11 +1,11 @@
-import { SAVE_USER_DATA, UserRight, LOGOUT } from "src/user/User.types";
+import { SAVE_USER_DATA, UserRight, LOGOUT, IUser } from "src/user/User.types";
 import { SaveUserData, Logout } from "../action/user.action";
 
-const defaultUser = {
+const defaultUser: IUser = {
     userRight: UserRight.NOT_AUTH
 };
 
-export default (state = defaultUser, action: SaveUserData | Logout) => {
+export default (state: IUser = defaultUser, action: SaveUserData | Logout) => {
     switch(action.type) {
         case SAVE_USER_DATA:
             return {

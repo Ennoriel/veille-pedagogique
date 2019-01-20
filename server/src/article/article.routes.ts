@@ -6,14 +6,7 @@ export class Routes {
     
     public articleController: ArticleController = new ArticleController();
     
-    public routes(app: Application): void {   
-        
-        app.route('/')
-        .get((req: Request, res: Response) => {            
-            res.status(200).send({
-                message: 'GET request successfulll!!!!'
-            })
-        })
+    public routes(app: Application): void {
         
         // Article
         app.route('/article')

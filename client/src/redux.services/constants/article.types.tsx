@@ -7,7 +7,8 @@ export interface ArticleItem {
     url: string,
     language: string,
     medium: string,
-    createdAt: Date,
+    createdAt: number,
+    indexedAt: number,
     description: string,
     themes: Array<string>
     siteInternet: string,

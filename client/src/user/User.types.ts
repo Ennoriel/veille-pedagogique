@@ -1,7 +1,20 @@
+export interface IUser{
+
+    _id?: string;
+    username?: string;
+    lastname?: string;
+    firstname?: string;
+    email?: string;
+    password?: string;
+    passwordBis?: string;
+    userRight: UserRight;
+    token?: string;
+}
+
 /**
  * Classe d'un utilisateur
  */
-export class User {
+export class User implements IUser{
     constructor(){
         this._id;
         this.username = '';
@@ -10,6 +23,7 @@ export class User {
         this.email = '';
         this.password = '';
         this.passwordBis = '';
+        this.userRight = UserRight.NOT_AUTH;
     }
 
     _id: string;
@@ -19,6 +33,7 @@ export class User {
     email: string;
     password: string;
     passwordBis: string;
+    userRight: UserRight
 }
 
 export const SAVE_USER_DATA = 'SAVE_USER_DATA';
