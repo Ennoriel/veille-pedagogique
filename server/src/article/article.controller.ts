@@ -16,8 +16,8 @@ export class ArticleController{
 
     public getArticles (req: Request, res: Response) {
 
-        var perPage = 3
-        , page = Math.min(10, Math.max(0, parseInt(req.body.page)));
+        let perPage = 5;
+        let page = Math.min(10, Math.max(0, parseInt(req.query.page)));
 
         ArticleModel
                 .find({})
