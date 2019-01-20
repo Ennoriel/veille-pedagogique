@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { ArticleModel } from './article.types'
+import { addRegexParam, addRegexParams, addAfterParam } from './../shared/searchObject.util';
 
 export class ArticleController{
 
@@ -19,8 +20,16 @@ export class ArticleController{
         let perPage = 5;
         let page = Math.min(10, Math.max(0, parseInt(req.query.page)));
 
+        let queryParam = {};
+        addRegexParam(queryParam, 'title', req.query.title);
+        addRegexParam(queryParam, 'description', req.query.description);
+        addRegexParam(queryParam, 'medium', req.query.medium);
+        addRegexParam(queryParam, 'siteInternet', req.query.siteInternet);
+        addAfterParam(queryParam, 'createdAt', req.query.createdAt);
+        addRegexParams(queryParam, 'themes', req.query.themes);
+
         ArticleModel
-                .find({})
+                .find(queryParam)
                 .limit(perPage)
                 .skip(perPage * page)
                 .sort({"indexedAt": "desc"})
