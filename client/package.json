@@ -9,33 +9,39 @@
     "eject": "react-scripts-ts eject"
   },
   "dependencies": {
-    "@material-ui/core": "^3.6.0",
-    "@material-ui/icons": "^3.0.1",
+    "@material-ui/core": "^3.9.0",
+    "@material-ui/icons": "^3.0.2",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "^3.1.0",
+    "react-scripts-ts": "^4.0.8",
     "redux": "^4.0.1",
     "rxjs": "^6.3.3"
   },
   "devDependencies": {
-    "@types/classnames": "^2.2.6",
+    "@types/classnames": "^2.2.7",
     "@types/enzyme": "^3.1.15",
     "@types/enzyme-adapter-react-16": "^1.0.3",
-    "@types/jest": "^23.3.10",
-    "@types/lodash": "^4.14.118",
-    "@types/node": "^10.12.10",
-    "@types/react": "^16.7.8",
+    "@types/jest": "^23.3.13",
+    "@types/lodash": "^4.14.120",
+    "@types/node": "^10.12.18",
+    "@types/react": "^16.7.20",
     "@types/react-dom": "^16.0.11",
-    "@types/react-redux": "^6.0.10",
+    "@types/react-redux": "^6.0.13",
     "@types/react-router-dom": "^4.3.1",
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.7.0",
-    "react-test-renderer": "^16.6.3",
-    "typescript": "^3.1.6"
-  }
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
+    "react-test-renderer": "^16.7.0",
+    "typescript": "^3.2.4"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
