@@ -22,6 +22,7 @@ export class ArticleController{
 
         let queryParam = {};
         addRegexParam(queryParam, 'title', req.query.title);
+        // TODO remplacer les espaces de la description par des | en regex
         addRegexParam(queryParam, 'description', req.query.description);
         addRegexParam(queryParam, 'medium', req.query.medium);
         addRegexParam(queryParam, 'siteInternet', req.query.siteInternet);
@@ -66,6 +67,16 @@ export class ArticleController{
                 res.send(err);
             }
             res.json({ message: 'Successfully deleted Article!'});
+        });
+    }
+
+    public getThemes (req: Request, res: Response) {
+        ArticleModel.distinct('themes')
+                .exec((err, themes) => {
+            if(err){
+                res.send(err);
+            }
+            res.json(themes);
         });
     }
     
