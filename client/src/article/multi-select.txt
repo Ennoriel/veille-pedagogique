@@ -1,0 +1,26 @@
+<FormControl className={classes.formControl}>
+    <InputLabel
+        // ref={(ref: any) => this.InputLabelRef = ref}
+        htmlFor="select-multiple-checkbox"
+    >
+        Tag
+    </InputLabel>
+    <Select
+        multiple
+        value={this.state.mediums}
+        onChange={this.handleChange}
+        input={<OutlinedInput
+            name="medium"
+            labelWidth={this.state.labelWidth}
+            id="select-multiple-checkbox" />}
+        renderValue={selected => (selected as string[]).join(', ')}
+        MenuProps={MenuProps}
+    >
+        {["aaaaaaaa", "b"].map(name => (
+        <MenuItem key={name} value={name}>
+            <Checkbox checked={this.state.mediums.indexOf(name) > -1} />
+            <ListItemText primary={name} />
+        </MenuItem>
+        ))}
+    </Select>
+</FormControl>

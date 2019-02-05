@@ -15,3 +15,34 @@ export interface ArticleItem {
     auteur: Array<number>,
     tweetId?: Array<number>
 }
+
+export interface IArticleCritere {
+    title: string,
+    description: string,
+    medium: {[key: string]: string},
+    siteInternet: string,
+    createdAt: number,
+    themes: Array<string>
+}
+
+export class ArticleCritere implements IArticleCritere {
+    constructor() {
+        this.title;
+        this.description;
+        this.medium = {
+            // video : '',
+            // blog : '',
+            // presse : ''
+        };
+        this.siteInternet;
+        this.createdAt;
+        this.themes;
+    }
+
+    title: string;
+    description: string;
+    medium: {[key: string]: string};
+    siteInternet: string;
+    createdAt: number;
+    themes: Array<string>;
+}

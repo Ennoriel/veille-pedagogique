@@ -17,7 +17,7 @@ import {
     Grid,
     Button} from '@material-ui/core';
 
-import { ArticleItem, articleState } from 'src/redux.services/constants/article.types';
+import { ArticleItem, articleState, IArticleCritere } from 'src/redux.services/constants/article.types';
 
 import VideoCamIcon from '@material-ui/icons/Videocam';
 import NotesIcon from '@material-ui/icons/Notes';
@@ -28,6 +28,7 @@ import { WithStyleComponent } from 'src/shared/standard.types';
 import { SaveArticles } from 'src/redux.services/action/article.action';
 import { ArticleRepositoryService } from './Article.repositoryService';
 import { IncrementArticlePage } from 'src/redux.services/action/config.action';
+import ArticleCriteresComponent from './ArticleCriteres.component';
 
 const styles = (theme : any) => ({
     card: {
@@ -78,6 +79,7 @@ class Article extends React.Component<Props> {
         }
 
         this.handleLoadMoreArticles = this.handleLoadMoreArticles.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
     /**
@@ -92,6 +94,10 @@ class Article extends React.Component<Props> {
         });
     }
 
+    handleSearch(article: IArticleCritere) {
+        console.log(article);
+    }
+
     // réccupération des auteurs
     auteurs = store.getState().auteur;
 
@@ -101,6 +107,7 @@ class Article extends React.Component<Props> {
 
         return (
             <div>
+                <ArticleCriteresComponent handleSearch={this.handleSearch}></ArticleCriteresComponent>
                 {_.values(articles).map((article: ArticleItem, index: number) => 
                     <Card key={index} className={classes.card}>
                         <CardHeader
