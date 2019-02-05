@@ -3,6 +3,7 @@ import { BASE_URI_SERVER } from '../shared/uri.constants';
 import store from 'src/redux.services/index.store';
 
 const URI_ARTICLES = '/article';
+const URI_THEMES = '/theme';
 
 axios.defaults.baseURL = BASE_URI_SERVER;
 
@@ -21,5 +22,9 @@ export class ArticleRepositoryService  {
             params: { page: articlePage }
         }
         return axios.get(URI_ARTICLES, config);
+    }
+
+    public getThemes() {
+        return axios.get(URI_THEMES, {headers: {Authorization: store.getState().user.token}});
     }
 }

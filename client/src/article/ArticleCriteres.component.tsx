@@ -6,6 +6,7 @@ import { ArticleCritere, IArticleCritere } from 'src/redux.services/constants/ar
 import DownShiftMultipleComponent from 'src/shared/DownShiftMultiple.component';
 
 import classNames from 'classnames';
+import { ArticleRepositoryService } from './Article.repositoryService';
 
 const styles = (theme : any) => ({
     card: {
@@ -30,31 +31,39 @@ export interface Props {
 
 interface State {
     article: IArticleCritere;
+    suggestions: Array<string>;
 }
 
-const suggestions = [
-    'Afghanistan',
-    'Aland Islands',
-    'Albania',
-    'Algeria',
-    'American Samoa',
-    'Andorra'
-];
+let articleRepositoryService: ArticleRepositoryService;
 
 class ArticleCriteres extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
 
+        articleRepositoryService = new ArticleRepositoryService;
+
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
 
         this.state = {
-            article: new ArticleCritere()
+            article: new ArticleCritere(),
+            suggestions: new Array<string>()
         };
+
+        this.getSuggestions();
     }
 
-    InputLabelRef = 'azerty';
+    getSuggestions() {
+        articleRepositoryService.getThemes().then(themes => {
+            this.setState({
+                suggestions: themes.data
+            });
+            console.log(this.state.suggestions)
+        }).catch(error => {
+            // TODO gérer l'erreur
+        });
+    }
 
     readonly state: State;
 
@@ -186,7 +195,7 @@ class ArticleCriteres extends React.Component<Props> {
                         <Grid item xs={12} lg={6} className={classes.gridInput}>
                             <DownShiftMultipleComponent
                                 label="themes"
-                                liste={suggestions}
+                                liste={this.state.suggestions}
                                 handleRes={this.handleThemes}
                             />
                         </Grid>
