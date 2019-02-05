@@ -33,12 +33,12 @@ interface State {
 }
 
 const suggestions = [
-    { label: 'Afghanistan' },
-    { label: 'Aland Islands' },
-    { label: 'Albania' },
-    { label: 'Algeria' },
-    { label: 'American Samoa' },
-    { label: 'Andorra' }
+    'Afghanistan',
+    'Aland Islands',
+    'Albania',
+    'Algeria',
+    'American Samoa',
+    'Andorra'
 ];
 
 class ArticleCriteres extends React.Component<Props> {

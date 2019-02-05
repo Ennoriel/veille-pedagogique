@@ -71,7 +71,7 @@ function renderInput(inputProps: IIInputProps) {
     );
 }
 
-function getSuggestions(liste: {label: string}[], value: string | null) {
+function getSuggestions(liste: string[], value: string | null) {
     const inputValue = _.deburr((value == null ? '' : value).trim()).toLowerCase();
     const inputLength = inputValue.length;
     let count = 0;
@@ -80,7 +80,7 @@ function getSuggestions(liste: {label: string}[], value: string | null) {
         ? []
         : liste.filter(suggestion => {
             const keep =
-                count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+                count < 5 && suggestion.slice(0, inputLength).toLowerCase() === inputValue;
     
             if (keep) {
                 count += 1;
@@ -92,22 +92,22 @@ function getSuggestions(liste: {label: string}[], value: string | null) {
 
 function renderSuggestion(
     { listeItem, index, itemProps, highlightedIndex, selectedItem } :
-    { listeItem: {label: string}, index: number, itemProps: object, highlightedIndex: number | null, selectedItem: string}
+    { listeItem: string, index: number, itemProps: object, highlightedIndex: number | null, selectedItem: string}
 ) {
     const isHighlighted = highlightedIndex === index;
-    const isSelected = (selectedItem || '').indexOf(listeItem.label) > -1;
+    const isSelected = (selectedItem || '').indexOf(listeItem) > -1;
   
     return (
         <MenuItem
             {...itemProps}
-            key={listeItem.label}
+            key={listeItem}
             selected={isHighlighted}
             component="div"
             style={{
                 fontWeight: isSelected ? 500 : 400,
             }}
         >
-            {listeItem.label}
+            {listeItem}
         </MenuItem>
     );
 }
@@ -119,7 +119,7 @@ interface State {
 
 export interface Props {
     label: string;
-    liste: {label: string}[];
+    liste: string[];
     handleRes: ((liste: string[]) => never);
     classes?: any;
 }
@@ -218,11 +218,11 @@ class DownshiftMultiple extends React.Component<Props> {
                         })}
                         {isOpen ? (
                             <Paper className={classes.paper} square>
-                                {getSuggestions(liste, inputValue2).map((listeItem: {label: string}, index: number) =>
+                                {getSuggestions(liste, inputValue2).map((listeItem: string, index: number) =>
                                     renderSuggestion({
                                         listeItem,
                                         index,
-                                        itemProps: getItemProps({ item: listeItem.label }),
+                                        itemProps: getItemProps({ item: listeItem }),
                                         highlightedIndex,
                                         selectedItem: selectedItem2,
                                     })
