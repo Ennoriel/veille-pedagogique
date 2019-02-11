@@ -1,9 +1,24 @@
 import * as React from 'react';
 // import ReactDOM from 'react-dom';
-import { withStyles, Card, CardHeader, Divider, CardContent, TextField, Grid, FormControlLabel, Checkbox, Button } from '@material-ui/core';
+import {
+    withStyles,
+    Card,
+    CardHeader,
+    Divider,
+    CardContent, 
+    TextField,
+    Grid,
+    FormControlLabel,
+    Checkbox,
+    Button,
+    IconButton,
+    Collapse
+} from '@material-ui/core';
 import { WithStyleComponent } from 'src/shared/standard.types';
 import { ArticleCritere, IArticleCritere } from 'src/redux.services/constants/article.types';
 import DownShiftMultipleComponent from 'src/shared/DownShiftMultiple.component';
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import classNames from 'classnames';
 import { ArticleRepositoryService } from './Article.repositoryService';
@@ -31,6 +46,7 @@ export interface Props {
 
 interface State {
     article: IArticleCritere;
+    expanded: boolean;
     suggestions: Array<string>;
 }
 
@@ -45,9 +61,11 @@ class ArticleCriteres extends React.Component<Props> {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+        this.handleExpandClick = this.handleExpandClick.bind(this);
 
         this.state = {
             article: new ArticleCritere(),
+            expanded: false,
             suggestions: new Array<string>()
         };
 
@@ -73,6 +91,12 @@ class ArticleCriteres extends React.Component<Props> {
                 ...this.state.article,
                 themes: liste
             }
+        })
+    }
+
+    handleExpandClick() {
+        this.setState({
+            expanded: !this.state.expanded
         })
     }
 
@@ -123,7 +147,24 @@ class ArticleCriteres extends React.Component<Props> {
         
         return (
             <Card className={classes.card}>
-                <CardHeader title="Critères de recherche"/>
+                <CardHeader
+                    title="Critères de recherche"
+                    action={
+                        <IconButton
+                            className={classNames(classes.expand, {
+                                    [classes.expandOpen]: this.state.expanded,
+                                })}
+                            onClick={this.handleExpandClick}
+                            aria-expanded={this.state.expanded}
+                            aria-label="Show more"
+                        >
+                            <ExpandMoreIcon />
+                        </IconButton>
+                    }/>
+                {/* <CardActions className={classes.actions} disableActionSpacing> */}
+                    
+                {/* </CardActions> */}
+                <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
                 <Divider />
                 <CardContent>
                     <Grid container>
@@ -226,6 +267,7 @@ class ArticleCriteres extends React.Component<Props> {
                         </Grid>
                     </Grid>
                 </CardContent>
+                </Collapse>
             </Card>
         );
     }
