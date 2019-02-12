@@ -17,7 +17,7 @@ import {
     Grid,
     Button} from '@material-ui/core';
 
-import { ArticleItem, articleState, IArticleCritere } from 'src/redux.services/constants/article.types';
+import { ArticleItem, articleState, IArticleCritere, ArticleCritere } from 'src/redux.services/constants/article.types';
 
 import VideoCamIcon from '@material-ui/icons/Videocam';
 import NotesIcon from '@material-ui/icons/Notes';
@@ -25,9 +25,9 @@ import LinkIcon from '@material-ui/icons/Link';
 import CreateIcon from '@material-ui/icons/Create';
 import classNames from 'classnames';
 import { WithStyleComponent } from 'src/shared/standard.types';
-import { SaveArticles } from 'src/redux.services/action/article.action';
+import { SaveArticles, ReplaceArticles } from 'src/redux.services/action/article.action';
 import { ArticleRepositoryService } from './Article.repositoryService';
-import { IncrementArticlePage } from 'src/redux.services/action/config.action';
+import { IncrementArticlePage, ResetArticlePage } from 'src/redux.services/action/config.action';
 import ArticleCriteresComponent from './ArticleCriteres.component';
 
 const styles = (theme : any) => ({
@@ -64,6 +64,10 @@ export interface Props {
 let articleRepositoryService: ArticleRepositoryService;
 let articles: articleState;
 
+interface State {
+    articleCritere: IArticleCritere;
+}
+
 /**
  * Composant d'affichage des articles
  */
@@ -74,6 +78,10 @@ class Article extends React.Component<Props> {
 
         articleRepositoryService = new ArticleRepositoryService;
 
+        this.state = {
+            articleCritere: new ArticleCritere()
+        };
+
         if (store.getState().config.articlePage === 0){
             this.handleLoadMoreArticles();
         }
@@ -82,11 +90,17 @@ class Article extends React.Component<Props> {
         this.handleSearch = this.handleSearch.bind(this);
     }
 
+    readonly state: State;
+
     /**
      * Chargement d'une page d'article supplémentaire dans le store
      */
     handleLoadMoreArticles() {
-        articleRepositoryService.getArticles(store.getState().config.articlePage).then(value => {
+
+        let articleCritere = this.state.articleCritere;
+        articleCritere['page'] = store.getState().config.articlePage;
+
+        articleRepositoryService.getArticles(articleCritere).then(value => {
             store.dispatch(IncrementArticlePage());
             store.dispatch(SaveArticles(value.data))
         }).catch(error => {
@@ -94,8 +108,17 @@ class Article extends React.Component<Props> {
         });
     }
 
-    handleSearch(article: IArticleCritere) {
-        console.log(article);
+    handleSearch(articleCritere: IArticleCritere) {
+
+        this.setState(articleCritere);
+
+        articleRepositoryService.getArticles(articleCritere).then(value => {
+            store.dispatch(ResetArticlePage());
+            store.dispatch(IncrementArticlePage());
+            store.dispatch(ReplaceArticles(value.data))
+        }).catch(error => {
+            // TODO gérer l'erreur
+        });
     }
 
     // réccupération des auteurs

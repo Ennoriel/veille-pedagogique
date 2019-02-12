@@ -16,17 +16,18 @@ export interface ArticleItem {
     tweetId?: Array<number>
 }
 
-export interface IArticleCritere {
-    title: string,
-    description: string,
-    medium: {[key: string]: string},
-    siteInternet: string,
-    createdAt: number,
-    themes: Array<string>
+export interface IArticleCritere extends IRecherche {
+    title?: string,
+    description?: string,
+    medium?: {[key: string]: string},
+    siteInternet?: string,
+    createdAt?: number,
+    themes?: Array<string>
 }
 
 export class ArticleCritere implements IArticleCritere {
     constructor() {
+        this.page;
         this.title;
         this.description;
         this.medium = {
@@ -39,10 +40,11 @@ export class ArticleCritere implements IArticleCritere {
         this.themes;
     }
 
-    title: string;
-    description: string;
-    medium: {[key: string]: string};
-    siteInternet: string;
-    createdAt: number;
-    themes: Array<string>;
+    page: number;
+    title?: string;
+    description?: string;
+    medium?: {[key: string]: string};
+    siteInternet?: string;
+    createdAt?: number;
+    themes?: Array<string>;
 }
