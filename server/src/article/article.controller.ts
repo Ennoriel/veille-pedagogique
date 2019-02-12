@@ -24,7 +24,7 @@ export class ArticleController{
         addRegexParam(queryParam, 'title', req.query.title);
         // TODO remplacer les espaces de la description par des | en regex
         addRegexParam(queryParam, 'description', req.query.description);
-        addRegexParam(queryParam, 'medium', req.query.medium);
+        addRegexParam(queryParam, 'medium', req.query.medium === '{}' ? null : req.query.medium);
         addRegexParam(queryParam, 'siteInternet', req.query.siteInternet);
         addAfterParam(queryParam, 'createdAt', req.query.createdAt);
         addRegexParams(queryParam, 'themes', req.query.themes);
