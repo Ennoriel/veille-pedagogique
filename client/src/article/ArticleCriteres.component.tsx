@@ -72,19 +72,24 @@ class ArticleCriteres extends React.Component<Props> {
         this.getSuggestions();
     }
 
+    readonly state: State;
+
+    /**
+     * Initialise les suggestions de thèmes
+     */
     getSuggestions() {
         articleRepositoryService.getThemes().then(themes => {
             this.setState({
                 suggestions: themes.data
             });
-            console.log(this.state.suggestions)
         }).catch(error => {
             // TODO gérer l'erreur
         });
     }
 
-    readonly state: State;
-
+    /**
+     * Gestion de la sauvegarde des termes à rechercher
+     */
     handleThemes = (liste: string[]) => {
         this.setState({
             article: {
@@ -94,6 +99,9 @@ class ArticleCriteres extends React.Component<Props> {
         })
     }
 
+    /**
+     * Gestion de l'expansion du panneau de recherche
+     */
     handleExpandClick() {
         this.setState({
             expanded: !this.state.expanded
@@ -137,8 +145,12 @@ class ArticleCriteres extends React.Component<Props> {
         });
     }
 
+    /**
+     * Gestion de l'appuie sur le bouton "search"
+     * Ferme le panneau de recherche et renvoit l'événement au composant parent
+     */
     handleSearch = () => {
-        console.log(this.state.article);
+        this.handleExpandClick();
         this.props.handleSearch(this.state.article);
     }
     
@@ -161,9 +173,6 @@ class ArticleCriteres extends React.Component<Props> {
                             <ExpandMoreIcon />
                         </IconButton>
                     }/>
-                {/* <CardActions className={classes.actions} disableActionSpacing> */}
-                    
-                {/* </CardActions> */}
                 <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
                 <Divider />
                 <CardContent>

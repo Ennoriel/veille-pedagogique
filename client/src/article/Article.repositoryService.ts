@@ -14,7 +14,7 @@ axios.defaults.baseURL = BASE_URI_SERVER;
 export class ArticleRepositoryService  {
 
     /**
-     * Réccupération des articles d'une page
+     * Récupération des articles d'une page
      * @param article critere de recherche
      */
     public getArticles(article: IArticleCritere) {
@@ -25,6 +25,9 @@ export class ArticleRepositoryService  {
         return axios.get(URI_ARTICLES, config);
     }
 
+    /**
+     * Récupération des thèmes disponibles
+     */
     public getThemes() {
         return axios.get(URI_THEMES, {headers: {Authorization: store.getState().user.token}});
     }

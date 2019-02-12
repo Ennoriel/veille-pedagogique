@@ -37,27 +37,26 @@ const styles = (theme : any) => ({
 });
 
 interface IInputProps {
-    startAdornment: JSX.Element[];
-    onChange: (event: any) => void;
-    onKeyDown: (event: any) => void;
-    placeholder: string;
-}
-
-interface IIInputProps {
-    InputProps: IInputProps;
+    InputProps: {
+        startAdornment: JSX.Element[];
+        onChange: (event: any) => void;
+        onKeyDown: (event: any) => void;
+        placeholder: string;
+    }
     classes: any;
-    // ref: any;
     fullWidth: boolean;
     label: string;
 }
 
-function renderInput(inputProps: IIInputProps) {
+/**
+ * Gestion de l'affichage de l'input
+ */
+function renderInput(inputProps: IInputProps) {
     const { InputProps, classes, ...other } = inputProps;
   
     return (
         <TextField
             InputProps={{
-                // inputRef: ref,
                 classes: {
                     root: classes.inputRoot,
                     input: classes.inputInput,
@@ -71,6 +70,11 @@ function renderInput(inputProps: IIInputProps) {
     );
 }
 
+/**
+ * Renvoie la liste des suggestions
+ * @param liste 
+ * @param value 
+ */
 function getSuggestions(liste: string[], value: string | null) {
     const inputValue = _.deburr((value == null ? '' : value).trim()).toLowerCase();
     const inputLength = inputValue.length;
@@ -90,6 +94,9 @@ function getSuggestions(liste: string[], value: string | null) {
         });
 }
 
+/**
+ * Gestion de l'affichage d'une suggestion
+ */
 function renderSuggestion(
     { listeItem, index, itemProps, highlightedIndex, selectedItem } :
     { listeItem: string, index: number, itemProps: object, highlightedIndex: number | null, selectedItem: string}
@@ -140,6 +147,9 @@ class DownshiftMultiple extends React.Component<Props> {
         selectedItem: [],
     };
   
+    /**
+     * Gestion de la suppression d'un élément par la touche "suppr" du clavier
+     */
     handleKeyDown = (event: number) => {
         const { inputValue, selectedItem } = this.state;
         if (selectedItem.length && !inputValue.length && keycode(event) === 'backspace') {
@@ -149,10 +159,16 @@ class DownshiftMultiple extends React.Component<Props> {
         }
     };
   
+    /**
+     * Gestion de la saisie utilisateur
+     */
     handleInputChange = (event: {target: {value: string}}) => {
         this.setState({ inputValue: event.target.value });
     };
   
+    /**
+     * Gestion de l'ajout d'un élément de la liste
+     */
     handleChange = (item: string) => {
         let { selectedItem } = this.state;
     
@@ -168,6 +184,9 @@ class DownshiftMultiple extends React.Component<Props> {
         this.props.handleRes(selectedItem);
     };
   
+    /**
+     * Gestion de la suppression d'un élément de la liste
+     */
     handleDelete = (item: string) => () => {
         let selectedItemm = this.state.selectedItem;
         this.setState(state => {

@@ -108,6 +108,10 @@ class Article extends React.Component<Props> {
         });
     }
 
+    /**
+     * Chargement d'une nouvelle page d'article à partir des critères de recherche
+     * @param articleCritere critère de recherche
+     */
     handleSearch(articleCritere: IArticleCritere) {
 
         this.setState(articleCritere);
