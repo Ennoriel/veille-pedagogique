@@ -15,6 +15,6 @@ render();
 store.subscribe(render);
 
 function logState() {
-    console.log("%c Rendered with 👉 👉 👉 👉 👉 👇", "background: black; color: #fff");
+    console.log("%c LOG STATE", "background: black; color: #fff");
     console.log(store.getState());
 };
