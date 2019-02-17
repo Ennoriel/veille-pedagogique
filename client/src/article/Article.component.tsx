@@ -136,69 +136,75 @@ class Article extends React.Component<Props> {
         return (
             <div>
                 <ArticleCriteresComponent handleSearch={this.handleSearch}></ArticleCriteresComponent>
-                {_.values(articles).map((article: ArticleItem, index: number) => 
-                    <Card key={index} className={classes.card}>
-                        <CardHeader
-                            title={article.title}
-                            subheader={new Date(article.indexedAt).toDateString()}
-                        />
-                        <Divider />
-                        <CardContent>
-                            <div className={classes.toto}>
-                                <Chip
-                                    className={classes.chip}
-                                    label={article.medium}
-                                    icon={article.medium == "video" ? <VideoCamIcon /> : <NotesIcon />}
+                {
+                    _.values(articles).length ?
+                    <div>
+                        {_.values(articles).map((article: ArticleItem, index: number) => 
+                            <Card key={index} className={classes.card}>
+                                <CardHeader
+                                    title={article.title}
+                                    subheader={new Date(article.indexedAt).toDateString()}
                                 />
-                                {article.themes.map((theme: string, index: number) => 
-                                    <Chip
-                                        className={classes.chip}
-                                        key={index}
-                                        label={theme}
-                                    />
-                                )}
-                            </div>
-                            <Typography component="p">
-                                {article.description}
-                            </Typography>
-                        </CardContent>
-                        <Divider />
-                        <CardActions className={classes.cardActions}>
-                            <Tooltip title="Accès direct sur le site" placement="top">
-                                <IconButton href={article.url} target="_blank">
-                                    <LinkIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Typography>
-                                sur {article.siteInternet}
-                            </Typography>
-                            {article.auteur.map((auteurId, index) => 
-                                <div key={index} className={classNames({[classes.iconeDroite]: index === 0})}>
-                                    <Tooltip title="Accès à la page auteur" placement="top">
-                                        <IconButton>
-                                            <CreateIcon />
+                                <Divider />
+                                <CardContent>
+                                    <div className={classes.toto}>
+                                        <Chip
+                                            className={classes.chip}
+                                            label={article.medium}
+                                            icon={article.medium == "video" ? <VideoCamIcon /> : <NotesIcon />}
+                                        />
+                                        {article.themes.map((theme: string, index: number) => 
+                                            <Chip
+                                                className={classes.chip}
+                                                key={index}
+                                                label={theme}
+                                            />
+                                        )}
+                                    </div>
+                                    <Typography component="p">
+                                        {article.description}
+                                    </Typography>
+                                </CardContent>
+                                <Divider />
+                                <CardActions className={classes.cardActions}>
+                                    <Tooltip title="Accès direct sur le site" placement="top">
+                                        <IconButton href={article.url} target="_blank">
+                                            <LinkIcon />
                                         </IconButton>
                                     </Tooltip>
-                                    <Typography className={classes.inlineFlex}>
-                                        par {this.auteurs[auteurId].nom}
+                                    <Typography>
+                                        sur {article.siteInternet}
                                     </Typography>
-                                </div>
-                            )}
-                        </CardActions>
-                    </Card>
-                )}
-                <Grid container justify='center'>
-                    <Grid item>
-                        <Button
-                            onClick={this.handleLoadMoreArticles}
-                            variant="outlined" 
-                            size="large" 
-                            color="primary"
-                            className={classes.buttonWidth}>
-                                Load more articles
-                        </Button>
-                    </Grid>
-                </Grid>
+                                    {article.auteur.map((auteurId, index) => 
+                                        <div key={index} className={classNames({[classes.iconeDroite]: index === 0})}>
+                                            <Tooltip title="Accès à la page auteur" placement="top">
+                                                <IconButton>
+                                                    <CreateIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Typography className={classes.inlineFlex}>
+                                                par {this.auteurs[auteurId].nom}
+                                            </Typography>
+                                        </div>
+                                    )}
+                                </CardActions>
+                            </Card>
+                        )}
+                        <Grid container justify='center'>
+                            <Grid item>
+                                <Button
+                                    onClick={this.handleLoadMoreArticles}
+                                    variant="outlined" 
+                                    size="large" 
+                                    color="primary"
+                                    className={classes.buttonWidth}>
+                                        Load more articles
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </div>
+                    : <Typography>Aucun article ne correspond à votre recherche. Merci de choisir d'autres critères de recherche.</Typography>
+                }
             </div>
         );
     }
