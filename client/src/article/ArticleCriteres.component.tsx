@@ -22,6 +22,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import classNames from 'classnames';
 import { ArticleRepositoryService } from './Article.repositoryService';
+import DateFieldComponent from 'src/shared/DateField.component';
 
 const styles = (theme : any) => ({
     card: {
@@ -48,6 +49,11 @@ interface State {
     article: IArticleCritere;
     expanded: boolean;
     suggestions: Array<string>;
+    articleMedium: {
+        'video': boolean,
+        'blog': boolean,
+        'presse': boolean
+    }
 }
 
 let articleRepositoryService: ArticleRepositoryService;
@@ -63,10 +69,17 @@ class ArticleCriteres extends React.Component<Props> {
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
         this.handleExpandClick = this.handleExpandClick.bind(this);
 
+        console.log(this.state);
+
         this.state = {
             article: new ArticleCritere(),
             expanded: false,
-            suggestions: new Array<string>()
+            suggestions: new Array<string>(),
+            articleMedium: {
+                'video': true,
+                'blog': true,
+                'presse': true
+            }
         };
 
         this.getSuggestions();
@@ -132,17 +145,35 @@ class ArticleCriteres extends React.Component<Props> {
     handleCheckboxChange(event: any) {
         const target = event.target;
         const value = target.checked;
-        const name = target.name;
+        const inputMedium = target.name;
         
         this.setState({
-            "article": {
-                ...this.state.article,
-                medium: {
-                    ...this.state.article.medium,
-                    [name]: value
-                }
+            'articleMedium': {
+                ...this.state.articleMedium,
+                [inputMedium]: value
             }
-        });
+        })
+        
+        if(value) {
+            this.setState({
+                'article': {
+                    ...this.state.article,
+                    'medium': [
+                        ...this.state.article.medium!,
+                        inputMedium
+                    ]
+                }
+            });
+        } else {
+            this.setState({
+                'article': {
+                    ...this.state.article,
+                    'medium': [
+                        ...this.state.article.medium!.filter(medium => medium !== inputMedium)
+                    ]
+                }
+            })
+        }
     }
 
     /**
@@ -183,6 +214,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 label="Title"
                                 name="title"
                                 onChange={this.handleInputChange}
+                                value={this.state.article.title}
                                 fullWidth
                                 margin="normal"
                                 variant="outlined"
@@ -194,6 +226,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 label="Description"
                                 name="description"
                                 onChange={this.handleInputChange}
+                                value={this.state.article.description}
                                 fullWidth
                                 margin="normal"
                                 variant="outlined"
@@ -205,6 +238,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 label="Site Internet"
                                 name="siteInternet"
                                 onChange={this.handleInputChange}
+                                value={this.state.article.siteInternet}
                                 fullWidth
                                 margin="normal"
                                 variant="outlined"
@@ -216,6 +250,7 @@ class ArticleCriteres extends React.Component<Props> {
                                     <Checkbox
                                         name="video"
                                         onChange={this.handleCheckboxChange}
+                                        checked={this.state.articleMedium.video}
                                         color="primary"
                                     />
                                 }
@@ -226,6 +261,7 @@ class ArticleCriteres extends React.Component<Props> {
                                     <Checkbox
                                         name="blog"
                                         onChange={this.handleCheckboxChange}
+                                        checked={this.state.articleMedium.blog}
                                         color="primary"
                                     />
                                 }
@@ -236,6 +272,7 @@ class ArticleCriteres extends React.Component<Props> {
                                     <Checkbox
                                         name="presse"
                                         onChange={this.handleCheckboxChange}
+                                        checked={this.state.articleMedium.presse}
                                         color="primary"
                                     />
                                 }
@@ -246,22 +283,17 @@ class ArticleCriteres extends React.Component<Props> {
                             <DownShiftMultipleComponent
                                 label="themes"
                                 liste={this.state.suggestions}
+                                value={this.state.article.themes}
                                 handleRes={this.handleThemes}
                             />
                         </Grid>
                         <Grid item xs={6} lg={3} className={classes.gridInput}>
-                            <TextField
-                                id="createdAt"
-                                label="Created At"
-                                name="createdAt"
-                                type="date"
+                            <DateFieldComponent
+                                value={this.state.article.createdAt}
                                 onChange={this.handleInputChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
+                                id="createdAt"
+                                label="Created after"
+                                name="createdAt"
                             />
                         </Grid>
                         <Grid item xs={6} lg={3} className={classNames(classes.gridInput, classes.gridButton)}>

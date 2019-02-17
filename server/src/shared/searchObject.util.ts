@@ -21,10 +21,10 @@ export function addRegexParam(paramObject: any, paramKey: string, paramValue: st
  * @param paramKey clef de recherche
  * @param paramValues valeurs à rechercher
  */
-export function addRegexParams(paramObject: any, paramKey: string, paramValues: string) {
+export function addRegexParams(paramObject: any, paramKey: string, paramValues: [string]) {
     if(paramValues) {
         paramObject[paramKey] = {
-            $in: paramValues.split(',').map(paramValue => paramValue.trim())
+            $in: paramValues.map(paramValue => paramValue.trim())
         };
     }
 }

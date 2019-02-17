@@ -127,6 +127,7 @@ interface State {
 export interface Props {
     label: string;
     liste: string[];
+    value: string[];
     handleRes: ((liste: string[]) => never);
     classes?: any;
 }
@@ -144,7 +145,7 @@ class DownshiftMultiple extends React.Component<Props> {
 
     readonly state: State = {
         inputValue: '',
-        selectedItem: [],
+        selectedItem: this.props.value || [],
     };
   
     /**
@@ -153,9 +154,14 @@ class DownshiftMultiple extends React.Component<Props> {
     handleKeyDown = (event: number) => {
         const { inputValue, selectedItem } = this.state;
         if (selectedItem.length && !inputValue.length && keycode(event) === 'backspace') {
+
+            let selectedItemFinal = selectedItem.slice(0, selectedItem.length - 1)
+
             this.setState({
-                selectedItem: selectedItem.slice(0, selectedItem.length - 1),
+                selectedItem: selectedItemFinal,
             });
+
+            this.props.handleRes(selectedItemFinal);
         }
     };
   
@@ -188,12 +194,12 @@ class DownshiftMultiple extends React.Component<Props> {
      * Gestion de la suppression d'un élément de la liste
      */
     handleDelete = (item: string) => () => {
-        let selectedItemm = this.state.selectedItem;
-        this.setState(state => {
-            const selectedItem = [...selectedItemm];
-            selectedItem.splice(selectedItem.indexOf(item), 1);
-            return { selectedItem };
-        });
+        let selectedItem = this.state.selectedItem;
+
+        selectedItem.splice(selectedItem.indexOf(item), 1);
+
+        this.setState({selectedItem});
+        this.props.handleRes(selectedItem);
     };
   
     render() {

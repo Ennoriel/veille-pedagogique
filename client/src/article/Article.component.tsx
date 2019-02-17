@@ -114,7 +114,8 @@ class Article extends React.Component<Props> {
      */
     handleSearch(articleCritere: IArticleCritere) {
 
-        this.setState(articleCritere);
+        this.setState({'articleCritere': undefined});
+        this.setState({'articleCritere': {...articleCritere}});
 
         articleRepositoryService.getArticles(articleCritere).then(value => {
             store.dispatch(ResetArticlePage());

@@ -19,7 +19,7 @@ export interface ArticleItem {
 export interface IArticleCritere extends IRecherche {
     title?: string,
     description?: string,
-    medium?: {[key: string]: string},
+    medium?: Array<string>,
     siteInternet?: string,
     createdAt?: number,
     themes?: Array<string>
@@ -27,23 +27,19 @@ export interface IArticleCritere extends IRecherche {
 
 export class ArticleCritere implements IArticleCritere {
     constructor() {
-        this.page;
-        this.title;
+        this.page = 0;
+        this.title = '';
         this.description;
-        this.medium = {
-            // video : '',
-            // blog : '',
-            // presse : ''
-        };
-        this.siteInternet;
+        this.medium = ['video', 'blog', 'presse'];
+        this.siteInternet = '';
         this.createdAt;
-        this.themes;
+        this.themes = [];
     }
 
     page: number;
     title?: string;
     description?: string;
-    medium?: {[key: string]: string};
+    medium?: Array<string>;
     siteInternet?: string;
     createdAt?: number;
     themes?: Array<string>;

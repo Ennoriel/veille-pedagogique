@@ -29,6 +29,6 @@ export class ArticleRepositoryService  {
      * Récupération des thèmes disponibles
      */
     public getThemes() {
-        return axios.get(URI_THEMES, {headers: {Authorization: store.getState().user.token}});
+        return axios.get(URI_THEMES, {headers: {'Authorization': store.getState().user.token}});
     }
 }
