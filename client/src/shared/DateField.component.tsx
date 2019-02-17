@@ -17,6 +17,10 @@ export interface State {
     date: number
 }
 
+/**
+ * Composant permetant de rendre un TextField de type date de manière avec la gestion
+ * "controlled" / "uncontrolled" des input React
+ */
 class DateField extends React.Component<Props> {
 
     constructor(props: Props) {

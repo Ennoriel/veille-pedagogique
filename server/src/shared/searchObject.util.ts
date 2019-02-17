@@ -15,8 +15,8 @@ export function addRegexParam(paramObject: any, paramKey: string, paramValue: st
 }
 
 /**
- * Ajoute une liste d'attributs, parsée par le caractère ',' à un objet de recherche
- * pour rechercher un terme dans une chaine de caractère sans tenir compte de la casse
+ * Ajoute une liste d'attributs à un objet de recherche
+ * pour rechercher plusieurs termes dans dans une liste
  * @param paramObject objet de recherche
  * @param paramKey clef de recherche
  * @param paramValues valeurs à rechercher
