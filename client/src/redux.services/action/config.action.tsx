@@ -30,8 +30,8 @@ export function IncrementArticlePage(): incrementArticlePageAction {
 /**
  * Génère un objet permettant de remettre à zéro le numéro de la page dans le store
  */
-export function ResetArticlePage(): incrementArticlePageAction {
+export function ResetArticlePage(): resetArticlePageAction {
     return {
-        type: INCREMENT_ARTICLE_PAGE
+        type: RESET_ARTICLE_PAGE
     }
 }
