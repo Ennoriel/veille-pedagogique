@@ -20,7 +20,9 @@ export class Routes {
         // get specific article
         .get(this.articleController.getArticleWithID)
         .put(this.articleController.updateArticle)
-        .delete(this.articleController.deleteArticle)
+        .delete(this.articleController.deleteArticle);
 
+        app.route('/theme')
+        .get(this.articleController.getThemes);
     }
 }

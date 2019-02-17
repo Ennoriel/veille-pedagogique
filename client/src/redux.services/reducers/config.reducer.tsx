@@ -1,9 +1,18 @@
-import { INCREMENT_ARTICLE_PAGE, incrementArticlePageAction } from "../action/config.action";
+import {
+    INCREMENT_ARTICLE_PAGE,
+    RESET_ARTICLE_PAGE,
+    incrementArticlePageAction,
+    resetArticlePageAction
+} from "../action/config.action";
 
-export default (state = {"articlePage":0}, action: incrementArticlePageAction) => {
+let DEFAULT_ARTICLE_PAGE = {'articlePage': 0}
+
+export default (state = DEFAULT_ARTICLE_PAGE, action: incrementArticlePageAction | resetArticlePageAction) => {
     switch(action.type) {
         case INCREMENT_ARTICLE_PAGE:
             return {articlePage: state.articlePage + 1};
+        case RESET_ARTICLE_PAGE:
+            return DEFAULT_ARTICLE_PAGE;
     }
     return state;
 };

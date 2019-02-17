@@ -4,7 +4,7 @@
         "moduleResolution": "node",
         "pretty": true,
         "sourceMap": true,
-        "target": "es6",
+        "target": "es2017",
         "outDir": "./build",
         "baseUrl": "./src"
     },
@@ -13,5 +13,8 @@
     ],
     "exclude": [
         "node_modules"
+    ],
+    "lib": [
+        "es2017.object"
     ]
 }

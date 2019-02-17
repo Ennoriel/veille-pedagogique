@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { ArticleModel } from './article.types'
+import { addRegexParam, addRegexParams, addAfterParam } from './../shared/searchObject.util';
 
 export class ArticleController{
 
@@ -19,8 +20,17 @@ export class ArticleController{
         let perPage = 5;
         let page = Math.min(10, Math.max(0, parseInt(req.query.page)));
 
+        let queryParam = {};
+        addRegexParam(queryParam, 'title', req.query.title);
+        // TODO remplacer les espaces de la description par des | en regex
+        addRegexParam(queryParam, 'description', req.query.description);
+        addRegexParams(queryParam, 'medium', req.query.medium === '{}' ? null : req.query.medium);
+        addRegexParam(queryParam, 'siteInternet', req.query.siteInternet);
+        addAfterParam(queryParam, 'createdAt', req.query.createdAt);
+        addRegexParams(queryParam, 'themes', req.query.themes);
+
         ArticleModel
-                .find({})
+                .find(queryParam)
                 .limit(perPage)
                 .skip(perPage * page)
                 .sort({"indexedAt": "desc"})
@@ -57,6 +67,16 @@ export class ArticleController{
                 res.send(err);
             }
             res.json({ message: 'Successfully deleted Article!'});
+        });
+    }
+
+    public getThemes (req: Request, res: Response) {
+        ArticleModel.distinct('themes')
+                .exec((err, themes) => {
+            if(err){
+                res.send(err);
+            }
+            res.json(themes);
         });
     }
     
