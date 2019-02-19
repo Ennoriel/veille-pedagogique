@@ -31,7 +31,7 @@ import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
 
 import classNames from 'classnames';
 import { WithStyleComponent } from 'src/shared/standard.types';
-import { SaveArticles, ReplaceArticles, RemoveArticle } from 'src/redux.services/action/article.action';
+import { SaveArticles, ReplaceArticles, RemoveArticle, ReplaceArticle } from 'src/redux.services/action/article.action';
 import { ArticleRepositoryService } from './Article.repositoryService';
 import { IncrementArticlePage, ResetArticlePage } from 'src/redux.services/action/config.action';
 import ArticleCriteresComponent from './ArticleCriteres.component';
@@ -107,6 +107,7 @@ class Article extends React.Component<Props> {
         this.handleHideArticle = this.handleHideArticle.bind(this);
         this.handleDeleteArticle = this.handleDeleteArticle.bind(this);
         this.handlOpenUpdateArticlePanel = this.handlOpenUpdateArticlePanel.bind(this);
+        this.handlArticleMaj = this.handlArticleMaj.bind(this);
     }
 
     readonly state: State;
@@ -167,11 +168,20 @@ class Article extends React.Component<Props> {
     }
 
     /**
-     * 
+     * Affiche le paneau de mise à jour d'un article
      */
     handlOpenUpdateArticlePanel(index: number) {
         this.setState({
             isBeingUpdated: index
+        });
+    }
+
+    /**
+     * Enregistre les modifications d'un article & Le mets à jour dans la liste
+     */
+    handlArticleMaj(index: number, articleNew: ArticleItem) {
+        articleRepositoryService.updateArticle(articleNew).then(() => {
+            store.dispatch(ReplaceArticle(index, articleNew));
         });
     }
 
@@ -287,7 +297,9 @@ class Article extends React.Component<Props> {
                                             <span>
                                                 <Divider />
                                                 <CardContent>
-                                                    <ArticleMiseAJourComponent/>
+                                                    <ArticleMiseAJourComponent
+                                                        article={article}
+                                                        handleArticleMaj={(articleNew: ArticleItem) => handleArticleMaj(index, articleNew)}/>
                                                 </CardContent>
                                             </span>
                                         ) : null
