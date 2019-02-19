@@ -38,6 +38,7 @@ import ArticleCriteresComponent from './ArticleCriteres.component';
 
 import { UserRight } from "src/user/User.types";
 import { isNullOrUndefined } from 'util';
+import ArticleMiseAJourComponent from './ArticleMiseAJour.component';
 
 const styles = (theme : any) => ({
     card: {
@@ -75,6 +76,7 @@ let articles: articleState;
 
 interface State {
     articleCritere: IArticleCritere;
+    isBeingUpdated: number;
 }
 
 function isSuperUser() {
@@ -92,7 +94,8 @@ class Article extends React.Component<Props> {
         articleRepositoryService = new ArticleRepositoryService;
 
         this.state = {
-            articleCritere: new ArticleCritere()
+            articleCritere: new ArticleCritere(),
+            isBeingUpdated: -1
         };
 
         if (store.getState().config.articlePage === 0){
@@ -102,7 +105,8 @@ class Article extends React.Component<Props> {
         this.handleLoadMoreArticles = this.handleLoadMoreArticles.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleHideArticle = this.handleHideArticle.bind(this);
-        this.handleDeleteArticle = this.handleDeleteArticle.bind(this)
+        this.handleDeleteArticle = this.handleDeleteArticle.bind(this);
+        this.handlOpenUpdateArticlePanel = this.handlOpenUpdateArticlePanel.bind(this);
     }
 
     readonly state: State;
@@ -162,6 +166,15 @@ class Article extends React.Component<Props> {
         });
     }
 
+    /**
+     * 
+     */
+    handlOpenUpdateArticlePanel(index: number) {
+        this.setState({
+            isBeingUpdated: index
+        });
+    }
+
     // réccupération des auteurs
     auteurs = store.getState().auteur;
 
@@ -200,7 +213,7 @@ class Article extends React.Component<Props> {
                                             </IconButton>
                                             {!isSuperUser() ? null :
                                             [
-                                                <IconButton key={0}>
+                                                <IconButton key={0} onClick={() => this.handlOpenUpdateArticlePanel(index)}>
                                                     <CreateIcon />
                                                 </IconButton>,
                                                 <IconButton key={1} onClick={() => this.handleHideArticle(article, index)}>
@@ -267,6 +280,19 @@ class Article extends React.Component<Props> {
                                         ) : isNullOrUndefined
                                     }
                                 </CardActions>
+                                <span>
+                                    {
+                                        this.state.isBeingUpdated === index ?
+                                        (
+                                            <span>
+                                                <Divider />
+                                                <CardContent>
+                                                    <ArticleMiseAJourComponent/>
+                                                </CardContent>
+                                            </span>
+                                        ) : null
+                                    }
+                                </span>
                             </Card>
                         )}
                         <Grid container justify='center'>
