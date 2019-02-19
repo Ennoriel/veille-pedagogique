@@ -34,7 +34,7 @@ export class ArticleController{
         addRegexParam(queryParam, 'siteInternet', req.query.siteInternet);
         addAfterParam(queryParam, 'createdAt', req.query.createdAt);
         addRegexParams(queryParam, 'themes', req.query.themes);
-        addBooleanParam(queryParam, 'isVisible', false, true);
+        addBooleanParam(queryParam, 'isVisible', false, false);
 
         console.log("");
         console.log("");
