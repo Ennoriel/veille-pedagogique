@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
 import { ArticleModel } from './article.types'
-import { addRegexParam, addRegexParams, addAfterParam } from './../shared/searchObject.util';
+import {
+    addRegexParam,
+    addRegexParams,
+    addRegexParamsOrEmpty,
+    addAfterParam,
+    addBooleanParam
+} from './../shared/searchObject.util';
 
 export class ArticleController{
 
@@ -24,10 +30,19 @@ export class ArticleController{
         addRegexParam(queryParam, 'title', req.query.title);
         // TODO remplacer les espaces de la description par des | en regex
         addRegexParam(queryParam, 'description', req.query.description);
-        addRegexParams(queryParam, 'medium', req.query.medium === '{}' ? null : req.query.medium);
+        addRegexParamsOrEmpty(queryParam, 'medium', req.query.medium === '{}' ? null : req.query.medium);
         addRegexParam(queryParam, 'siteInternet', req.query.siteInternet);
         addAfterParam(queryParam, 'createdAt', req.query.createdAt);
         addRegexParams(queryParam, 'themes', req.query.themes);
+        addBooleanParam(queryParam, 'isVisible', false, true);
+
+        console.log("");
+        console.log("");
+        console.log("");
+        console.log("URL QUERY");
+        console.log(req.query);
+        console.log("MONGO QUERY");
+        console.log(queryParam);
 
         ArticleModel
                 .find(queryParam)
@@ -35,6 +50,21 @@ export class ArticleController{
                 .skip(perPage * page)
                 .sort({"indexedAt": "desc"})
                 .exec((err, article) => {
+                    
+            if(err){
+                res.status(400).send(err);
+                return;
+            }
+            res.json(article);
+        });
+    }
+
+    public getArticleWithID = (req: Request, res: Response) => {
+        this.getArticleById(req.params._id, res)
+    }
+
+    public getArticleById (id: string, res: Response) {
+        ArticleModel.findById(id, (err, article) => {
             if(err){
                 res.send(err);
             }
@@ -42,22 +72,18 @@ export class ArticleController{
         });
     }
 
-    public getArticleWithID (req: Request, res: Response) {
-        console.log(req.params._id);           
-        ArticleModel.findById(req.params._id, (err, article) => {
-            if(err){
-                res.send(err);
-            }
-            res.json(article);
-        });
-    }
+    public updateArticle = (req: Request, res: Response) => {
 
-    public updateArticle (req: Request, res: Response) {
-        ArticleModel.findOneAndUpdate({ _id: req.params._id }, req.body, { new: true }, (err, article) => {
+        let article = req.body.params;
+        if(article._id) {
+            delete article._id;
+        }console.log(article);
+        
+        ArticleModel.findOneAndReplace({ _id: req.params._id }, article, (err, article) => {
             if(err){
                 res.send(err);
             }
-            res.json(article);
+            this.getArticleById(req.params._id, res);
         });
     }
 

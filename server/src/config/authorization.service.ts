@@ -18,7 +18,6 @@ export class AuthorizationService {
     public jwtFilter = (req: Request, res: Response, next: NextFunction) => {
 
         if(this.isAuthorizedWithoutToken(req.method, req.url)) {
-            console.log('no JWT Token verification');
             next();
         } else {
             let token = req.get('Authorization');

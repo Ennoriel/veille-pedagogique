@@ -3,6 +3,8 @@ export interface articleState {
 }
 
 export interface ArticleItem {
+    _id: string,
+    isVisible?: boolean
     title: string,
     url: string,
     language: string,

@@ -15,7 +15,8 @@ export const routes = [
         label: 'Home',
         userRights: [
             UserRight.NOT_AUTH,
-            UserRight.BEARER
+            UserRight.BEARER,
+            UserRight.SUPER_USER
         ],
         component: Home,
         icon: <InboxIcon/>
@@ -42,7 +43,8 @@ export const routes = [
         path: '/articles',
         label: 'Articles',
         userRights: [
-            UserRight.BEARER
+            UserRight.BEARER,
+            UserRight.SUPER_USER
         ],
         component: Article,
         icon: <MailIcon/>
