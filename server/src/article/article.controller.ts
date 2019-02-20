@@ -1,3 +1,5 @@
+var jwt = require('jsonwebtoken');
+
 import { Request, Response } from 'express';
 import { ArticleModel } from './article.types'
 import {
@@ -5,7 +7,8 @@ import {
     addRegexParams,
     addRegexParamsOrEmpty,
     addAfterParam,
-    addBooleanParam
+    addBooleanParam,
+    addNullParam
 } from './../shared/searchObject.util';
 
 export class ArticleController{
@@ -35,14 +38,16 @@ export class ArticleController{
         addAfterParam(queryParam, 'createdAt', req.query.createdAt);
         addRegexParams(queryParam, 'themes', req.query.themes);
         addBooleanParam(queryParam, 'isVisible', false, false);
+        
 
-        console.log("");
-        console.log("");
-        console.log("");
-        console.log("URL QUERY");
-        console.log(req.query);
-        console.log("MONGO QUERY");
-        console.log(queryParam);
+        let token = req.get('Authorization');
+        let user = jwt.decode(token);
+
+        if (user.right === "AUTHORIZED") {
+            addNullParam(queryParam, 'approvedAt', false);
+        } else if (user.right === "SUPER_USER") {
+            addNullParam(queryParam, 'approvedAt', true);
+        }
 
         ArticleModel
                 .find(queryParam)
