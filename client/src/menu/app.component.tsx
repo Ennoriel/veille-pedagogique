@@ -12,6 +12,8 @@ import MainFrame from './mainFrame.component';
 import { MenuRoute } from './menu.types';
 import { logout } from 'src/redux.services/action/user.action';
 import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
+import { ResetArticlePage } from 'src/redux.services/action/config.action';
+import { ReplaceAllArticles } from 'src/redux.services/action/article.action';
 
 const styles = (theme : any) => ({
     root: {
@@ -45,6 +47,8 @@ class App extends React.Component<Props> {
     handleLogout(): void {
         store.dispatch(logout());
         store.dispatch(saveActiveRoute(DEFAULT_ROUTE));
+        store.dispatch(ResetArticlePage());
+        store.dispatch(ReplaceAllArticles([]));
         this.handleDrawerClose();
     }
     
