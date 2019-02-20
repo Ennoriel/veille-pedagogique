@@ -201,17 +201,9 @@ class Article extends React.Component<Props> {
 
         return (
             <div>
-                {
-                    /**
-                     * Le super-utilisateur n'a pas le droit de filter.
-                     * Il peut juste éditer les articles
-                     */
-                    isSuperUser() ? null :
-                        <ArticleCriteresComponent
-                            handleSearch={this.handleSearch}
-                        />
-                        
-                }
+                <ArticleCriteresComponent
+                    handleSearch={this.handleSearch}
+                />
                 {
                     _.values(articles).length ?
                     <div>
