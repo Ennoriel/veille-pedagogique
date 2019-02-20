@@ -43,6 +43,7 @@ import ArticleMiseAJourComponent from './ArticleMiseAJour.component';
 const styles = (theme : any) => ({
     card: {
         marginBottom: "20px",
+        overflow: 'visible' as 'visible'
     },
     chip: {
         margin: "0 5px",

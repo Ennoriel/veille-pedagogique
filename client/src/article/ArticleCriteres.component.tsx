@@ -281,6 +281,7 @@ class ArticleCriteres extends React.Component<Props> {
                             <DownShiftMultipleComponent
                                 label="themes"
                                 liste={this.state.suggestions}
+                                addNewItems={false}
                                 value={this.state.article.themes}
                                 handleRes={this.handleThemes}
                             />
