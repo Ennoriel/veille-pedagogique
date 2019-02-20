@@ -15,6 +15,7 @@ export class User {
     firstname: string;
     email: string;
     password: string;
+    right: string;
 }
 
 /**
@@ -26,7 +27,8 @@ var userSchema = new Schema({
     lastname: String,
     firstname: String,
     email: {type: mongoose.SchemaTypes.Email, unique: true, require},
-    password: String
+    password: String,
+    right: String
 
 });
 

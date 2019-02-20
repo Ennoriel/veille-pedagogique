@@ -15,7 +15,8 @@ export const routes = [
         label: 'Home',
         userRights: [
             UserRight.NOT_AUTH,
-            UserRight.BEARER,
+            UserRight.BEARER_0,
+            UserRight.BEARER_1,
             UserRight.SUPER_USER
         ],
         component: Home,
@@ -43,7 +44,7 @@ export const routes = [
         path: '/articles',
         label: 'Articles',
         userRights: [
-            UserRight.BEARER,
+            UserRight.BEARER_1,
             UserRight.SUPER_USER
         ],
         component: Article,

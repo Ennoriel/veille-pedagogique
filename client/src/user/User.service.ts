@@ -3,11 +3,11 @@ import { UserRight } from "./User.types";
 
 export class UserService {
 
-    isAuthenticated(): boolean {
-        return store.getState().user.userRight === UserRight.BEARER;
+    getUserRight = (): UserRight => {
+        return store.getState().user.userRight;
     }
 
-    getUserRight(): UserRight {
-        return store.getState().user.userRight;
+    isAuthenticated = (): boolean => {
+        return [UserRight.BEARER_0, UserRight.BEARER_1].includes(this.getUserRight());
     }
 }
