@@ -157,7 +157,6 @@ class DownshiftMultiple extends React.Component<Props> {
     handleKeyDown = (event: number) => {
         const { inputValue } = this.state;
         let { selectedItem } = this.state;
-        console.log(keycode(event));
 
         /**
          * Si la touche haut ou bas est appuyé, on n'autorise plus la saisie manuelle
