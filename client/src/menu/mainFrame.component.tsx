@@ -83,7 +83,7 @@ class CustomRoute extends React.Component<CustomRouteProps & RouteProps> {
        const {component: Component, privilege, ...rest} = this.props;
 
        const renderRoute = (props: any) => {
-           console.log(this.isAuthenticated(privilege))
+           
            if (this.isAuthenticated(privilege)) {
               return (
                   <Component {...props} />

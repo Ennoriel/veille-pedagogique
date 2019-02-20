@@ -69,8 +69,6 @@ class ArticleCriteres extends React.Component<Props> {
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
         this.handleExpandClick = this.handleExpandClick.bind(this);
 
-        console.log(this.state);
-
         this.state = {
             article: new ArticleCritere(),
             expanded: false,
@@ -283,6 +281,7 @@ class ArticleCriteres extends React.Component<Props> {
                             <DownShiftMultipleComponent
                                 label="themes"
                                 liste={this.state.suggestions}
+                                addNewItems={false}
                                 value={this.state.article.themes}
                                 handleRes={this.handleThemes}
                             />

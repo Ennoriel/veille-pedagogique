@@ -103,7 +103,7 @@ class MenuDrawer extends React.Component<Props> {
                         />
                     ))}
                     {
-                        userRight === UserRight.BEARER ?
+                        userRight !== UserRight.NOT_AUTH ?
                         <Route
                             path={DEFAULT_ROUTE.path}
                             children={({ match }) => (

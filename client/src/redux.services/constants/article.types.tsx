@@ -3,11 +3,14 @@ export interface articleState {
 }
 
 export interface ArticleItem {
+    _id: string,
+    isVisible?: boolean
     title: string,
     url: string,
     language: string,
     medium: string,
     createdAt: number,
+    approvedAt: number,
     indexedAt: number,
     description: string,
     themes: Array<string>

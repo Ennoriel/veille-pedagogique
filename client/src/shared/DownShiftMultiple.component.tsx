@@ -122,12 +122,14 @@ function renderSuggestion(
 interface State {
     inputValue: string;
     selectedItem: string[];
+    isManualAddingEnabled: boolean;
 }
 
 export interface Props {
     label: string;
     liste: string[];
     value: string[];
+    addNewItems: boolean
     handleRes: ((liste: string[]) => never);
     classes?: any;
 }
@@ -146,22 +148,50 @@ class DownshiftMultiple extends React.Component<Props> {
     readonly state: State = {
         inputValue: '',
         selectedItem: this.props.value || [],
+        isManualAddingEnabled: true
     };
   
     /**
      * Gestion de la suppression d'un élément par la touche "suppr" du clavier
      */
     handleKeyDown = (event: number) => {
-        const { inputValue, selectedItem } = this.state;
+        const { inputValue } = this.state;
+        let { selectedItem } = this.state;
+        console.log(keycode(event));
+
+        /**
+         * Si la touche haut ou bas est appuyé, on n'autorise plus la saisie manuelle
+         * pour prévenir l'enregistrement de la saisie utilisateur et d'un item de la liste
+         */ 
+        if(keycode(event) === 'down' || keycode(event) === 'up') {
+            this.setState({
+                isManualAddingEnabled: false
+            })
+        }
+
         if (selectedItem.length && !inputValue.length && keycode(event) === 'backspace') {
 
             let selectedItemFinal = selectedItem.slice(0, selectedItem.length - 1)
 
             this.setState({
                 selectedItem: selectedItemFinal,
+                isManualAddingEnabled: true
             });
 
             this.props.handleRes(selectedItemFinal);
+
+        } else if (this.props.addNewItems && this.state.isManualAddingEnabled
+                    && inputValue.length && keycode(event) === 'enter') {
+
+            if (selectedItem.indexOf(inputValue) === -1) {
+                selectedItem = [...selectedItem, inputValue];
+            }
+
+            this.setState({
+                inputValue: '',
+                selectedItem,
+            });
+            this.props.handleRes(this.state.selectedItem);
         }
     };
   
@@ -185,6 +215,7 @@ class DownshiftMultiple extends React.Component<Props> {
         this.setState({
             inputValue: '',
             selectedItem,
+            isManualAddingEnabled: true
         });
 
         this.props.handleRes(selectedItem);
@@ -198,7 +229,10 @@ class DownshiftMultiple extends React.Component<Props> {
 
         selectedItem.splice(selectedItem.indexOf(item), 1);
 
-        this.setState({selectedItem});
+        this.setState({
+            selectedItem,
+            isManualAddingEnabled: true
+        });
         this.props.handleRes(selectedItem);
     };
   

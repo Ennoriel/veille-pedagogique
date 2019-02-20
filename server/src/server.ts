@@ -62,9 +62,7 @@ class Server {
      * Lancement du serveur
      */
     private serveurLaunch(): void {
-        this.app.listen(3001, () => {
-            console.log(`Listening at http://localhost:${3001}/`);
-        });
+        this.app.listen(3001, () => {});
     }
 
 }

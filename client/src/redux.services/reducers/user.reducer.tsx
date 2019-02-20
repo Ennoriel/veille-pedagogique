@@ -5,7 +5,17 @@ const defaultUser: IUser = {
     userRight: UserRight.NOT_AUTH
 };
 
-export default (state: IUser = defaultUser, action: SaveUserData | Logout) => {
+const superUser: IUser = {
+	email: 'azer@azer.azer',
+	firstname: 'azer',
+	lastname: 'azer',
+	token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YzNhNDgyZjAzZTIxZjE4NTk2MDU4MTciLCJpYXQiOjE1NTA0MjUxODd9.AcTIfjujcxlLcVydtwIHGkTiXeJv5ND6zMUzt1i-I74',
+	userRight: UserRight.SUPER_USER,
+	username: 'azerazerazer',
+	_id: '5c3a482f03e21f1859605817'
+}
+
+export default (state: IUser = superUser, action: SaveUserData | Logout) => {
     switch(action.type) {
         case SAVE_USER_DATA:
             return {
