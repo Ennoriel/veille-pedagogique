@@ -27,6 +27,7 @@ export class UserController{
         }
 
         newUser.password = bcrypt.hashSync(newUser.password, 10);
+        newUser.right = "NOT_AUTHORIZED";
     
         newUser.save((err: MongoError, user: User) => {
             if(err){
@@ -151,7 +152,8 @@ export class UserController{
      * @param user User
      */
     private getAuthToken(user: User) {
-        return jwt.sign({_id : user._id}, 'SECRET');
+        const { _id, right } = user;
+        return jwt.sign({ _id, right }, 'SECRET');
     }
 
     /**

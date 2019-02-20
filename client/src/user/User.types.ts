@@ -24,6 +24,7 @@ export class User implements IUser{
         this.password = '';
         this.passwordBis = '';
         this.userRight = UserRight.NOT_AUTH;
+        this.right = "UNAUTHORIZED";
     }
 
     _id: string;
@@ -33,7 +34,11 @@ export class User implements IUser{
     email: string;
     password: string;
     passwordBis: string;
-    userRight: UserRight
+    userRight: UserRight;
+    /**
+     * right sent by the server
+     */
+    right: string;
 }
 
 export const SAVE_USER_DATA = 'SAVE_USER_DATA';
@@ -49,7 +54,8 @@ export interface UserState {
 
 export enum UserRight {
     NOT_AUTH,
-    BEARER,
+    BEARER_0,
+    BEARER_1,
     SUPER_USER
 }
 
