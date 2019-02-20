@@ -1,10 +1,13 @@
 import { Request, Response, NextFunction } from "express";
+import { UserController } from "./../user/user.controller";
 var jwt = require('jsonwebtoken');
 
 /**
  * Service d'autorisation
  */
 export class AuthorizationService {
+
+    public userController: UserController = new UserController();
 
     /**
      * filtre permettant de laisser passer un appel webservice d'un utilisateur habilité.
@@ -17,16 +20,62 @@ export class AuthorizationService {
      */
     public jwtFilter = (req: Request, res: Response, next: NextFunction) => {
 
+        const encodedToken = req.get('Authorization');
+        let isTokenOk;
+
         if(this.isAuthorizedWithoutToken(req.method, req.url)) {
+            isTokenOk = true;
+        } else if (!this.isTokenPresent(encodedToken)) {
+            isTokenOk = false;
+        } else if (!this.isTokenPreserved(encodedToken)) {
+            isTokenOk = false;
+        } else if (!this.isTokenInUse(encodedToken)) {
+            isTokenOk = false;
+        } else {
+            isTokenOk = true;
+        }
+
+        if (isTokenOk) {
             next();
         } else {
-            let token = req.get('Authorization');
-            if(token == null || !jwt.verify(token, 'SECRET')) {
-                res.status(400).send({message: 'you shall not pass!'});
-            } else {
-                next();
-            }
+            res.status(400).send({message: 'you shall not pass!'});
         }
+    }
+
+    /**
+     * Méthode de vérification de nullité du jeton
+     * @param encodedToken jeton
+     */
+    private isTokenPresent(encodedToken: string): any {
+        return encodedToken !== null
+    }
+
+    /**
+     * Méthode de vérification de la non altération du jeton
+     * @param encodedToken jeton
+     */
+    private isTokenPreserved(encodedToken: string): any {
+        try {
+            jwt.verify(encodedToken, 'SECRET');
+            return true;
+        } catch(e) {
+            return false;
+        }
+    }
+
+    /**
+     * Méthode de vérification de l'appartenance du jeton à un utilisateur
+     * @param encodedToken jeton
+     */
+    private isTokenInUse(encodedToken: string): any {
+        const clearToken = jwt.decode(encodedToken);
+        this.userController.existsUserById(clearToken._id).then(user => {
+            if (!user) {
+                return false;
+            } else {
+                return true;
+            }
+        });
     }
 
     /**
