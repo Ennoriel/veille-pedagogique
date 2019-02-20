@@ -102,12 +102,15 @@ class ArticleMiseAJour extends React.Component<Props> {
     }
 
     /**
-     * 
+     * Ajoute la date d'aprobabation de l'article et transmet l'article au composant parent
+     * pour l'enregistrement et la mise à jour de l'article affiché
      */
     handleArticleMaj() {
         this.setState({
             ...this.state.article,
-            article : new Date().getTime()
+            article : {
+                approvedAt: new Date().getTime()
+            }
         })
         
         this.props.handleArticleMaj(this.state.article)
