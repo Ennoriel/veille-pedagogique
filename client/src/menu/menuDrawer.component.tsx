@@ -9,7 +9,7 @@ import { routes } from './routes';
 import { MenuRoute } from './menu.types';
 import { UserService } from 'src/user/User.service';
 
-import MailIcon from '@material-ui/icons/Mail';
+import PauseIcon from '@material-ui/icons/Pause';
 import { UserRight } from 'src/user/User.types';
 import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
 
@@ -112,7 +112,7 @@ class MenuDrawer extends React.Component<Props> {
                                     onClick={() => this.props.handleLogout()}
                                 >
                                     <ListItem button className={classes.logout}>
-                                        <ListItemIcon><MailIcon/></ListItemIcon>
+                                        <ListItemIcon><PauseIcon/></ListItemIcon>
                                         <ListItemText primary="Logout" />
                                     </ListItem>
                                 </Link>
