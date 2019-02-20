@@ -31,7 +31,7 @@ import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
 
 import classNames from 'classnames';
 import { WithStyleComponent } from 'src/shared/standard.types';
-import { SaveArticles, ReplaceArticles, RemoveArticle, ReplaceArticle } from 'src/redux.services/action/article.action';
+import { SaveArticles, RemoveArticle, ReplaceArticle, ReplaceAllArticles } from 'src/redux.services/action/article.action';
 import { ArticleRepositoryService } from './Article.repositoryService';
 import { IncrementArticlePage, ResetArticlePage } from 'src/redux.services/action/config.action';
 import ArticleCriteresComponent from './ArticleCriteres.component';
@@ -64,6 +64,9 @@ const styles = (theme : any) => ({
     },
     buttonWidth: {
         width: '350px'
+    },
+    description: {
+        whiteSpace: 'pre-line' as 'pre-line'
     }
 });
 
@@ -107,7 +110,7 @@ class Article extends React.Component<Props> {
         this.handleHideArticle = this.handleHideArticle.bind(this);
         this.handleDeleteArticle = this.handleDeleteArticle.bind(this);
         this.handlOpenUpdateArticlePanel = this.handlOpenUpdateArticlePanel.bind(this);
-        this.handlArticleMaj = this.handlArticleMaj.bind(this);
+        this.handleArticleMaj = this.handleArticleMaj.bind(this);
     }
 
     readonly state: State;
@@ -140,7 +143,7 @@ class Article extends React.Component<Props> {
         articleRepositoryService.getArticles(articleCritere).then(value => {
             store.dispatch(ResetArticlePage());
             store.dispatch(IncrementArticlePage());
-            store.dispatch(ReplaceArticles(value.data))
+            store.dispatch(ReplaceAllArticles(value.data))
         }).catch(error => {
             // TODO gérer l'erreur
         });
@@ -179,7 +182,10 @@ class Article extends React.Component<Props> {
     /**
      * Enregistre les modifications d'un article & Le mets à jour dans la liste
      */
-    handlArticleMaj(index: number, articleNew: ArticleItem) {
+    handleArticleMaj(index: number, articleNew: ArticleItem) {
+        this.setState({
+            isBeingUpdated: -1
+        });
         articleRepositoryService.updateArticle(articleNew).then(() => {
             store.dispatch(ReplaceArticle(index, articleNew));
         });
@@ -260,7 +266,7 @@ class Article extends React.Component<Props> {
                                             ) : null
                                         }
                                     </div>
-                                    <Typography component="p">
+                                    <Typography component="p" className={classes.description}>
                                         {article.description}
                                     </Typography>
                                 </CardContent>
@@ -299,7 +305,7 @@ class Article extends React.Component<Props> {
                                                 <CardContent>
                                                     <ArticleMiseAJourComponent
                                                         article={article}
-                                                        handleArticleMaj={(articleNew: ArticleItem) => handleArticleMaj(index, articleNew)}/>
+                                                        handleArticleMaj={(articleNew: ArticleItem) => this.handleArticleMaj(index, articleNew)}/>
                                                 </CardContent>
                                             </span>
                                         ) : null

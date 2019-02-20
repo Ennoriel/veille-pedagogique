@@ -74,10 +74,11 @@ export class ArticleController{
 
     public updateArticle = (req: Request, res: Response) => {
 
-        let article = req.body.params;
+        let article = req.body;
+
         if(article._id) {
             delete article._id;
-        }console.log(article);
+        }
         
         ArticleModel.findOneAndReplace({ _id: req.params._id }, article, (err, article) => {
             if(err){

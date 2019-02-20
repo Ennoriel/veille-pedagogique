@@ -31,10 +31,9 @@ export class ArticleRepositoryService  {
      */
     public updateArticle(article: ArticleItem) {
         let config = {
-            headers: {Authorization: store.getState().user.token},
-            params: article
+            headers: {Authorization: store.getState().user.token}
         }
-        return axios.put(URI_ARTICLES + '/' + article._id, config);
+        return axios.put(URI_ARTICLES + '/' + article._id, article, config);
     }
 
     /**

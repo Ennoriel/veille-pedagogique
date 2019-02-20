@@ -10,6 +10,7 @@ export interface ArticleItem {
     language: string,
     medium: string,
     createdAt: number,
+    approvedAt: number,
     indexedAt: number,
     description: string,
     themes: Array<string>
