@@ -77,3 +77,20 @@ export function addAfterParam(paramObject: any, paramKey: string, paramValue: nu
         };
     }
 }
+
+/**
+ * Ajoute un attribut à un objet de recherche
+ * pour rechercher un attribut null ou non
+ * @param paramObject objet de recherche
+ * @param paramKey clef de recherche
+ * @param paramValue si TRUE, rechercher null, si FALSE, rechercher non null
+ */
+export function addNullParam(paramObject: any, paramKey: string, paramValue: boolean) {
+    if(paramValue) {
+        paramObject[paramKey] = null;
+    } else {
+        paramObject[paramKey] = {
+            '$ne': null
+        };
+    }
+}
