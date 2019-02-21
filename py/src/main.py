@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
 # List of installed dependencies:
 #    sudo apt-get install python3-dev
 # 	 pip install tweepy
