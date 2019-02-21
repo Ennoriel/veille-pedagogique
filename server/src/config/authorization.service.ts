@@ -20,26 +20,42 @@ export class AuthorizationService {
      */
     public jwtFilter = (req: Request, res: Response, next: NextFunction) => {
 
+        this.isTokenOk(req, res).then(isTokenOk => {
+            if (isTokenOk) {
+                next();
+            } else {
+                res.status(400).send({message: 'you shall not pass!'});
+            }
+        })
+    }
+
+    /**
+     * Méthode de vérification des différents contrôles de validité du jeton
+     * @param req requête
+     * @param res réponse
+     */
+    private isTokenOk = async (req: Request, res: Response) => {
+
         const encodedToken = req.get('Authorization');
         let isTokenOk;
 
         if(this.isAuthorizedWithoutToken(req.method, req.url)) {
+            console.log("1")
             isTokenOk = true;
         } else if (!this.isTokenPresent(encodedToken)) {
+            console.log("2")
             isTokenOk = false;
         } else if (!this.isTokenPreserved(encodedToken)) {
+            console.log("3")
             isTokenOk = false;
-        } else if (!this.isTokenInUse(encodedToken)) {
+        } else if (await this.isTokenInUse(encodedToken)) {
+            console.log("4")
             isTokenOk = false;
         } else {
+            console.log("5")
             isTokenOk = true;
         }
-
-        if (isTokenOk) {
-            next();
-        } else {
-            res.status(400).send({message: 'you shall not pass!'});
-        }
+        return isTokenOk;
     }
 
     /**
