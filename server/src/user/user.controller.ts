@@ -72,7 +72,8 @@ export class UserController{
     }
 
     /**
-     * Réccupération d'un utilisateur par son identifiant technique
+     * Permet de tester l'existance d'un utilisateur
+     * Méthode asynchrone, pour envoit HTTP
      * 
      * @param req requête
      * @param res réponse
@@ -92,6 +93,16 @@ export class UserController{
             console.log('ok');
             res.status(200).send(true);
         });
+    }
+
+    /**
+     * Permet de tester l'existance d'un utilisateur
+     * Méthode asynchrone, pour usage interne
+     * 
+     * @param _id identifiant technique de l'utilisateur
+     */
+    public existsUserById (_id: string) {
+        return UserModel.findById(_id)
     }
 
     /**
