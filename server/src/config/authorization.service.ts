@@ -40,19 +40,14 @@ export class AuthorizationService {
         let isTokenOk;
 
         if(this.isAuthorizedWithoutToken(req.method, req.url)) {
-            console.log("1")
             isTokenOk = true;
         } else if (!this.isTokenPresent(encodedToken)) {
-            console.log("2")
             isTokenOk = false;
         } else if (!this.isTokenPreserved(encodedToken)) {
-            console.log("3")
             isTokenOk = false;
         } else if (await this.isTokenInUse(encodedToken)) {
-            console.log("4")
             isTokenOk = false;
         } else {
-            console.log("5")
             isTokenOk = true;
         }
         return isTokenOk;
