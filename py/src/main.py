@@ -92,6 +92,7 @@ def main():
 
 	for index, tweet in enumerate(pedagogy_tweets):
 		# print_first_tweet(tweet)
+		print(str(index) + " / " + str(len(pedagogy_tweets)))
 
 		if not tweetmongo.exists(tweet._json["id"]):
 
@@ -105,7 +106,7 @@ def main():
 			nb_tweet_enregistre = nb_tweet_enregistre + 1
 			nbarticle_enregistre = nbarticle_enregistre + len(article_models)
 
-	print(str(nb_tweet_enregistre) + " tweets enregistrés.")
+	print(str(nb_tweet_enregistre) + " / " + str(len(pedagogy_tweets)) + " tweets enregistrés.")
 	print(str(nbarticle_enregistre) + " articles enregistrés.")
 
 
