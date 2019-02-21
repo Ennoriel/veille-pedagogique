@@ -63,6 +63,9 @@ class MainFrame extends React.Component<Props> {
                         exact path={route.path}
                     />
                 )}
+                <Redirect
+                    to={DEFAULT_ROUTE.path}
+                />
             </main>
         );
     }
