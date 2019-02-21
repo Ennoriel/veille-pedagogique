@@ -52,6 +52,7 @@ export class AuthorizationService {
 
     /**
      * Méthode de vérification de la non altération du jeton
+     * jwt.verify() throws an exception if the token is ivalid
      * @param encodedToken jeton
      */
     private isTokenPreserved(encodedToken: string): any {
