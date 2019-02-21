@@ -40,6 +40,8 @@ import { UserRight } from "src/user/User.types";
 import { isNullOrUndefined } from 'util';
 import ArticleMiseAJourComponent from './ArticleMiseAJour.component';
 
+import { toFrenchFormatDate } from 'src/shared/date.utils';
+
 const styles = (theme : any) => ({
     card: {
         marginBottom: "20px",
@@ -211,7 +213,7 @@ class Article extends React.Component<Props> {
                             <Card key={index} className={classes.card}>
                                 <CardHeader
                                     title={article.title}
-                                    subheader={new Date(article.indexedAt).toDateString()}
+                                    subheader={toFrenchFormatDate(new Date(article.indexedAt))}
                                     action={
                                         <div>
                                             <IconButton>
