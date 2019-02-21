@@ -20,6 +20,22 @@ export class AuthorizationService {
      */
     public jwtFilter = (req: Request, res: Response, next: NextFunction) => {
 
+        this.isTokenOk(req, res).then(isTokenOk => {
+            if (isTokenOk) {
+                next();
+            } else {
+                res.status(400).send({message: 'you shall not pass!'});
+            }
+        })
+    }
+
+    /**
+     * Méthode de vérification des différents contrôles de validité du jeton
+     * @param req requête
+     * @param res réponse
+     */
+    private isTokenOk = async (req: Request, res: Response) => {
+
         const encodedToken = req.get('Authorization');
         let isTokenOk;
 
@@ -29,17 +45,12 @@ export class AuthorizationService {
             isTokenOk = false;
         } else if (!this.isTokenPreserved(encodedToken)) {
             isTokenOk = false;
-        } else if (!this.isTokenInUse(encodedToken)) {
+        } else if (!await this.isTokenInUse(encodedToken)) {
             isTokenOk = false;
         } else {
             isTokenOk = true;
         }
-
-        if (isTokenOk) {
-            next();
-        } else {
-            res.status(400).send({message: 'you shall not pass!'});
-        }
+        return isTokenOk;
     }
 
     /**
@@ -68,15 +79,16 @@ export class AuthorizationService {
      * Méthode de vérification de l'appartenance du jeton à un utilisateur
      * @param encodedToken jeton
      */
-    private isTokenInUse(encodedToken: string): any {
+    private async isTokenInUse(encodedToken: string) {
+
         const clearToken = jwt.decode(encodedToken);
-        this.userController.existsUserById(clearToken._id).then(user => {
-            if (!user) {
-                return false;
-            } else {
-                return true;
-            }
-        });
+        const user = await this.userController.existsUserById(clearToken._id)
+        
+        if (!!user) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
