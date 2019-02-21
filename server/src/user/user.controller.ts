@@ -102,7 +102,7 @@ export class UserController{
      * @param _id identifiant technique de l'utilisateur
      */
     public existsUserById (_id: string) {
-        return UserModel.findById(_id)
+        return UserModel.findById(_id, {_id: 1})
     }
 
     /**
