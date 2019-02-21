@@ -45,7 +45,7 @@ export class AuthorizationService {
             isTokenOk = false;
         } else if (!this.isTokenPreserved(encodedToken)) {
             isTokenOk = false;
-        } else if (await this.isTokenInUse(encodedToken)) {
+        } else if (!await this.isTokenInUse(encodedToken)) {
             isTokenOk = false;
         } else {
             isTokenOk = true;
@@ -79,15 +79,16 @@ export class AuthorizationService {
      * Méthode de vérification de l'appartenance du jeton à un utilisateur
      * @param encodedToken jeton
      */
-    private isTokenInUse(encodedToken: string): any {
+    private async isTokenInUse(encodedToken: string) {
+
         const clearToken = jwt.decode(encodedToken);
-        this.userController.existsUserById(clearToken._id).then(user => {
-            if (!user) {
-                return false;
-            } else {
-                return true;
-            }
-        });
+        const user = await this.userController.existsUserById(clearToken._id)
+        
+        if (!!user) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
