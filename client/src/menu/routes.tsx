@@ -5,8 +5,10 @@ import Register from '../user/register/Register.components';
 import Login from '../user/login/Login.component';
 import Article from '../article/Article.component';
 
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import HomeIcon from '@material-ui/icons/Home';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SubjectIcon from '@material-ui/icons/Subject';
 import { UserRight } from 'src/user/User.types';
 
 export const routes = [
@@ -20,7 +22,7 @@ export const routes = [
             UserRight.SUPER_USER
         ],
         component: Home,
-        icon: <InboxIcon/>
+        icon: <HomeIcon/>
     },
     {
         path: '/register',
@@ -29,7 +31,7 @@ export const routes = [
             UserRight.NOT_AUTH,
         ],
         component: Register,
-        icon: <MailIcon/>
+        icon: <GroupAddIcon/>
     },
     {
         path: '/login',
@@ -38,7 +40,7 @@ export const routes = [
             UserRight.NOT_AUTH,
         ],
         component: Login,
-        icon: <InboxIcon/>
+        icon: <AccountCircleIcon/>
     },
     {
         path: '/articles',
@@ -48,6 +50,6 @@ export const routes = [
             UserRight.SUPER_USER
         ],
         component: Article,
-        icon: <MailIcon/>
+        icon: <SubjectIcon/>
     }
 ]
