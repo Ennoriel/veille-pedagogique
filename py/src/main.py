@@ -135,6 +135,9 @@ def main():
 		# print_first_tweet(tweet)
 		print(str(index + 1) + " / " + str(len(pedagogy_tweets) + 1))
 
+		if tweet.lang != 'fr':
+			continue
+
 		if not tweetmongo.exists(tweet._json["id"]):
 
 			tweet_model = get_tweet_model(tweet)
