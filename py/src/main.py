@@ -17,7 +17,6 @@ import url_utils
 import ast
 import time
 
-
 consumer_key = "AXuCZQkAfoThsLg0Jp7I0UNJ5"
 consumer_secret = "seFkcnlYUytqK9MkyrRxgt3BdTVBF1FhLnbC3nqrI53hGSnDZJ"
 access_token = "2498179466-x2m98oTJm3u3bMO0pAVyotWMVxuCGSt1mLPwS3K"
@@ -54,6 +53,22 @@ def get_tweet_model(tweet):
 	}
 
 
+def update_article_if_exists(url: str, tweet_id: str) -> bool:
+	"""
+		If an article already exists, add the tweet id to it
+		Returns whether an article has been found or not
+	"""
+
+	articles = articlemongo.gets(url)
+
+	if articles.count() > 0:
+		for article in articles:
+			article['tweetId'].append(tweet_id)
+			articlemongo.update_tweet_ids(article)
+
+	return articles.count() > 0
+
+
 def get_article_models(tweet):
 	articles = []
 
@@ -61,8 +76,7 @@ def get_article_models(tweet):
 
 		unshorten_url = url_utils.unshorten(url["expanded_url"])
 
-		if articlemongo.exists(unshorten_url):
-			# TODO feature : dans ce cas, il faut lier l'article existant au tweet
+		if update_article_if_exists(unshorten_url, tweet._json["id"]):
 			continue
 
 		if re.search("^https://twitter.com/\\w+/status/\\d+$", url["expanded_url"]):
@@ -107,7 +121,6 @@ def get_saved_tweet_id():
 	else:
 		tweet_id_in = []
 
-
 	with open('tweet_id.txt', 'w') as f:
 		f.write(str(tweet_id_in))
 
@@ -134,6 +147,9 @@ def main():
 	for index, tweet in enumerate(pedagogy_tweets):
 		# print_first_tweet(tweet)
 		print(str(index + 1) + " / " + str(len(pedagogy_tweets) + 1))
+
+		if tweet.lang != 'fr':
+			continue
 
 		if not tweetmongo.exists(tweet._json["id"]):
 

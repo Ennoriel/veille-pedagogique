@@ -15,3 +15,8 @@ def exists(url):
 def saves(articles):
 	client = pymongo.MongoClient("mongodb://abcdef1:abcdef1@ds117158.mlab.com:17158/veille-pedago")
 	return client["veille-pedago"]["articles"].insert_many(articles)
+
+
+def update_tweet_ids(article):
+	client = pymongo.MongoClient("mongodb://abcdef1:abcdef1@ds117158.mlab.com:17158/veille-pedago")
+	return client["veille-pedago"]["articles"].update_one({"_id": article['_id']}, {'$set': {'tweetId' : article['tweetId']}})
