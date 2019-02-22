@@ -14,6 +14,8 @@ import re
 from twisted.internet import task, reactor
 import datetime
 import url_utils
+import ast
+import time
 
 
 consumer_key = "AXuCZQkAfoThsLg0Jp7I0UNJ5"
@@ -89,15 +91,49 @@ def get_article_models(tweet):
 	return articles
 
 
+def get_saved_tweet_id():
+	with open('tweet_id.txt', 'r') as f:
+		tweet_id = f.read()
+
+	tweet_id = ast.literal_eval(tweet_id)
+
+	interval = 30
+	interval_max = min(interval, len(tweet_id))
+
+	tweet_id_out = tweet_id[0:interval_max]
+
+	if interval == interval_max:
+		tweet_id_in = tweet_id[interval:len(tweet_id)]
+	else:
+		tweet_id_in = []
+
+
+	with open('tweet_id.txt', 'w') as f:
+		f.write(str(tweet_id_in))
+
+	with open('tweet_id_out.txt', 'a') as f:
+		f.writelines("%s\n" % tweet_id_o for tweet_id_o in tweet_id_out)
+
+	return tweet_id_out
+
+
 def main():
-	pedagogy_tweets = api.search(q='#pedagogie', result_type='recent', tweet_mode='extended', lang='fr', count=5)
+	# pedagogy_tweets = api.search(q='#pedagogie', result_type='recent', tweet_mode='extended', lang='fr', count=5)
+
+	ts = time.time()
+
+	tweet_id = get_saved_tweet_id()
+	pedagogy_tweets = api.statuses_lookup(tweet_id, tweet_mode='extended')
+
+	with open('test2.json', 'w') as f:
+		f.write(str(pedagogy_tweets))
 
 	nb_tweet_enregistre = 0
 	nbarticle_enregistre = 0
 
 	for index, tweet in enumerate(pedagogy_tweets):
 		# print_first_tweet(tweet)
-		print(str(index) + " / " + str(len(pedagogy_tweets)))
+		print(str(index + 1) + " / " + str(len(pedagogy_tweets) + 1))
 
 		if not tweetmongo.exists(tweet._json["id"]):
 
@@ -111,11 +147,12 @@ def main():
 			nb_tweet_enregistre = nb_tweet_enregistre + 1
 			nbarticle_enregistre = nbarticle_enregistre + len(article_models)
 
+	print("En " + str(time.time() - ts) + "s, le programme a :")
 	print(str(nb_tweet_enregistre) + " / " + str(len(pedagogy_tweets)) + " tweets enregistrés.")
 	print(str(nbarticle_enregistre) + " articles enregistrés.")
 
 
-timeout = 300.0
+timeout = 60.0
 
 
 def do_work():
