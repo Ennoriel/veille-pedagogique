@@ -76,10 +76,14 @@ def get_article_models(tweet):
 
 		unshorten_url = url_utils.unshorten(url["expanded_url"])
 
-		if update_article_if_exists(unshorten_url, tweet._json["id"]):
+		# Suppression des url en double dans un tweet
+		if unshorten_url in [a['url'] for a in articles]:
 			continue
 
 		if re.search("^https://twitter.com/\\w+/status/\\d+$", url["expanded_url"]):
+			continue
+
+		if update_article_if_exists(unshorten_url, tweet._json["id"]):
 			continue
 
 		# TODO feature : si l'url est un site, ne pas l'enregistrer en tant qu'article
@@ -111,7 +115,7 @@ def get_saved_tweet_id():
 
 	tweet_id = ast.literal_eval(tweet_id)
 
-	interval = 30
+	interval = 40
 	interval_max = min(interval, len(tweet_id))
 
 	tweet_id_out = tweet_id[0:interval_max]
@@ -146,7 +150,7 @@ def main():
 
 	for index, tweet in enumerate(pedagogy_tweets):
 		# print_first_tweet(tweet)
-		print(str(index + 1) + " / " + str(len(pedagogy_tweets) + 1))
+		print(str(index + 1) + " / " + str(len(pedagogy_tweets)) + " (" + str(tweet._json["id"]) + ")")
 
 		if tweet.lang != 'fr':
 			continue
