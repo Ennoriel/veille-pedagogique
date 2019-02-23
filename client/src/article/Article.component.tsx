@@ -48,13 +48,13 @@ const styles = (theme : any) => ({
         overflow: 'visible' as 'visible'
     },
     chip: {
-        margin: "0 5px",
+        margin: "0 5px 10px 5px",
     },
-    toto: {
+    chipContainer: {
         display: "flex",
         justifyContent: "center",
         flexWrap: "wrap" as "wrap",
-        marginBottom: "15px"
+        marginBottom: "5px"
     },
     cardActions: {
         padding: "8px 22px 8px 10px !important"
@@ -202,7 +202,8 @@ class Article extends React.Component<Props> {
         articles = store.getState().article as articleState;
 
         return (
-            <div>
+            <Grid container justify='center'>
+                <Grid item xs={10} lg={8}>
                 <ArticleCriteresComponent
                     handleSearch={this.handleSearch}
                 />
@@ -240,7 +241,7 @@ class Article extends React.Component<Props> {
                                 />
                                 <Divider />
                                 <CardContent>
-                                    <div className={classes.toto}>
+                                    <div className={classes.chipContainer}>
                                         {
                                             article.medium ?
                                                 <Chip
@@ -323,7 +324,9 @@ class Article extends React.Component<Props> {
                     </div>
                     : <Typography>Aucun article ne correspond à votre recherche. Merci de choisir d'autres critères de recherche.</Typography>
                 }
-            </div>
+            
+            </Grid>
+            </Grid>
         );
     }
 }

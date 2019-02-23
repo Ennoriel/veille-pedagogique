@@ -22,7 +22,7 @@ export const routes = [
             UserRight.SUPER_USER
         ],
         component: Home,
-        icon: <HomeIcon/>
+        icon: <HomeIcon color="primary"/>
     },
     {
         path: '/register',
@@ -31,7 +31,7 @@ export const routes = [
             UserRight.NOT_AUTH,
         ],
         component: Register,
-        icon: <GroupAddIcon/>
+        icon: <GroupAddIcon color="primary"/>
     },
     {
         path: '/login',
@@ -40,7 +40,7 @@ export const routes = [
             UserRight.NOT_AUTH,
         ],
         component: Login,
-        icon: <AccountCircleIcon/>
+        icon: <AccountCircleIcon color="primary"/>
     },
     {
         path: '/articles',
@@ -50,6 +50,6 @@ export const routes = [
             UserRight.SUPER_USER
         ],
         component: Article,
-        icon: <SubjectIcon/>
+        icon: <SubjectIcon color="primary"/>
     }
 ]
