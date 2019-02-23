@@ -15,7 +15,7 @@ export class User {
     firstname: string;
     email: string;
     password: string;
-    right: string;
+    right: UserRight;
 }
 
 /**
@@ -31,6 +31,13 @@ var userSchema = new Schema({
     right: String
 
 });
+
+export enum UserRight {
+    NOT_AUTH = "NOT_AUTH",
+    BEARER_FREE = "BEARER_FREE",
+    BEARER_PREMIUM = "BEARER_PREMIUM",
+    SUPER_USER = "SUPER_USER"
+}
 
 /**
  * Modèle d'un utilisateur

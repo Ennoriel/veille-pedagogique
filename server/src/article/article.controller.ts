@@ -10,6 +10,7 @@ import {
     addBooleanParam,
     addNullParam
 } from './../shared/searchObject.util';
+import { UserRight } from './../user/user.types';
 
 export class ArticleController{
 
@@ -43,9 +44,9 @@ export class ArticleController{
         let token = req.get('Authorization');
         let user = jwt.decode(token);
 
-        if (user.right === "AUTHORIZED") {
+        if (user.right === UserRight.BEARER_PREMIUM) {
             addNullParam(queryParam, 'approvedAt', false);
-        } else if (user.right === "SUPER_USER") {
+        } else if (user.right === UserRight.SUPER_USER) {
             addNullParam(queryParam, 'approvedAt', true);
         }
 
