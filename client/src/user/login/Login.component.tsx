@@ -35,7 +35,7 @@ export interface Props {
 interface State {
     user: User,
     error: User,
-    redirectToHome: boolean
+    redirectToHome: boolean,
     messageErreur: string
 }
 
