@@ -172,9 +172,6 @@ class Login extends React.Component<Props> {
                                         variant="outlined"
                                     />
                             </Grid>
-                            {/* the helper text of the password field is volutary long
-                            to let it be full length (otherwise a Textfield in a Grid
-                            doesn't seem to be doing the job) */}
                             <Grid item xs={12} className={classes.gridInput}>
                                 <TextField
                                     id="password"
@@ -185,7 +182,7 @@ class Login extends React.Component<Props> {
                                     value={this.state.user.password}
                                     onChange={this.handleInputChange}
                                     required
-                                    helperText="Just a reminder that we forced you to chose a 12 characters password. Thus a less than 12 characters password won't work. It might be obvious for some of you but maybe not for all of you. And because we care about every single person typing his/her password, we wanted to be more precise ;)"
+                                    helperText="(at least 12 characters)"
                                     fullWidth
                                     margin="normal"
                                     variant="outlined"
