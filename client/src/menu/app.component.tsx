@@ -18,6 +18,9 @@ import { ReplaceAllArticles } from 'src/redux.services/action/article.action';
 const styles = (theme : any) => ({
     root: {
         display: 'flex',
+    },
+    main: {
+        flex: '0 0 100%'
     }
 });
 
@@ -64,7 +67,7 @@ class App extends React.Component<Props> {
                     handleDrawerOpen={this.handleDrawerOpen}
                 />
                 <Router>
-                    <div>
+                    <div className={classes.main}>
                         <MenuDrawer
                             open={open}
                             handleDrawerClose={this.handleDrawerClose}

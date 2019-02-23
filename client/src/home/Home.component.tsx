@@ -1,12 +1,18 @@
 import * as React from "react";
-import { Typography, Grid } from "@material-ui/core";
+import { Typography, Grid, withStyles } from "@material-ui/core";
+import { WithStyleComponent } from "src/shared/standard.types";
+
+const styles = (theme : any) => ({
+})
 
 export interface Props {
+    classes?: any;
 }
 
 class Home extends React.Component<Props> {
 
     render(): JSX.Element {
+
         return (
             <Grid container justify='center'>
                 <Grid item xs={10} lg={8}>
@@ -39,4 +45,4 @@ class Home extends React.Component<Props> {
     }
 }
 
-export default Home;
+export default withStyles(styles, { withTheme: true })(Home) as WithStyleComponent;
