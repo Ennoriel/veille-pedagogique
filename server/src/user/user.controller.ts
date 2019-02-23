@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import { Request, Response } from 'express';
-import { User, UserModel } from './user.types'
+import { User, UserModel, UserRight } from './user.types'
 import { MongoError } from 'mongodb';
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
@@ -27,7 +27,7 @@ export class UserController{
         }
 
         newUser.password = bcrypt.hashSync(newUser.password, 10);
-        newUser.right = "NOT_AUTHORIZED";
+        newUser.right = UserRight.BEARER_FREE;
     
         newUser.save((err: MongoError, user: User) => {
             if(err){

@@ -79,7 +79,7 @@ interface CustomRouteProps {
 class CustomRoute extends React.Component<CustomRouteProps & RouteProps> {
 
     isAuthenticated(routePrivilege: Array<UserRight>) {
-        return routePrivilege.includes(store.getState().user.userRight);
+        return routePrivilege.includes(store.getState().user.right!);
     }
 
     render() {

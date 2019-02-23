@@ -86,7 +86,7 @@ interface State {
 }
 
 function isSuperUser() {
-    return store.getState().user.userRight === UserRight.SUPER_USER;
+    return store.getState().user.right === UserRight.SUPER_USER;
 }
 
 /**

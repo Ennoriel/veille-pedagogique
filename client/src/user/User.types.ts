@@ -7,7 +7,7 @@ export interface IUser{
     email?: string;
     password?: string;
     passwordBis?: string;
-    userRight: UserRight;
+    right?: UserRight;
     token?: string;
 }
 
@@ -23,8 +23,7 @@ export class User implements IUser{
         this.email = '';
         this.password = '';
         this.passwordBis = '';
-        this.userRight = UserRight.NOT_AUTH;
-        this.right = "UNAUTHORIZED";
+        this.right = UserRight.NOT_AUTH;
     }
 
     _id: string;
@@ -34,11 +33,7 @@ export class User implements IUser{
     email: string;
     password: string;
     passwordBis: string;
-    userRight: UserRight;
-    /**
-     * right sent by the server
-     */
-    right: string;
+    right: UserRight;
 }
 
 export const SAVE_USER_DATA = 'SAVE_USER_DATA';
@@ -53,10 +48,10 @@ export interface UserState {
 }
 
 export enum UserRight {
-    NOT_AUTH,
-    BEARER_0,
-    BEARER_1,
-    SUPER_USER
+    NOT_AUTH = "NOT_AUTH",
+    BEARER_FREE = "BEARER_FREE",
+    BEARER_PREMIUM = "BEARER_PREMIUM",
+    SUPER_USER = "SUPER_USER"
 }
 
 export const EMAIL_REGEXP = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
