@@ -11,6 +11,7 @@ import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import { Redirect } from 'react-router';
 import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
 import { WithStyleComponent } from 'src/shared/standard.types';
+import ErrorDialog from 'src/shared/ErrorDialog.component';
 
 const styles = (theme : any) => ({
     root: {
@@ -35,7 +36,8 @@ interface State {
     user: User,
     error: User,
     usernameHelperText: string,
-    redirectToHome: boolean
+    redirectToHome: boolean,
+    messageErreur: string
 }
 
 const ERREUR = 'o';
@@ -68,7 +70,8 @@ class Register extends React.Component<Props & ClassNames> {
         user : new User(),
         error: new User(),
         usernameHelperText: '',
-        redirectToHome: false
+        redirectToHome: false,
+        messageErreur: ''
     };
   
     /**
@@ -302,6 +305,10 @@ class Register extends React.Component<Props & ClassNames> {
                         </Grid>
                     </Grid>
                 </Grid>
+                <ErrorDialog
+                    onClose={() => this.setState({"messageErreur": ""})}
+                    message={this.state.messageErreur}
+                />
             </div>
         );
     }
