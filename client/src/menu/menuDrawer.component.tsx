@@ -37,6 +37,9 @@ const styles = (theme: any) => ({
     logout: {
         position: 'absolute' as 'absolute',
         bottom: '10px'
+    },
+    liens: {
+        textDecoration: 'none'
     }
 })
 
@@ -93,6 +96,7 @@ class MenuDrawer extends React.Component<Props> {
                                 <Link
                                     to={route.path}
                                     onClick={() => this.props.handleRouteChange(route)}
+                                    className={classes.liens}
                                 >
                                     <ListItem button>
                                         <ListItemIcon>{route.icon}</ListItemIcon>
@@ -112,7 +116,7 @@ class MenuDrawer extends React.Component<Props> {
                                     onClick={() => this.props.handleLogout()}
                                 >
                                     <ListItem button className={classes.logout}>
-                                        <ListItemIcon><PauseIcon/></ListItemIcon>
+                                        <ListItemIcon><PauseIcon color="primary"/></ListItemIcon>
                                         <ListItemText primary="Logout" />
                                     </ListItem>
                                 </Link>
