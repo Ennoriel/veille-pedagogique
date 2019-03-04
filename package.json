@@ -1,0 +1,20 @@
+{
+  "name": "veille-pedago",
+  "version": "1.0.0",
+  "description": "> Make knowledge valuable.",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd server && npm run start",
+    "heroku-postbuild": "concurrently \"cd server && npm run ib\" \"cd server/client && npm run ib\" ",
+    "nodemonz": "concurrently \"cd server && npm run nodemonz\" \"cd server/client && npm run nodemonz\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@framagit.org:Maxime103/veille-pedago.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^4.1.0"
+  }
+}

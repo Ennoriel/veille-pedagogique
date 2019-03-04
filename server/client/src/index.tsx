@@ -15,6 +15,8 @@ render();
 store.subscribe(render);
 
 function logState() {
-    console.log("%c LOG STATE", "background: black; color: #fff");
-    console.log(store.getState());
+    if(process.env.ENV === 'development') {
+        console.log("%c LOG STATE", "background: black; color: #fff");
+        console.log(store.getState());
+    }
 };

@@ -1,4 +1,5 @@
-import { Application } from "express";
+import * as express from "express";
+
 import { UserController } from "./user.controller";
 
 /**
@@ -12,22 +13,25 @@ export class Routes {
      * Définition des routes liés à un utilisateur
      * @param app contexte de l'application express
      */
-    public routes(app: Application): void {
+    get routes(): express.Router {
         
-        app.route('/user')
+        let router = express.Router();
+        
+        router.route('/user')
         .get(this.userController.getUsers)
         .post(this.userController.addNewUser);
 
-        app.route('/user/:_id')
+        router.route('/user/:_id')
         .get(this.userController.getUserByID)
         .put(this.userController.updateUser)
         .delete(this.userController.deleteUser);
 
-        app.route('/user/exists/:username')
+        router.route('/user/exists/:username')
         .get(this.userController.existsUser)
 
-        app.route('/authenticate')
+        router.route('/authenticate')
         .post(this.userController.authenticate)
 
+        return router;
     }
 }

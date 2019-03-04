@@ -81,16 +81,16 @@ export class UserController{
     public existsUser (req: Request, res: Response) {
         UserModel.findOne({'username' : req.params.username}, (err: MongoError, user: User) => {
             if(err){
-                console.log('erreur grave');
+                // Erreur non géré
                 res.status(400).send(err);
                 return;
             }
             if(user == null) {
-                console.log('erreur');
+                // Utilisateur non connu de la BDD
                 res.status(200).send(false);
                 return;
             }
-            console.log('ok');
+            // Utilisateur connu de la BDD
             res.status(200).send(true);
         });
     }
