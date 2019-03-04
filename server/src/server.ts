@@ -5,6 +5,9 @@ import { Routes as UserRoutes } from "./user/user.routes";
 import * as mongoose from "mongoose";
 import { AuthorizationService } from "./config/authorization.service";
 import { CorsService } from "./config/cors.service";
+import * as path from "path";
+
+const BASE_URI = '/api';
 
 /**
  * Serveur de l'application
@@ -46,8 +49,15 @@ class Server {
 
         this.app.use(this.authorizationSerivce.jwtFilter);
 
-        this.articleRoute.routes(this.app);
-        this.userRoute.routes(this.app);
+
+        this.app.use(express.static(path.join(__dirname, '/../client/build')));
+        
+        this.app.use(BASE_URI, this.articleRoute.routes);
+        this.app.use(BASE_URI, this.userRoute.routes);
+
+        this.app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, '/../client/build/index.html'));
+        });
     }
 
     /**
@@ -62,7 +72,7 @@ class Server {
      * Lancement du serveur
      */
     private serveurLaunch(): void {
-        this.app.listen(3001, () => {});
+        this.app.listen(process.env.PORT || 3001, () => {});
     }
 
 }

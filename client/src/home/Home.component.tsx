@@ -32,7 +32,7 @@ class Home extends React.Component<Props> {
                                 align="center"
                                 className={classes.titre}
                             >
-                                Veille Pédagogique
+                                Veille Pédagogique ! ! !
                             </Typography>
                         </CardContent>
                         <CardMedia

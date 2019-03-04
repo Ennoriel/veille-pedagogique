@@ -1,1 +1,1 @@
-export const BASE_URI_SERVER = 'http://localhost:3001';
+export const BASE_URI_SERVER = '/api';

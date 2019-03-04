@@ -1,28 +1,32 @@
-import { Application } from "express";
-import { Request, Response, NextFunction } from "express";
+import * as express from "express";
+
 import { ArticleController } from "./article.controller";
 
 export class Routes { 
     
     public articleController: ArticleController = new ArticleController();
     
-    public routes(app: Application): void {
+    get routes(): express.Router {
         
+        let router = express.Router();
+
         // Article
-        app.route('/article')
+        router.route('/article')
         .get(this.articleController.getArticles)        
 
         // POST endpoint
         .post(this.articleController.addNewArticle);
 
         // Article detail
-        app.route('/article/:_id')
+        router.route('/article/:_id')
         // get specific article
         .get(this.articleController.getArticleWithID)
         .put(this.articleController.updateArticle)
         .delete(this.articleController.deleteArticle);
 
-        app.route('/theme')
+        router.route('/theme')
         .get(this.articleController.getThemes);
+
+        return router;
     }
 }

@@ -2,11 +2,12 @@
   "name": "veille-pedago-client",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3001",
   "scripts": {
-    "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
-    "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "ib": "npm i && npm i --only=dev && npm run build",
+    "hot": "react-scripts-ts build",
+    "nodemonz": "./node_modules/nodemon/bin/nodemon.js"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.2",
@@ -20,6 +21,7 @@
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-router-dom": "^4.3.1",
+    "react-scripts-ts": "^4.0.8",
     "redux": "^4.0.1",
     "rxjs": "^6.4.0"
   },
@@ -35,9 +37,8 @@
     "@types/react-router-dom": "^4.3.1",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.9.1",
-    "react-scripts-ts": "^4.0.8",
-    "react-test-renderer": "^16.8.3",
-    "typescript": "^3.3.3333"
+    "nodemon": "^1.18.10",
+    "react-test-renderer": "^16.8.3"
   },
   "browserslist": [
     ">0.2%",

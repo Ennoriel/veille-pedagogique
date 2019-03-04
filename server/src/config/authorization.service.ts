@@ -98,9 +98,18 @@ export class AuthorizationService {
      */
     private isAuthorizedWithoutToken = (method: string, url: string) => {
 
+        /**
+         * Si l'url ne commence pas par '/api',
+         * l'appel est utilisé pour réccupérer une page statique,
+         * on ne filtre pas à ce niveau
+        **/
+        if(url.slice(0,4) !== '/api') {
+            return true;
+        }
+
         const map: Map<string, Array<RegExp>> = new Map();
 
-        const regExpUrlGet = [/^\/user\/exists\/.*/];
+        const regExpUrlGet = [/^\/user\/existss\/.*/];
         const regExpUrlPost = [/^\/authenticate$/, /^\/user$/];
         const REGEXP_EVERYTHING = [/.*/];
 
@@ -108,7 +117,7 @@ export class AuthorizationService {
         map.set('OPTIONS', REGEXP_EVERYTHING);
         map.set('POST', regExpUrlPost);
 
-        return map.get(method) != null && map.get(method).filter(regexUrl => url.match(regexUrl)).length > 0;
+        return map.get(method) != null && map.get(method).filter(regexUrl => url.replace('/api','').match(regexUrl)).length > 0;
     }
 }
 
