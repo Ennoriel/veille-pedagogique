@@ -114,3 +114,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# project specific
+tweet_id.txt
+tweet_id_out.txt
+tweet_id_save.txt
