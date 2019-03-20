@@ -1,0 +1,237 @@
+from tweepy.models import Status
+from datetime import datetime
+from ast import literal_eval
+from tweepy import OAuthHandler, API
+from tweetmongo import exists as tweet_exists, saves_many as tweet_saves_many
+from articlemongo import saves_many as article_saves_many, gets as article_gets, update_tweet_ids as article_update_tweet_ids
+from re import compile, escape, findall, search
+from url_utils import unshorten
+from itertools import chain
+
+
+class User:
+
+	def __init__(self, status: Status):
+		author = status.__getattribute__("author").__getattribute__("_json")
+
+		self.id = author["id"]
+		self.name = author["name"]
+		self.screen_name = author["screen_name"]
+
+	def get(self):
+		return {
+			"id": self.id,
+			"name": self.name,
+			"screenName": self.screen_name,
+		}
+
+
+class Tweet:
+
+	def __init__(self, status: Status):
+		_json = status.__getattribute__("_json")
+		full_text = status.__getattribute__("full_text")
+		entities = status.__getattribute__("entities")
+
+		self.id = _json["id"]
+		self.text = bulk_replace(full_text, {url["url"]: url["expanded_url"] for url in entities["urls"]})
+		self.created_at = _json["created_at"]
+		self.user = User(status)
+		self.url = "https://twitter.com/" + self.user.screen_name + "/status/" + _json["id_str"]
+
+	@staticmethod
+	def get_saved_tweet_ids():
+
+		with open('tweet_id.txt', 'r') as f:
+			tweet_ids = f.read()
+
+		tweet_ids = literal_eval(tweet_ids)
+
+		interval_max = 30
+		interval = min(interval_max, len(tweet_ids))
+
+		tweet_ids_to_fetch = tweet_ids[0:interval]
+
+		# saving remaining tweet ids
+		with open('tweet_id.txt', 'w') as f:
+			if interval == interval_max:
+				f.write(str(tweet_ids[interval:len(tweet_ids)]))
+			else:
+				f.write('[]')
+
+		# logging tweet ids to be searched
+		with open('tweet_id_out.txt', 'a') as f:
+			f.writelines("%s\n" % tweet_id_o for tweet_id_o in tweet_ids_to_fetch)
+
+		return tweet_ids_to_fetch
+
+	def get(self):
+		return {
+			"id": self.id,
+			"text": self.text,
+			"createdAt": self.created_at,
+			"user": self.user.get(),
+			"url": self.url
+		}
+
+
+class Article:
+
+	def __init__(self, status: Status, url: str):
+		self.title = ""
+		self.url = url
+		self.language = status.__getattribute__("lang")
+		self.medium = ""
+		self.created_at = None
+		self.indexed_at = datetime.now()
+		self.approved_at = None
+		self.description = ""
+		self.themes = [hashtag["text"] for hashtag in status.__getattribute__("entities")["hashtags"]]
+		self.site_internet = findall("[\\w-]+\.[\\w.-]+", url)[0]
+		self.auteur = []
+		self.tweets = [Tweet(status)]
+
+	def add_tweet(self, status):
+		# TODO : lorsque l'on ajoute un tweet, ajouter les hashtags comme thèmes (potentiellement différents)
+		self.tweets.append(Tweet(status))
+
+	@staticmethod
+	def update_article_if_exists(url: str, tweet_id: str) -> bool:
+		"""
+			If an article already exists, add the tweet id to it
+			Returns whether an article has been found or not
+		"""
+
+		articles = article_gets(url)
+
+		if articles.count() > 0:
+			for article in articles:
+				article['tweetId'].append(tweet_id)
+				article_update_tweet_ids(article)
+
+		return articles.count() > 0
+
+	def get(self):
+		return {
+			"title": self.title,
+			"url": self.url,
+			"language": self.language,
+			"medium": self.medium,
+			"createdAt": self.created_at,
+			"indexedAt": self.indexed_at,
+			"approvedAt": self.approved_at,
+			"description": self.description,
+			"themes": self.themes,
+			"siteInternet": self.site_internet,
+			"auteur": self.auteur,
+			"tweetId": [tweet.id for tweet in self.tweets]
+		}
+
+
+class ApiCusto:
+
+	def __init__(self):
+
+		consumer_key = "AXuCZQkAfoThsLg0Jp7I0UNJ5"
+		consumer_secret = "seFkcnlYUytqK9MkyrRxgt3BdTVBF1FhLnbC3nqrI53hGSnDZJ"
+		access_token = "2498179466-x2m98oTJm3u3bMO0pAVyotWMVxuCGSt1mLPwS3K"
+		access_token_secret = "L8p4dU8gjqlmQSejicfezr4JXRdAhkD5PGz2WidxpVHOD"
+
+		auth = OAuthHandler(consumer_key, consumer_secret)
+		auth.set_access_token(access_token, access_token_secret)
+
+		self.api = API(auth)
+
+	def fetch(self):
+		"""
+		fetch remote or local if time is remote fetch limit is not reached
+		:return: tweets
+		"""
+		return self.fetch_local()
+
+	def fetch_remote(self):
+		"""
+		Fetch to Twitter API tweets by their hashtags
+		:return:
+		"""
+		return self.api.search(q='#pedagogie', result_type='recent', tweet_mode='extended', lang='fr', count=5)
+
+	def fetch_local(self):
+		"""
+		Fetch to Twitter API local saved tweet ids
+		:return:
+		"""
+		tweet_ids_to_fetch = Tweet.get_saved_tweet_ids()
+		if tweet_ids_to_fetch:
+			return self.api.statuses_lookup(tweet_ids_to_fetch, tweet_mode='extended')
+		else:
+			return []
+
+	def parse(self):
+
+		statuses = self.fetch()
+
+		articles = []
+
+		for status in statuses:
+
+			# Suppression des tweets non francophones
+			if status.__getattribute__("lang") != 'fr':
+				continue
+
+			# Suppression des tweets déjà enregistrés
+			if tweet_exists(status.__getattribute__("_json")["id"]):
+				continue
+
+			article_courants = []
+			_json = status.__getattribute__("_json")
+
+			for url in status.entities["urls"]:
+
+				unshorten_url = unshorten(url["expanded_url"])
+
+				# Suppression des url en double dans un tweet
+				if unshorten_url in [a.url for a in article_courants]:
+					continue
+
+				# Suppression des url qui sont des liens vers d'autres status Twitter
+				if search("^https://twitter.com/\\w+/status/\\d+$", url["expanded_url"]):
+					continue
+
+				# Si l'url pointe vers un article déjà référencé, on le mets à jour et on passe à l'url suivante
+				if Article.update_article_if_exists(unshorten_url, _json["id"]):
+					continue
+
+				# TODO feature : si l'url est un site, ne pas l'enregistrer en tant qu'article
+				# la regex (?<!\/)\/(?!\/) permet de trouver le premier caractère après la fin de l'url du site
+
+				# Si article déjà référencé, on le met à jour localement
+				if unshorten_url in [article.url for article in articles]:
+					for article in articles:
+						if article.url == unshorten_url:
+							article.add_tweet(status)
+							break
+					continue
+
+				article_courants.append(Article(status, unshorten_url))
+
+			articles.extend(article_courants)
+
+		return articles
+
+	def fetch_and_parse(self):
+		articles = self.parse()
+
+		article_saves_many([article.get() for article in articles])
+
+		tweets = list(chain.from_iterable([article.tweets for article in articles]))
+		tweet_saves_many([tweet.get() for tweet in tweets])
+
+
+def bulk_replace(text, tab):
+	if not tab:
+		return text
+	else:
+		rep = dict((escape(k), v) for k, v in tab.items())
+		pattern = compile("|".join(rep.keys()))
+		return pattern.sub(lambda m: rep[escape(m.group(0))], text)

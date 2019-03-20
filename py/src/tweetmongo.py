@@ -12,6 +12,11 @@ def exists(id):
 	return tweet.count() > 0
 
 
-def saves(tweet):
+def saves_one(tweet):
 	client = pymongo.MongoClient("mongodb://abcdef1:abcdef1@ds117158.mlab.com:17158/veille-pedago")
 	return client["veille-pedago"]["tweets"].insert_one(tweet)
+
+
+def saves_many(tweets):
+	client = pymongo.MongoClient("mongodb://abcdef1:abcdef1@ds117158.mlab.com:17158/veille-pedago")
+	return client["veille-pedago"]["tweets"].insert_many(tweets)
