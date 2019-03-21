@@ -7,6 +7,7 @@ from articlemongo import saves_many as article_saves_many, gets as article_gets,
 from re import compile, escape, findall, search
 from url_utils import unshorten
 from itertools import chain
+from newspaper import Config as NPConfig, Article as NPArticle, ArticleException
 
 
 class User:
@@ -47,7 +48,7 @@ class Tweet:
 
 		tweet_ids = literal_eval(tweet_ids)
 
-		interval_max = 30
+		interval_max = 5
 		interval = min(interval_max, len(tweet_ids))
 
 		tweet_ids_to_fetch = tweet_ids[0:interval]
@@ -65,6 +66,16 @@ class Tweet:
 
 		return tweet_ids_to_fetch
 
+	@staticmethod
+	def get_page_content(url: str):
+		config = NPConfig()
+		config.MAX_TITLE = 500
+		config.language = 'fr'
+		config.request_timeout = 20
+		config.memoize_articles = False
+
+		return NPArticle(url=url, config=config)
+
 	def get(self):
 		return {
 			"id": self.id,
@@ -77,18 +88,20 @@ class Tweet:
 
 class Article:
 
-	def __init__(self, status: Status, url: str):
-		self.title = ""
+	def __init__(self, status: Status, article_content: NPArticle, url: str):
+		self.title = article_content.title
 		self.url = url
 		self.language = status.__getattribute__("lang")
 		self.medium = ""
-		self.created_at = None
+		self.top_image = article_content.top_img
+		self.created_at = article_content.publish_date
 		self.indexed_at = datetime.now()
 		self.approved_at = None
-		self.description = ""
-		self.themes = [hashtag["text"] for hashtag in status.__getattribute__("entities")["hashtags"]]
+		self.description = article_content.text[:500] if len(article_content.text) > 500 else article_content.text
+		self.full_text = article_content.text
+		self.themes = [hashtag["text"] for hashtag in status.__getattribute__("entities")["hashtags"]].extend(article_content.keywords)
 		self.site_internet = findall("[\\w-]+\.[\\w.-]+", url)[0]
-		self.auteur = []
+		self.auteur = article_content.authors
 		self.tweets = [Tweet(status)]
 
 	def add_tweet(self, status):
@@ -117,6 +130,7 @@ class Article:
 			"url": self.url,
 			"language": self.language,
 			"medium": self.medium,
+			"topImage": self.top_image,
 			"createdAt": self.created_at,
 			"indexedAt": self.indexed_at,
 			"approvedAt": self.approved_at,
@@ -213,7 +227,16 @@ class ApiCusto:
 							break
 					continue
 
-				article_courants.append(Article(status, unshorten_url))
+				article_content = Tweet.get_page_content(unshorten_url)
+
+				try:
+					article_content.build()
+				except ArticleException:
+					# Lien ne renvoyant pas à une URL disponible, on ne l'enregistre pas
+					# TODO : enregistrer les articles nont joignabes avec gestion de tentatives de retry
+					continue
+
+				article_courants.append(Article(status, article_content, unshorten_url))
 
 			articles.extend(article_courants)
 
@@ -222,10 +245,11 @@ class ApiCusto:
 	def fetch_and_parse(self):
 		articles = self.parse()
 
-		article_saves_many([article.get() for article in articles])
+		if articles:
+			article_saves_many([article.get() for article in articles])
 
-		tweets = list(chain.from_iterable([article.tweets for article in articles]))
-		tweet_saves_many([tweet.get() for tweet in tweets])
+			tweets = list(chain.from_iterable([article.tweets for article in articles]))
+			tweet_saves_many([tweet.get() for tweet in tweets])
 
 
 def bulk_replace(text, tab):
