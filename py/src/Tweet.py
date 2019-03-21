@@ -7,7 +7,7 @@ from articlemongo import saves_many as article_saves_many, gets as article_gets,
 from re import compile, escape, findall, search
 from url_utils import unshorten
 from itertools import chain
-from newspaper import Config as NPConfig, Article as NPArticle
+from newspaper import Config as NPConfig, Article as NPArticle, ArticleException
 
 
 class User:
@@ -228,7 +228,13 @@ class ApiCusto:
 					continue
 
 				article_content = Tweet.get_page_content(unshorten_url)
-				article_content.build()
+
+				try:
+					article_content.build()
+				except ArticleException:
+					# Lien ne renvoyant pas à une URL disponible, on ne l'enregistre pas
+					# TODO : enregistrer les articles nont joignabes avec gestion de tentatives de retry
+					continue
 
 				article_courants.append(Article(status, article_content, unshorten_url))
 
@@ -239,10 +245,11 @@ class ApiCusto:
 	def fetch_and_parse(self):
 		articles = self.parse()
 
-		article_saves_many([article.get() for article in articles])
+		if articles:
+			article_saves_many([article.get() for article in articles])
 
-		tweets = list(chain.from_iterable([article.tweets for article in articles]))
-		tweet_saves_many([tweet.get() for tweet in tweets])
+			tweets = list(chain.from_iterable([article.tweets for article in articles]))
+			tweet_saves_many([tweet.get() for tweet in tweets])
 
 
 def bulk_replace(text, tab):
