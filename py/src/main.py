@@ -15,7 +15,7 @@ from Tweet import ApiCusto
 
 api_custo = ApiCusto()
 
-timeout = 30.0
+timeout = 60.0
 
 
 def do_work():

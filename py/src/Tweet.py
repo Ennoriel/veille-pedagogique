@@ -130,6 +130,7 @@ class Article:
 			"url": self.url,
 			"language": self.language,
 			"medium": self.medium,
+			"topImage": self.top_image,
 			"createdAt": self.created_at,
 			"indexedAt": self.indexed_at,
 			"approvedAt": self.approved_at,
