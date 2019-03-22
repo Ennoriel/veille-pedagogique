@@ -8,6 +8,7 @@ from re import compile, escape, findall, search
 from url_utils import unshorten
 from itertools import chain
 from newspaper import Config as NPConfig, Article as NPArticle, ArticleException
+from yaml import load as yaml_load
 
 
 class User:
@@ -146,10 +147,12 @@ class ApiCusto:
 
 	def __init__(self):
 
-		consumer_key = "AXuCZQkAfoThsLg0Jp7I0UNJ5"
-		consumer_secret = "seFkcnlYUytqK9MkyrRxgt3BdTVBF1FhLnbC3nqrI53hGSnDZJ"
-		access_token = "2498179466-x2m98oTJm3u3bMO0pAVyotWMVxuCGSt1mLPwS3K"
-		access_token_secret = "L8p4dU8gjqlmQSejicfezr4JXRdAhkD5PGz2WidxpVHOD"
+		conf = yaml_load(open("credentials.yaml"))["twitter_api"]
+
+		consumer_key = conf["consumer_key"]
+		consumer_secret = conf["consumer_secret"]
+		access_token = conf["access_token"]
+		access_token_secret = conf["access_token_secret"]
 
 		auth = OAuthHandler(consumer_key, consumer_secret)
 		auth.set_access_token(access_token, access_token_secret)
@@ -161,7 +164,7 @@ class ApiCusto:
 		fetch remote or local if time is remote fetch limit is not reached
 		:return: tweets
 		"""
-		return self.fetch_local()
+		return self.fetch_remote()
 
 	def fetch_remote(self):
 		"""
