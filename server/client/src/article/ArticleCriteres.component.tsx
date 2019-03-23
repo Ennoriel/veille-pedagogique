@@ -201,9 +201,7 @@ class ArticleCriteres extends React.Component<Props> {
                         >
                             <ExpandMoreIcon />
                         </IconButton>
-                    }>
-                        <div>Hello</div>
-                    </CardHeader>
+                    }/>
                 <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
                 <Divider />
                 <CardContent>
