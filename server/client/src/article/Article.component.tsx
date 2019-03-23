@@ -213,7 +213,11 @@ class Article extends React.Component<Props> {
                             <Card key={index} className={classes.card}>
                                 <CardHeader
                                     title={article.title}
-                                    subheader={toFrenchFormatDate(new Date(article.indexedAt))}
+                                    subheader={
+                                        article.createdAt ? 
+                                        toFrenchFormatDate(new Date(article.createdAt)) :
+                                        ""
+                                    }
                                     action={
                                         <div>
                                             {!isSuperUser() ? null :
