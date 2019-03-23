@@ -24,7 +24,7 @@ class Home extends React.Component<Props> {
 
         return (
             <Grid container justify='center'>
-                <Grid item xs={10} lg={8}>
+                <Grid item xs={12} lg={8}>
                     <Card>
                         <CardContent>
                             <Typography
@@ -32,7 +32,7 @@ class Home extends React.Component<Props> {
                                 align="center"
                                 className={classes.titre}
                             >
-                                Veille Pédagogique ! ! !
+                                Veille Pédagogique
                             </Typography>
                         </CardContent>
                         <CardMedia
