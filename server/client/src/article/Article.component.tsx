@@ -24,10 +24,9 @@ import VideoCamIcon from '@material-ui/icons/Videocam';
 import NotesIcon from '@material-ui/icons/Notes';
 import LinkIcon from '@material-ui/icons/Link';
 import CreateIcon from '@material-ui/icons/Create';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
 import DeleteIcon from '@material-ui/icons/Delete';
-import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 import classNames from 'classnames';
 import { WithStyleComponent } from 'src/shared/standard.types';
@@ -157,9 +156,9 @@ class Article extends React.Component<Props> {
      * @param article article à cacher
      */
     handleHideArticle(article: ArticleItem, index: number) {
-        article.isVisible = false;
+        article.isVisible = !article.isVisible || false;
         articleRepositoryService.updateArticle(article).then(() => {
-            store.dispatch(RemoveArticle(index));
+            store.dispatch(ReplaceArticle(index, article));
         });
     }
 
@@ -217,19 +216,15 @@ class Article extends React.Component<Props> {
                                     subheader={toFrenchFormatDate(new Date(article.indexedAt))}
                                     action={
                                         <div>
-                                            <IconButton>
-                                                <FavoriteIcon />
-                                            </IconButton>
-                                            <IconButton>
-                                                <ShareIcon />
-                                            </IconButton>
                                             {!isSuperUser() ? null :
                                             [
                                                 <IconButton key={0} onClick={() => this.handlOpenUpdateArticlePanel(index)}>
                                                     <CreateIcon />
                                                 </IconButton>,
                                                 <IconButton key={1} onClick={() => this.handleHideArticle(article, index)}>
-                                                    <RemoveRedEyeIcon />
+                                                    {
+                                                        article.isVisible ? <VisibilityIcon/> : <VisibilityOffIcon/>
+                                                    }
                                                 </IconButton>,
                                                 <IconButton key={2} onClick={() => this.handleDeleteArticle(article, index)}>
                                                     <DeleteIcon />

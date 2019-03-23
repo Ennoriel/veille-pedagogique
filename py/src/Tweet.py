@@ -139,6 +139,7 @@ class Article:
 			"themes": self.themes,
 			"siteInternet": self.site_internet,
 			"auteur": self.auteur,
+			"isVisible": self.title is not None and self.description is not None,
 			"tweetId": [tweet.id for tweet in self.tweets]
 		}
 
