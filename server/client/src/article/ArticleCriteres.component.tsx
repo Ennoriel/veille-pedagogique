@@ -201,12 +201,14 @@ class ArticleCriteres extends React.Component<Props> {
                         >
                             <ExpandMoreIcon />
                         </IconButton>
-                    }/>
+                    }>
+                        <div>Hello</div>
+                    </CardHeader>
                 <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
                 <Divider />
                 <CardContent>
                     <Grid container>
-                        <Grid item xs={6} lg={3} className={classes.gridInput}>
+                        <Grid item xs={12} lg={3} className={classes.gridInput}>
                             <TextField
                                 id="title"
                                 label="Title"
@@ -218,7 +220,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item xs={6} lg={3} className={classes.gridInput}>
+                        <Grid item xs={12} lg={3} className={classes.gridInput}>
                             <TextField
                                 id="description"
                                 label="Description"
@@ -230,7 +232,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item xs={6} lg={3} className={classes.gridInput}>
+                        <Grid item xs={12} lg={3} className={classes.gridInput}>
                             <TextField
                                 id="siteInternet"
                                 label="Site Internet"
@@ -242,7 +244,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item xs={6} lg={3} className={classNames(classes.gridInput, classes.gridCheckBox)}>
+                        <Grid item xs={12} lg={3} className={classNames(classes.gridInput, classes.gridCheckBox)}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -286,7 +288,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 handleRes={this.handleThemes}
                             />
                         </Grid>
-                        <Grid item xs={6} lg={3} className={classes.gridInput}>
+                        <Grid item xs={12} lg={3} className={classes.gridInput}>
                             <DateFieldComponent
                                 value={this.state.article.createdAt}
                                 onChange={this.handleInputChange}
@@ -295,7 +297,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 name="createdAt"
                             />
                         </Grid>
-                        <Grid item xs={6} lg={3} className={classNames(classes.gridInput, classes.gridButton)}>
+                        <Grid item xs={12} lg={3} className={classNames(classes.gridInput, classes.gridButton)}>
                             <Button
                                 onClick={this.handleSearch}
                                 variant="outlined" 

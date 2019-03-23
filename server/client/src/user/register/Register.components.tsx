@@ -191,7 +191,7 @@ class Register extends React.Component<Props & ClassNames> {
         return (
             <div className={classes.root}>
                 <Grid container justify='center'>
-                    <Grid item xs={10} lg={8}>
+                    <Grid item xs={12} lg={8}>
                         <Grid container justify='center'>
                             <Grid item xs={12} className={classes.gridInput}>
                                 <TextField
