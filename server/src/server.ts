@@ -22,8 +22,6 @@ class Server {
     public articleRoute: ArticleRoutes = new ArticleRoutes();
     public userRoute: UserRoutes = new UserRoutes();
 
-    public mongoUrl: string = 'mongodb://veille-pedago-dc8ab820:529269fb1459@ds117158.mlab.com:17158/veille-pedago';
-
     /**
      * Initialisation du contexte du serveur
      */
@@ -65,7 +63,11 @@ class Server {
      */
     private dbConfig(): void {
         (<any>mongoose).Promise = global.Promise;
-        mongoose.connect(this.mongoUrl, { useNewUrlParser: true });        
+
+        let conf = require('./credentials.json')["mongodb"];
+        let mongoUrl = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + conf["db"]
+    
+        mongoose.connect(mongoUrl, { useNewUrlParser: true });        
     }
 
     /**
