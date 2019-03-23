@@ -63,12 +63,12 @@ export class AuthorizationService {
 
     /**
      * Méthode de vérification de la non altération du jeton
-     * jwt.verify() throws an exception if the token is ivalid
+     * jwt.verify() throws an exception if the token is invalid
      * @param encodedToken jeton
      */
     private isTokenPreserved(encodedToken: string): any {
         try {
-            jwt.verify(encodedToken, 'SECRET');
+            jwt.verify(encodedToken, require('./../credentials.json')["jwt"]['secret']);
             return true;
         } catch(e) {
             return false;
@@ -109,13 +109,13 @@ export class AuthorizationService {
 
         const map: Map<string, Array<RegExp>> = new Map();
 
-        const regExpUrlGet = [/^\/user\/existss\/.*/];
-        const regExpUrlPost = [/^\/authenticate$/, /^\/user$/];
+        const regExpUrlGetAuthorized = [/^\/user\/exists\/.*/];
+        const regExpUrlPostAuthorized = [/^\/authenticate$/, /^\/user$/];
         const REGEXP_EVERYTHING = [/.*/];
 
-        map.set('GET', regExpUrlGet);
+        map.set('GET', regExpUrlGetAuthorized);
         map.set('OPTIONS', REGEXP_EVERYTHING);
-        map.set('POST', regExpUrlPost);
+        map.set('POST', regExpUrlPostAuthorized);
 
         return map.get(method) != null && map.get(method).filter(regexUrl => url.replace('/api','').match(regexUrl)).length > 0;
     }
