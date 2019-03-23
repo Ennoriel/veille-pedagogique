@@ -38,7 +38,6 @@ export class ArticleController{
         addRegexParam(queryParam, 'siteInternet', req.query.siteInternet);
         addAfterParam(queryParam, 'createdAt', req.query.createdAt);
         addRegexParams(queryParam, 'themes', req.query.themes);
-        addBooleanParam(queryParam, 'isVisible', false, false);
         
 
         let token = req.get('Authorization');
@@ -46,8 +45,7 @@ export class ArticleController{
 
         if (user.right === UserRight.BEARER_PREMIUM) {
             addNullParam(queryParam, 'approvedAt', false);
-        } else if (user.right === UserRight.SUPER_USER) {
-            addNullParam(queryParam, 'approvedAt', true);
+            addBooleanParam(queryParam, 'isVisible', false, false);
         }
 
         ArticleModel
