@@ -22,6 +22,7 @@ def do_work():
 	print("\n\n")
 	print(datetime.now())
 	api_custo.fetch_and_parse()
+	print('- - - - - - - - -')
 
 
 loop = task.LoopingCall(do_work)
