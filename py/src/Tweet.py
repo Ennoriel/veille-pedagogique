@@ -137,6 +137,7 @@ class Article:
 			"indexedAt": self.indexed_at,
 			"approvedAt": self.approved_at,
 			"description": self.description,
+			"fullText": self.full_text,
 			"themes": self.themes,
 			"siteInternet": self.site_internet,
 			"auteur": self.auteur,
