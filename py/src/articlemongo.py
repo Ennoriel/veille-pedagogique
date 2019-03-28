@@ -2,36 +2,33 @@ from pymongo import MongoClient
 from yaml import load as yaml_load
 
 
-conf = yaml_load(open("credentials.yaml"))["mongodb"]
-db = conf["db"]
-mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + db
+class ArticleMongo:
 
+	def __init__(self):
 
-def gets(url):
-	client = MongoClient(mongo_url)
-	article = client[db]["articles"].find({"url": url})
-	return article
+		conf = yaml_load(open("credentials.yaml"))["mongodb"]
+		self.db = conf["db"]
+		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 
+		self.client = MongoClient(mongo_url)
 
-def get_per_page(page):
-	per_page = 1
-	page = max(0, page)
+	def gets(self, url):
+		article = self.client[self.db]["articles"].find({"url": url})
+		return article
 
-	client = MongoClient(mongo_url)
-	articles = client[db]["articles"].find({}).limit(per_page).skip(page * per_page)
-	return articles
+	def get_per_page(self, page):
+		per_page = 1
+		page = max(0, page)
 
+		articles = self.client[self.db]["articles"].find({}).limit(per_page).skip(page * per_page)
+		return articles
 
-def exists(url):
-	article = gets(url)
-	return article.count() > 0
+	def exists(self, url):
+		article = self.gets(url)
+		return article.count() > 0
 
+	def saves_many(self, articles):
+		return self.client[self.db]["articles"].insert_many(articles)
 
-def saves_many(articles):
-	client = MongoClient(mongo_url)
-	return client[db]["articles"].insert_many(articles)
-
-
-def update_tweet_ids(article):
-	client = MongoClient(mongo_url)
-	return client[db]["articles"].update_one({"_id": article['_id']}, {'$set': {'tweetId' : article['tweetId']}})
+	def update_tweet_ids(self, article):
+		return self.client[self.db]["articles"].update_one({"_id": article['_id']}, {'$set': {'tweetId' : article['tweetId']}})

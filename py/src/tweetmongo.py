@@ -2,27 +2,23 @@ from pymongo import MongoClient
 from yaml import load as yaml_load
 
 
-conf = yaml_load(open("credentials.yaml"))["mongodb"]
-db = conf["db"]
-mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + db
+class TweetMongo:
 
+	def __init__(self):
+		conf = yaml_load(open("credentials.yaml"))["mongodb"]
+		self.db = conf["db"]
+		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 
-def gets(id):
-	client = MongoClient(mongo_url)
-	tweet = client[db]["tweets"].find({"id": id})
-	return tweet
+		self.client = MongoClient(mongo_url)
 
+	def gets(self, id):
+		return self.client[self.db]["tweets"].find({"id": id})
 
-def exists(id):
-	tweet = gets(id)
-	return tweet.count() > 0
+	def exists(self, id):
+		return self.gets(id).count() > 0
 
+	def saves_one(self, tweet):
+		return self.client[self.db]["tweets"].insert_one(tweet)
 
-def saves_one(tweet):
-	client = MongoClient(mongo_url)
-	return client[db]["tweets"].insert_one(tweet)
-
-
-def saves_many(tweets):
-	client = MongoClient(mongo_url)
-	return client[db]["tweets"].insert_many(tweets)
+	def saves_many(self, tweets):
+		return self.client[self.db]["tweets"].insert_many(tweets)
