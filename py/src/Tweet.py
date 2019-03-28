@@ -9,6 +9,7 @@ from url_utils import unshorten
 from itertools import chain
 from newspaper import Config as NPConfig, Article as NPArticle, ArticleException
 from yaml import load as yaml_load
+from logg import dir_log
 
 
 class User:
@@ -49,7 +50,7 @@ class Tweet:
 
 		tweet_ids = literal_eval(tweet_ids)
 
-		interval_max = 5
+		interval_max = 50
 		interval = min(interval_max, len(tweet_ids))
 
 		tweet_ids_to_fetch = tweet_ids[0:interval]
@@ -167,7 +168,7 @@ class ApiCusto:
 		fetch remote or local if time is remote fetch limit is not reached
 		:return: tweets
 		"""
-		return self.fetch_remote()
+		return self.fetch_local()
 
 	def fetch_remote(self):
 		"""
@@ -193,7 +194,9 @@ class ApiCusto:
 
 		articles = []
 
-		for status in statuses:
+		for index_status, status in enumerate(statuses):
+
+			dir_log(0, index_status + 1, len(statuses))
 
 			# Suppression des tweets non francophones
 			if status.__getattribute__("lang") != 'fr':
@@ -206,7 +209,11 @@ class ApiCusto:
 			article_courants = []
 			_json = status.__getattribute__("_json")
 
-			for url in status.entities["urls"]:
+			urls = status.entities["urls"]
+
+			for index_article, url in enumerate(urls):
+
+				dir_log(1, index_article + 1, len(urls))
 
 				unshorten_url = unshorten(url["expanded_url"])
 
