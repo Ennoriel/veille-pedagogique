@@ -2,8 +2,8 @@ from tweepy.models import Status
 from datetime import datetime
 from ast import literal_eval
 from tweepy import OAuthHandler, API
-from tweetmongo import exists as tweet_exists, saves_many as tweet_saves_many
-from articlemongo import saves_many as article_saves_many, gets as article_gets, update_tweet_ids as article_update_tweet_ids
+from tweetmongo import TweetMongo
+from articlemongo import ArticleMongo
 from re import compile, escape, findall, search
 from url_utils import unshorten
 from itertools import chain
@@ -110,18 +110,18 @@ class Article:
 		self.tweets.append(Tweet(status))
 
 	@staticmethod
-	def update_article_if_exists(url: str, tweet_id: str) -> bool:
+	def update_article_if_exists(article_mongo: ArticleMongo, url: str, tweet_id: str) -> bool:
 		"""
 			If an article already exists, add the tweet id to it
 			Returns whether an article has been found or not
 		"""
 
-		articles = article_gets(url)
+		articles = article_mongo.gets(url)
 
 		if articles.count() > 0:
 			for article in articles:
 				article['tweetId'].append(tweet_id)
-				article_update_tweet_ids(article)
+				article_mongo.update_tweet_ids(article)
 
 		return articles.count() > 0
 
@@ -159,6 +159,8 @@ class ApiCusto:
 		auth.set_access_token(access_token, access_token_secret)
 
 		self.api = API(auth)
+		self.article_mongo = ArticleMongo()
+		self.tweet_mongo = TweetMongo()
 
 	def fetch(self):
 		"""
@@ -198,7 +200,7 @@ class ApiCusto:
 				continue
 
 			# Suppression des tweets déjà enregistrés
-			if tweet_exists(status.__getattribute__("_json")["id"]):
+			if self.tweet_mongo.exists(status.__getattribute__("_json")["id"]):
 				continue
 
 			article_courants = []
@@ -217,7 +219,7 @@ class ApiCusto:
 					continue
 
 				# Si l'url pointe vers un article déjà référencé, on le mets à jour et on passe à l'url suivante
-				if Article.update_article_if_exists(unshorten_url, _json["id"]):
+				if Article.update_article_if_exists(self.article_mongo, unshorten_url, _json["id"]):
 					continue
 
 				# TODO feature : si l'url est un site, ne pas l'enregistrer en tant qu'article
@@ -250,10 +252,10 @@ class ApiCusto:
 		articles = self.parse()
 
 		if articles:
-			article_saves_many([article.get() for article in articles])
+			self.article_mongo.saves_many([article.get() for article in articles])
 
 			tweets = list(chain.from_iterable([article.tweets for article in articles]))
-			tweet_saves_many([tweet.get() for tweet in tweets])
+			self.tweet_mongo.saves_many([tweet.get() for tweet in tweets])
 
 
 def bulk_replace(text, tab):
