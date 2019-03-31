@@ -101,7 +101,8 @@ class Article:
 		self.approved_at = None
 		self.description = article_content.text[:500] if len(article_content.text) > 500 else article_content.text
 		self.full_text = article_content.text
-		self.themes = [hashtag["text"] for hashtag in status.__getattribute__("entities")["hashtags"]].extend(article_content.keywords)
+		self.themes = [hashtag["text"] for hashtag in status.__getattribute__("entities")["hashtags"]]
+		self.themes.extend(article_content.keywords)
 		self.site_internet = findall("[\\w-]+\.[\\w.-]+", url)[0]
 		self.auteur = article_content.authors
 		self.tweets = [Tweet(status)]
@@ -137,6 +138,7 @@ class Article:
 			"indexedAt": self.indexed_at,
 			"approvedAt": self.approved_at,
 			"description": self.description,
+			"fullText": self.full_text,
 			"themes": self.themes,
 			"siteInternet": self.site_internet,
 			"auteur": self.auteur,
