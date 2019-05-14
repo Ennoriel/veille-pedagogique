@@ -19,6 +19,7 @@ import { WithStyleComponent } from 'src/shared/standard.types';
 import classNames from 'classnames';
 
 import { HashtagItem } from './Hashtag.type';
+import { HashtagRepositoryService } from './Hashtag.repositoryService';
 
 const styles = (theme : any) => ({
     hashtagCellWidth: {
@@ -47,8 +48,10 @@ interface Props {
 }
 
 interface State {
-    liste: Array<HashtagItem>
+    listeHashtag: Array<HashtagItem>
 }
+
+let hashtagRepositoryService: HashtagRepositoryService;
 
 /**
  * Composant d'affichage des hastags
@@ -58,24 +61,15 @@ class Hashtag extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        this.state = {
-            liste: [
-                {
-                    _id: "dfdfdff",
-                    entry: "pedagogie",
-                    articleToBeDeleted: false,
-                    themeToBeDeleted: false,
-                    synonyme: "Pédagogie"
-                },
-                {
-                    _id: "dfdfdff",
-                    entry: "philipe",
-                    articleToBeDeleted: true,
-                    themeToBeDeleted: false,
-                    synonyme: "Phillipe"
-                }
-            ]
-        }
+        hashtagRepositoryService = new HashtagRepositoryService;
+
+        this.state = { listeHashtag: [] }
+
+        hashtagRepositoryService.getHastags().then(value => {
+            this.setState({ listeHashtag: value.data })
+        }).catch(error => {
+            // TODO gérer l'erreur
+        });
 
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -94,7 +88,7 @@ class Hashtag extends React.Component<Props> {
         const value = target.checked;
         const booleanToUpdate = target.name;
 
-        let liste = this.state.liste;
+        let liste = this.state.listeHashtag;
         liste[index][booleanToUpdate] = value;
         liste[index]["saved"] = false;
         this.setState(liste);
@@ -106,8 +100,8 @@ class Hashtag extends React.Component<Props> {
      * @param index indice du hashtag à modifier
      */
     handleInputChange(event: any, index: number) {
-        let liste = this.state.liste;
-        liste[index]["synonyme"] = event.target.value;
+        let liste = this.state.listeHashtag;
+        liste[index]["associatedThemes"] = event.target.value;
         liste[index]["saved"] = false;
         this.setState(liste);
     }
@@ -117,8 +111,10 @@ class Hashtag extends React.Component<Props> {
      * @param index indice du hashtag à modifier
      */
     handleSaveChange(index: number) {
-        // TODO save in DB
-        let liste = this.state.liste;
+        let hashtagToSave = Object.assign({}, this.state.listeHashtag[index]);
+        delete hashtagToSave["saved"];
+        hashtagRepositoryService.saveHashtags(hashtagToSave);
+        let liste = this.state.listeHashtag;
         liste[index]["saved"] = true;
         this.setState(liste);
     }
@@ -150,17 +146,17 @@ class Hashtag extends React.Component<Props> {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {this.state.liste.map((item: any, index: number) => {
+                            {this.state.listeHashtag.map((hashtag: HashtagItem, index: number) => {
                                 return (
                                     <TableRow
                                         hover
                                         tabIndex={-1}
-                                        selected={item.saved}
+                                        selected={hashtag.saved}
                                         key={index}
                                     >
                                         <TableCell
                                             className={classNames(classes.cell, classes.hashtagCellWidth)}
-                                            align="center">{item.entry}</TableCell>
+                                            align="center">{hashtag.entry}</TableCell>
                                         <TableCell
                                             className={classNames(classes.cell, classes.booleanCellWidth)}
                                             align="center"
@@ -168,7 +164,7 @@ class Hashtag extends React.Component<Props> {
                                             <Checkbox
                                                 name="articleToBeDeleted"
                                                 color="primary"
-                                                checked={item.articleToBeDeleted}
+                                                checked={hashtag.articleToBeDeleted}
                                                 onChange={(event) => this.handleCheckboxChange(event, index)}
                                             />
                                         </TableCell>
@@ -179,7 +175,7 @@ class Hashtag extends React.Component<Props> {
                                             <Checkbox
                                                 name="themeToBeDeleted"
                                                 color="primary"
-                                                checked={item.themeToBeDeleted}
+                                                checked={hashtag.themeToBeDeleted}
                                                 onChange={(event) => this.handleCheckboxChange(event, index)}
                                             />
                                         </TableCell>
@@ -192,7 +188,7 @@ class Hashtag extends React.Component<Props> {
                                                 name="synonyme"
                                                 className={classes.dense}
                                                 onChange={(event) => this.handleInputChange(event, index)}
-                                                value={item.synonyme}
+                                                value={hashtag.synonyme}
                                                 fullWidth
                                                 margin="dense"
                                                 variant="outlined"
@@ -204,7 +200,7 @@ class Hashtag extends React.Component<Props> {
                                         >
                                             <IconButton
                                                 key={index}
-                                                disabled={item.saved}
+                                                disabled={hashtag.saved}
                                                 onClick={() => this.handleSaveChange(index)}
                                             >
                                                 <SaveIcon />
