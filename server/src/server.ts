@@ -2,6 +2,7 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import { Routes as ArticleRoutes } from "./article/article.routes";
 import { Routes as UserRoutes } from "./user/user.routes";
+import { Routes as HashtagRoutes } from "./hashtag/hashtag.routes";
 import * as mongoose from "mongoose";
 import { AuthorizationService } from "./config/authorization.service";
 import { CorsService } from "./config/cors.service";
@@ -21,6 +22,7 @@ class Server {
 
     public articleRoute: ArticleRoutes = new ArticleRoutes();
     public userRoute: UserRoutes = new UserRoutes();
+    public hashtagRoute: HashtagRoutes = new HashtagRoutes();
 
     /**
      * Initialisation du contexte du serveur
@@ -52,6 +54,7 @@ class Server {
         
         this.app.use(BASE_URI, this.articleRoute.routes);
         this.app.use(BASE_URI, this.userRoute.routes);
+        this.app.use(BASE_URI, this.hashtagRoute.routes);
 
         this.app.get('*', (req, res) => {
             res.sendFile(path.join(__dirname, '/../client/build/index.html'));
