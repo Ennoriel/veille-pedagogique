@@ -4,6 +4,7 @@ import Home from '../home/Home.component';
 import Register from '../user/register/Register.components';
 import Login from '../user/login/Login.component';
 import Article from '../article/Article.component';
+import Hashtag from '../hashtag/Hashtag.component';
 
 import HomeIcon from '@material-ui/icons/Home';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
@@ -50,6 +51,15 @@ export const routes = [
             UserRight.SUPER_USER
         ],
         component: Article,
+        icon: <SubjectIcon color="primary"/>
+    },
+    {
+        path: '/hashtags',
+        label: 'Hashtags',
+        userRights: [
+            UserRight.SUPER_USER
+        ],
+        component: Hashtag,
         icon: <SubjectIcon color="primary"/>
     }
 ]

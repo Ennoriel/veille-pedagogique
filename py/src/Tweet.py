@@ -1,15 +1,39 @@
+from pymongo.errors import BulkWriteError
 from tweepy.models import Status
 from datetime import datetime
 from ast import literal_eval
 from tweepy import OAuthHandler, API
+
 from tweetmongo import TweetMongo
 from articlemongo import ArticleMongo
+from hashtag_mongo import HashtagMongo
 from re import compile, escape, findall, search
 from url_utils import unshorten
 from itertools import chain
 from newspaper import Config as NPConfig, Article as NPArticle, ArticleException
 from yaml import load as yaml_load
 from logg import dir_log
+from typing import Tuple, List
+
+
+class Hashtag:
+
+	def __init__(self, entry):
+		self.entry = entry
+		self.articleToBeDeleted = False
+		self.themeToBeDeleted = False
+		self.associatedThemes = []
+
+	def get(self):
+		"""
+		get the hashtag as a database object
+		"""
+		return {
+			"entry": self.entry,
+			"articleToBeDeleted": self.articleToBeDeleted,
+			"themeToBeDeleted": self.themeToBeDeleted,
+			"associatedThemes": self.associatedThemes,
+		}
 
 
 class User:
@@ -17,11 +41,14 @@ class User:
 	def __init__(self, status: Status):
 		author = status.__getattribute__("author").__getattribute__("_json")
 
-		self.id = author["id"]
-		self.name = author["name"]
-		self.screen_name = author["screen_name"]
+		self.id: str = author["id"]
+		self.name: str = author["name"]
+		self.screen_name: str = author["screen_name"]
 
 	def get(self):
+		"""
+		get the user as a database object
+		"""
 		return {
 			"id": self.id,
 			"name": self.name,
@@ -43,24 +70,29 @@ class Tweet:
 		self.url = "https://twitter.com/" + self.user.screen_name + "/status/" + _json["id_str"]
 
 	@staticmethod
-	def get_saved_tweet_ids():
+	def get_saved_tweet_ids(interval_max=5) -> List[int]:
+		"""
+		get tweet ids from a file (tweet_id.txt) where tweet ids are stored as a list.
+		removes the tweet_ids of the file and log them in antoher file (tweet_id_out.txt) as one id by line
 
+		:param interval_max: number of tweet ids to fetch each time
+		:return: list of tweet ids
+		"""
 		with open('tweet_id.txt', 'r') as f:
 			tweet_ids = f.read()
 
 		tweet_ids = literal_eval(tweet_ids)
 
-		interval_max = 50
 		interval = min(interval_max, len(tweet_ids))
 
 		tweet_ids_to_fetch = tweet_ids[0:interval]
 
-		# saving remaining tweet ids
-		with open('tweet_id.txt', 'w') as f:
-			if interval == interval_max:
-				f.write(str(tweet_ids[interval:len(tweet_ids)]))
-			else:
-				f.write('[]')
+		# saving remaining tweet ids TODO décommenter les lignes suivantes pour supprimer les identifiants traités
+		# with open('tweet_id.txt', 'w') as f:
+		# 	if interval == interval_max:
+		# 		f.write(str(tweet_ids[interval:len(tweet_ids)]))
+		# 	else:
+		# 		f.write('[]')
 
 		# logging tweet ids to be searched
 		with open('tweet_id_out.txt', 'a') as f:
@@ -70,6 +102,10 @@ class Tweet:
 
 	@staticmethod
 	def get_page_content(url: str):
+		"""
+		get the page content with newspaper library
+		TODO remove this method of the class
+		"""
 		config = NPConfig()
 		config.MAX_TITLE = 500
 		config.language = 'fr'
@@ -79,6 +115,9 @@ class Tweet:
 		return NPArticle(url=url, config=config)
 
 	def get(self):
+		"""
+		get the tweet as a database object
+		"""
 		return {
 			"id": self.id,
 			"text": self.text,
@@ -91,21 +130,67 @@ class Tweet:
 class Article:
 
 	def __init__(self, status: Status, article_content: NPArticle, url: str):
-		self.title = article_content.title
-		self.url = url
-		self.language = status.__getattribute__("lang")
-		self.medium = ""
-		self.top_image = article_content.top_img
-		self.created_at = article_content.publish_date
-		self.indexed_at = datetime.now()
-		self.approved_at = None
-		self.description = article_content.text[:500] if len(article_content.text) > 500 else article_content.text
-		self.full_text = article_content.text
-		self.themes = [hashtag["text"] for hashtag in status.__getattribute__("entities")["hashtags"]]
-		self.themes.extend(article_content.keywords)
-		self.site_internet = findall("[\\w-]+\.[\\w.-]+", url)[0]
-		self.auteur = article_content.authors
-		self.tweets = [Tweet(status)]
+
+		self.indexed_theme_entries = []
+		self.not_indexed_theme_entries = []
+		if not self.parse_themes(status):
+			self._is_valid = False
+		else:
+			self._is_valid = True
+			self.title = article_content.title
+			self.url = url
+			self.language = status.__getattribute__("lang")
+			self.medium = ""
+			self.top_image = article_content.top_img
+			self.created_at = article_content.publish_date
+			self.indexed_at = datetime.now()
+			self.approved_at = None
+			self.description = article_content.text[:500] if len(article_content.text) > 500 else article_content.text
+			self.full_text = article_content.text
+
+			self.site_internet = findall("[\\w-]+\.[\\w.-]+", url)[0]
+			self.auteur = article_content.authors
+			self.tweets = [Tweet(status)]
+
+	@property
+	def is_valid(self):
+		return self._is_valid
+
+	def parse_themes(self, status):
+		"""
+		Parse themes
+		:param status: tweet status
+		:return: True or False whether the treatment is correct or not
+		"""
+		hashtag_mongo = HashtagMongo()
+
+		themes = [hashtag["text"] for hashtag in status.__getattribute__("entities")["hashtags"]]
+		print(str(themes))
+
+		# clean duplicates
+		themes = list(dict.fromkeys(themes))
+
+		hashtags = hashtag_mongo.gets(themes)
+
+		for theme in themes:
+			entry = next((hashtag for hashtag in hashtags if hashtag["entry"] == theme), False)
+			if entry:
+				if entry["articleToBeDeleted"]:
+					# articles to delete because the theme seems out of scope
+					return False
+				elif entry["themeToBeDeleted"]:
+					# theme to delete because the theme seems irrelevent
+					continue
+				elif entry["associatedThemes"]:
+					# theme to add as associated theme
+					self.indexed_theme_entries.extend(entry["associatedThemes"])
+					# TODO ajouter ou augmenter le points des connexions
+					#  à ajouter ici où à l'enregistrement
+			else:
+				# new theme to add as not yet indexed theme
+				self.not_indexed_theme_entries.append(theme)
+
+		return True
 
 	def add_tweet(self, status):
 		# TODO : lorsque l'on ajoute un tweet, ajouter les hashtags comme thèmes (potentiellement différents)
@@ -117,7 +202,6 @@ class Article:
 			If an article already exists, add the tweet id to it
 			Returns whether an article has been found or not
 		"""
-
 		articles = article_mongo.gets(url)
 
 		if articles.count() > 0:
@@ -128,6 +212,9 @@ class Article:
 		return articles.count() > 0
 
 	def get(self):
+		"""
+		get the article as a database object
+		"""
 		return {
 			"title": self.title,
 			"url": self.url,
@@ -139,7 +226,8 @@ class Article:
 			"approvedAt": self.approved_at,
 			"description": self.description,
 			"fullText": self.full_text,
-			"themes": self.themes,
+			"themes": self.indexed_theme_entries,
+			"notYetIndexedThemes": self.not_indexed_theme_entries,
 			"siteInternet": self.site_internet,
 			"auteur": self.auteur,
 			"isVisible": self.title is not None and self.description is not None,
@@ -164,6 +252,9 @@ class ApiCusto:
 		self.api = API(auth)
 		self.article_mongo = ArticleMongo()
 		self.tweet_mongo = TweetMongo()
+		self.hashtag_mongo = HashtagMongo()
+
+		self.articles = []
 
 	def fetch(self):
 		"""
@@ -177,7 +268,7 @@ class ApiCusto:
 		Fetch to Twitter API tweets by their hashtags
 		:return:
 		"""
-		return self.api.search(q='#pedagogie', result_type='recent', tweet_mode='extended', lang='fr', count=5)
+		return self.api.search(q='#pedagogie', result_type='recent', tweet_mode='extended', lang='fr', count=20)
 
 	def fetch_local(self):
 		"""
@@ -193,8 +284,6 @@ class ApiCusto:
 	def parse(self):
 
 		statuses = self.fetch()
-
-		articles = []
 
 		for index_status, status in enumerate(statuses):
 
@@ -216,6 +305,7 @@ class ApiCusto:
 			for index_article, url in enumerate(urls):
 
 				dir_log(1, index_article + 1, len(urls))
+				print('              ' + str(_json["id"]))
 
 				unshorten_url = unshorten(url["expanded_url"])
 
@@ -229,14 +319,15 @@ class ApiCusto:
 
 				# Si l'url pointe vers un article déjà référencé, on le mets à jour et on passe à l'url suivante
 				if Article.update_article_if_exists(self.article_mongo, unshorten_url, _json["id"]):
+					# TODO bug : l'article est mis à jour mais le tweet n'est pas enregistré s'il n'a pas d'autre urls
 					continue
 
 				# TODO feature : si l'url est un site, ne pas l'enregistrer en tant qu'article
 				# la regex (?<!\/)\/(?!\/) permet de trouver le premier caractère après la fin de l'url du site
 
 				# Si article déjà référencé, on le met à jour localement
-				if unshorten_url in [article.url for article in articles]:
-					for article in articles:
+				if unshorten_url in [article.url for article in self.articles]:
+					for article in self.articles:
 						if article.url == unshorten_url:
 							article.add_tweet(status)
 							break
@@ -248,23 +339,60 @@ class ApiCusto:
 					article_content.build()
 				except ArticleException:
 					# Lien ne renvoyant pas à une URL disponible, on ne l'enregistre pas
-					# TODO : enregistrer les articles nont joignabes avec gestion de tentatives de retry
+					# TODO : enregistrer les articles non joignabes avec gestion de tentatives de retry
 					continue
 
-				article_courants.append(Article(status, article_content, unshorten_url))
+				# TODO ajouté car temps de traitement trop long
+				# class FakeArticleContent:
+				# 	def __init__(self):
+				# 		self.title = "title"
+				# 		self.top_img = "top_img"
+				# 		self.publish_date = "publish_date"
+				# 		self.text = "text"
+				# 		self.authors = [
+				# 			"tom",
+				# 			"tom"
+				# 		]
 
-			articles.extend(article_courants)
+				article_courant = Article(status, article_content, unshorten_url)
+				if not article_courant.is_valid:
+					continue
 
-		return articles
+				article_courants.append(article_courant)
+
+			self.articles.extend(article_courants)
 
 	def fetch_and_parse(self):
-		articles = self.parse()
+		self.parse()
 
-		if articles:
-			self.article_mongo.saves_many([article.get() for article in articles])
+		for th in self.themes.list:
+			print(th.nodes[0] + " - " + th.nodes[1] + " : " + str(th.weight))
 
-			tweets = list(chain.from_iterable([article.tweets for article in articles]))
+		if self.articles:
+			for article in self.articles:
+				print(str(article.get()))
+
+
+			try:
+				self.article_mongo.saves_many([article.get() for article in self.articles])
+			except BulkWriteError as e:
+				print(e.details)
+				raise
+
+			tweets = list(chain.from_iterable([article.tweets for article in self.articles]))
 			self.tweet_mongo.saves_many([tweet.get() for tweet in tweets])
+
+			hashtags = []
+			for article in self.articles:
+				hashtags.extend([theme for theme in article.not_indexed_theme_entries])
+
+			# clean duplicates
+			hashtags = list(dict.fromkeys(hashtags))
+
+			hashtags = [Hashtag(hashtag).get() for hashtag in hashtags]
+
+			if len(hashtags):
+				self.hashtag_mongo.saves_many(hashtags)
 
 
 def bulk_replace(text, tab):

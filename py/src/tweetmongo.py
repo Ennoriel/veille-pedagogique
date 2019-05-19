@@ -22,3 +22,6 @@ class TweetMongo:
 
 	def saves_many(self, tweets):
 		return self.client[self.db]["tweets"].insert_many(tweets)
+
+	def delete_all(self):
+		return self.client[self.db]["tweets"].delete_many({})

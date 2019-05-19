@@ -5,13 +5,15 @@ var Schema = mongoose.Schema;
 var articleSchema = new Schema({
     title: String,
     url: {type: String, trim: true},
-    language: {type: String, unique: true, enum:['fr']},
-    medium: {type: String, unique: true, enum:['video', 'presse', 'blog']},
+    language: {type: String},
+    medium: {type: String, enum:['video', 'presse', 'blog']},
     description: String,
     siteInternet: String,
     themes: [{type: String, unique: true}],
+    notYetIndexedThemes: [{type: String, unique: true}],
     auteur: [{type: Number}],
     tweetId: [{type: Number}],
+    isVisible: Boolean,
     createdAt: {type: Date, default: new Date()}
 });
 
