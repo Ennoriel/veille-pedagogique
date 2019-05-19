@@ -104,7 +104,7 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-# mkdocs documentation
+# mkdocs documentationthe
 /site
 
 # mypy
@@ -116,7 +116,9 @@ dmypy.json
 .pyre/
 
 # project specific
-tweet_id.txt
-tweet_id_out.txt
-tweet_id_save.txt
+*.txt
+*.json
 credentials.yaml
+
+test.py
+test_mongo.py
