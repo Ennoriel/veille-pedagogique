@@ -90,8 +90,7 @@ class Hashtag extends React.Component<Props> {
 
         let liste = this.state.listeHashtag;
         liste[index][booleanToUpdate] = value;
-        liste[index]["saved"] = false;
-        this.setState(liste);
+        this.setState({"listeHashtag": liste});
     }
 
     /**
@@ -102,8 +101,7 @@ class Hashtag extends React.Component<Props> {
     handleInputChange(event: any, index: number) {
         let liste = this.state.listeHashtag;
         liste[index]["associatedThemes"] = event.target.value;
-        liste[index]["saved"] = false;
-        this.setState(liste);
+        this.setState({"listeHashtag": liste});
     }
 
     /**
@@ -111,12 +109,11 @@ class Hashtag extends React.Component<Props> {
      * @param index indice du hashtag à modifier
      */
     handleSaveChange(index: number) {
-        let hashtagToSave = Object.assign({}, this.state.listeHashtag[index]);
-        delete hashtagToSave["saved"];
-        hashtagRepositoryService.saveHashtags(hashtagToSave);
+        hashtagRepositoryService.saveHashtags(this.state.listeHashtag[index]);
+
         let liste = this.state.listeHashtag;
         liste[index]["saved"] = true;
-        this.setState(liste);
+        this.setState({"listeHashtag": liste});
     }
 
     render() {
@@ -208,8 +205,7 @@ class Hashtag extends React.Component<Props> {
                                         </TableCell>
                                     </TableRow>
                                 );
-                                })
-                            }
+                            })}
                         </TableBody>
                     </Table>
                 </Grid>
