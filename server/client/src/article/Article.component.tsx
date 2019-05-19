@@ -193,7 +193,7 @@ class Article extends React.Component<Props> {
         });
     }
 
-    // réccupération des auteurs
+    // récupération des auteurs
     auteurs = store.getState().auteur;
 
     render() {

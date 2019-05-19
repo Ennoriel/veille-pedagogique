@@ -8,7 +8,7 @@ const URI_HASHTAGS = '/hashtag';
 axios.defaults.baseURL = BASE_URI_SERVER;
 
 /**
- * Service de réccupération des hashtags
+ * Service de récupération des hashtags
  */
 export class HashtagRepositoryService  {
 

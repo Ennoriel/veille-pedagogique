@@ -100,7 +100,7 @@ export class AuthorizationService {
 
         /**
          * Si l'url ne commence pas par '/api',
-         * l'appel est utilisé pour réccupérer une page statique,
+         * l'appel est utilisé pour récupérer une page statique,
          * on ne filtre pas à ce niveau
         **/
         if(url.slice(0,4) !== '/api') {

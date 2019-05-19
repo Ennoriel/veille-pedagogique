@@ -9,7 +9,7 @@ const URI_THEMES = '/theme';
 axios.defaults.baseURL = BASE_URI_SERVER;
 
 /**
- * Service de réccupération des articles
+ * Service de récupération des articles
  */
 export class ArticleRepositoryService  {
 
