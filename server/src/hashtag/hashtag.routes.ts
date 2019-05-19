@@ -14,7 +14,7 @@ export class Routes {
                 .get(this.hashtagController.getNotYetIndexedHashtags);
 
         router.route('/hashtag/:_id')
-                .put(this.hashtagController.updateHashtag);
+                .put(this.hashtagController.updateHashtagToTheme);
 
         return router;
     }
