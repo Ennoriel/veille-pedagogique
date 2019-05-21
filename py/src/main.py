@@ -17,9 +17,7 @@ from articlemongo import ArticleMongo
 from hashtag_mongo import HashtagMongo
 
 
-api_custo = ApiCusto()
-
-timeout = 40.0
+timeout = 1.0
 
 
 def delete_all_in_db():
@@ -38,11 +36,12 @@ def delete_all_in_db():
 def do_work():
 	print("\n\n")
 	print(datetime.now())
+	api_custo = ApiCusto()
 	api_custo.fetch_and_parse()
 	print('- - - - - - - - -')
 
 
-# delete_all_in_db()
+delete_all_in_db()
 # do_work()
 
 loop = task.LoopingCall(do_work)
