@@ -322,8 +322,6 @@ class ApiCusto:
 				# Si l'url pointe vers un article déjà référencé, on le mets à jour et on passe à l'url suivante
 				if Article.update_article_if_exists(self.article_mongo, unshorten_url, _json["id"]):
 					count_url_already_indexed += 1
-					print("len(urls): " + str(len(urls)))
-					print("url: " + str(url))
 					continue
 
 				# TODO feature : si l'url est un site, ne pas l'enregistrer en tant qu'article
@@ -364,11 +362,7 @@ class ApiCusto:
 
 				article_courants.append(article_courant)
 
-			print(count_url_already_indexed)
-			print(len(urls))
 			if count_url_already_indexed == len(urls):
-				print("Yes!")
-				print(Tweet(status).get())
 				self.tweet_mongo.saves_one(Tweet(status).get())
 
 			self.articles.extend(article_courants)
