@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from pymongo.errors import BulkWriteError
 from yaml import load as yaml_load
 from typing import List
 
@@ -57,7 +58,16 @@ class HashtagMongo:
 		"""
 		for hashtag in hashtags:
 			print(str(hashtag))
-		return self.client.insert_many(hashtags)
+
+		res = {}
+
+		try:
+			# try except with ordered false to save unique hashtags
+			res = self.client.insert_many(hashtags, ordered=False)
+		except BulkWriteError:
+			pass
+
+		return res
 
 	def delete_all(self):
 		""""
