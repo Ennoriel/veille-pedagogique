@@ -88,11 +88,11 @@ class Tweet:
 		tweet_ids_to_fetch = tweet_ids[0:interval]
 
 		# saving remaining tweet ids TODO décommenter les lignes suivantes pour supprimer les identifiants traités
-		# with open('tweet_id.txt', 'w') as f:
-		# 	if interval == interval_max:
-		# 		f.write(str(tweet_ids[interval:len(tweet_ids)]))
-		# 	else:
-		# 		f.write('[]')
+		with open('tweet_id.txt', 'w') as f:
+			if interval == interval_max:
+				f.write(str(tweet_ids[interval:len(tweet_ids)]))
+			else:
+				f.write('[]')
 
 		# logging tweet ids to be searched
 		with open('tweet_id_out.txt', 'a') as f:
@@ -104,7 +104,6 @@ class Tweet:
 	def get_page_content(url: str):
 		"""
 		get the page content with newspaper library
-		TODO remove this method of the class
 		"""
 		config = NPConfig()
 		config.MAX_TITLE = 500
@@ -184,7 +183,7 @@ class Article:
 				elif entry["associatedThemes"]:
 					# theme to add as associated theme
 					self.indexed_theme_entries.extend(entry["associatedThemes"])
-					# TODO ajouter ou augmenter le points des connexions
+					# TODO ajouter ou augmenter le poids des connexions
 					#  à ajouter ici où à l'enregistrement
 			else:
 				# new theme to add as not yet indexed theme
@@ -193,7 +192,6 @@ class Article:
 		return True
 
 	def add_tweet(self, status):
-		# TODO : lorsque l'on ajoute un tweet, ajouter les hashtags comme thèmes (potentiellement différents)
 		self.tweets.append(Tweet(status))
 
 	@staticmethod
@@ -302,6 +300,10 @@ class ApiCusto:
 
 			urls = status.entities["urls"]
 
+			# variable counting url already indexed as an article, in order to save the tweet eventhoug all its urls
+			# are already referenced. If the tweet as at least one url not indexed as an article, it will be saved later
+			count_url_already_indexed = 0
+
 			for index_article, url in enumerate(urls):
 
 				dir_log(1, index_article + 1, len(urls))
@@ -319,7 +321,7 @@ class ApiCusto:
 
 				# Si l'url pointe vers un article déjà référencé, on le mets à jour et on passe à l'url suivante
 				if Article.update_article_if_exists(self.article_mongo, unshorten_url, _json["id"]):
-					# TODO bug : l'article est mis à jour mais le tweet n'est pas enregistré s'il n'a pas d'autre urls
+					count_url_already_indexed += 1
 					continue
 
 				# TODO feature : si l'url est un site, ne pas l'enregistrer en tant qu'article
@@ -333,40 +335,40 @@ class ApiCusto:
 							break
 					continue
 
-				article_content = Tweet.get_page_content(unshorten_url)
+				# article_content = Tweet.get_page_content(unshorten_url)
 
-				try:
-					article_content.build()
-				except ArticleException:
-					# Lien ne renvoyant pas à une URL disponible, on ne l'enregistre pas
-					# TODO : enregistrer les articles non joignabes avec gestion de tentatives de retry
-					continue
+				# try:
+				# 	article_content.build()
+				# except ArticleException:
+				# 	# Lien ne renvoyant pas à une URL disponible, on ne l'enregistre pas
+				# 	# TODO : enregistrer les articles non joignabes avec gestion de tentatives de retry
+				# 	continue
 
 				# TODO ajouté car temps de traitement trop long
-				# class FakeArticleContent:
-				# 	def __init__(self):
-				# 		self.title = "title"
-				# 		self.top_img = "top_img"
-				# 		self.publish_date = "publish_date"
-				# 		self.text = "text"
-				# 		self.authors = [
-				# 			"tom",
-				# 			"tom"
-				# 		]
+				class FakeArticleContent:
+					def __init__(self):
+						self.title = "title"
+						self.top_img = "top_img"
+						self.publish_date = "publish_date"
+						self.text = "text"
+						self.authors = [
+							"tom",
+							"tom"
+						]
 
-				article_courant = Article(status, article_content, unshorten_url)
+				article_courant = Article(status, FakeArticleContent(), unshorten_url)
 				if not article_courant.is_valid:
 					continue
 
 				article_courants.append(article_courant)
 
+			if count_url_already_indexed == len(urls):
+				self.tweet_mongo.saves_one(Tweet(status).get())
+
 			self.articles.extend(article_courants)
 
 	def fetch_and_parse(self):
 		self.parse()
-
-		for th in self.themes.list:
-			print(th.nodes[0] + " - " + th.nodes[1] + " : " + str(th.weight))
 
 		if self.articles:
 			for article in self.articles:
