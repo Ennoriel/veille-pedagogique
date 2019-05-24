@@ -13,7 +13,7 @@ from itertools import chain
 from newspaper import Config as NPConfig, Article as NPArticle, ArticleException
 from yaml import load as yaml_load
 from logg import dir_log
-from typing import Tuple, List
+from typing import List
 
 
 class Hashtag:
@@ -157,22 +157,22 @@ class Article:
 
 	def parse_themes(self, status):
 		"""
-		Parse themes
+		Parse themes of one status
 		:param status: tweet status
 		:return: True or False whether the treatment is correct or not
 		"""
 		hashtag_mongo = HashtagMongo()
 
-		themes = [hashtag["text"] for hashtag in status.__getattribute__("entities")["hashtags"]]
-		print(str(themes))
+		article_hashtags = [hashtag["text"] for hashtag in status.__getattribute__("entities")["hashtags"]]
+		print(str(article_hashtags))
 
 		# clean duplicates
-		themes = list(dict.fromkeys(themes))
+		article_hashtags = list(dict.fromkeys(article_hashtags))
 
-		hashtags = hashtag_mongo.gets(themes)
+		db_hashtags = hashtag_mongo.gets(article_hashtags)
 
-		for theme in themes:
-			entry = next((hashtag for hashtag in hashtags if hashtag["entry"] == theme), False)
+		for theme in article_hashtags:
+			entry = next((db_hashtag for db_hashtag in db_hashtags if db_hashtag["entry"] == theme), False)
 			if entry:
 				if entry["articleToBeDeleted"]:
 					# articles to delete because the theme seems out of scope
@@ -200,14 +200,8 @@ class Article:
 			If an article already exists, add the tweet id to it
 			Returns whether an article has been found or not
 		"""
-		articles = article_mongo.gets(url)
-
-		if articles.count() > 0:
-			for article in articles:
-				article['tweetId'].append(tweet_id)
-				article_mongo.update_tweet_ids(article)
-
-		return articles.count() > 0
+		res = article_mongo.update_tweet_ids(url, tweet_id)
+		return res.modified_count > 0
 
 	def get(self):
 		"""
