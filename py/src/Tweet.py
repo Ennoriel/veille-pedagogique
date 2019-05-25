@@ -7,9 +7,10 @@ from tweepy import OAuthHandler, API
 from tweetmongo import TweetMongo
 from articlemongo import ArticleMongo
 from hashtag_mongo import HashtagMongo
+from theme_mongo import ThemeMongo
 from re import compile, escape, findall, search
 from url_utils import unshorten
-from itertools import chain
+from itertools import chain, combinations
 from newspaper import Config as NPConfig, Article as NPArticle, ArticleException
 from yaml import load as yaml_load
 from logg import dir_log
@@ -170,7 +171,7 @@ class Article:
 		# clean duplicates
 		article_hashtags = list(dict.fromkeys(article_hashtags))
 
-		db_hashtags = hashtag_mongo.gets(article_hashtags)
+		db_hashtags = list(hashtag_mongo.gets(article_hashtags))
 
 		for theme in article_hashtags:
 			entry = next((db_hashtag for db_hashtag in db_hashtags if db_hashtag["entry"] == theme), False)
@@ -184,8 +185,6 @@ class Article:
 				elif entry["associatedThemes"]:
 					# theme to add as associated theme
 					self.indexed_theme_entries.extend(entry["associatedThemes"])
-					# TODO ajouter ou augmenter le poids des connexions
-					#  à ajouter ici où à l'enregistrement
 			else:
 				# new theme to add as not yet indexed theme
 				self.not_indexed_theme_entries.append(theme)
@@ -246,6 +245,7 @@ class ApiCusto:
 		self.article_mongo = ArticleMongo()
 		self.tweet_mongo = TweetMongo()
 		self.hashtag_mongo = HashtagMongo()
+		self.theme_mongo = ThemeMongo()
 
 		self.articles = []
 
@@ -371,16 +371,18 @@ class ApiCusto:
 			for article in self.articles:
 				print(str(article.get()))
 
-
+			# save articles
 			try:
 				self.article_mongo.saves_many([article.get() for article in self.articles])
 			except BulkWriteError as e:
 				print(e.details)
 				raise
 
+			# save tweets
 			tweets = list(chain.from_iterable([article.tweets for article in self.articles]))
 			self.tweet_mongo.saves_many([tweet.get() for tweet in tweets])
 
+			# save hashtags
 			hashtags = []
 			for article in self.articles:
 				hashtags.extend([theme for theme in article.not_indexed_theme_entries])
@@ -392,6 +394,12 @@ class ApiCusto:
 
 			if len(hashtags):
 				self.hashtag_mongo.saves_many(hashtags)
+
+			# update themes
+			for article in self.articles:
+				for [themeA, themeB] in combinations(article.indexed_theme_entries, 2):
+					self.theme_mongo.update_weight(themeA, themeB)
+					self.theme_mongo.update_weight(themeB, themeA)
 
 
 def bulk_replace(text, tab):
