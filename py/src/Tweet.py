@@ -14,6 +14,7 @@ from newspaper import Config as NPConfig, Article as NPArticle, ArticleException
 from yaml import load as yaml_load
 from logg import dir_log
 from typing import List
+from urllib.parse import urlparse
 
 
 class Hashtag:
@@ -310,16 +311,18 @@ class ApiCusto:
 					continue
 
 				# Suppression des url qui sont des liens vers d'autres status Twitter
-				if search("^https://twitter.com/\\w+/status/\\d+$", url["expanded_url"]):
+				if search("^https://twitter.com/\\w+/status/\\d+$", unshorten_url):
+					continue
+
+				# Suppression des url qui sont des urls de sites et non d'articles
+				url_path = urlparse(unshorten_url).path
+				if url_path == '' or url_path == '/':
 					continue
 
 				# Si l'url pointe vers un article déjà référencé, on le mets à jour et on passe à l'url suivante
 				if Article.update_article_if_exists(self.article_mongo, unshorten_url, _json["id"]):
 					count_url_already_indexed += 1
 					continue
-
-				# TODO feature : si l'url est un site, ne pas l'enregistrer en tant qu'article
-				# la regex (?<!\/)\/(?!\/) permet de trouver le premier caractère après la fin de l'url du site
 
 				# Si article déjà référencé, on le met à jour localement
 				if unshorten_url in [article.url for article in self.articles]:
