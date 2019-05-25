@@ -10,7 +10,7 @@ class ArticleMongo:
 		self.db = conf["db"]
 		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 
-		self.client = MongoClient(mongo_url)
+		self.client = MongoClient(mongo_url)[self.db]["articles"]
 
 	def gets(self, url: str):
 		"""
@@ -18,7 +18,7 @@ class ArticleMongo:
 		:param url: url
 		:return: article
 		"""
-		article = self.client[self.db]["articles"].find({"url": url})
+		article = self.client.find({"url": url})
 		return article
 
 	def gets_per_page(self, page):
@@ -30,7 +30,7 @@ class ArticleMongo:
 		per_page = 1
 		page = max(0, page)
 
-		return self.client[self.db]["articles"].find({}).limit(per_page).skip(page * per_page)
+		return self.client.find({}).limit(per_page).skip(page * per_page)
 
 	def exists(self, url):
 		"""
@@ -47,19 +47,25 @@ class ArticleMongo:
 		:param articles: articles
 		:return: result of inserting
 		"""
-		return self.client[self.db]["articles"].insert_many(articles)
+		return self.client.insert_many(articles)
 
-	def update_tweet_ids(self, article):
+	def update_tweet_ids(self, url, tweet_id):
 		"""
 		Adds tweet ids to an existing article
-		:param article: article
+		:param url: url de l'article
+		:param tweet_id: identifiant du tweet
 		:return: rstult of updating
-		TODO vérifier fonctionnement du "$set" => plutôt {"$push": { "tweetId": { "$each": article['tweetId']}}}
 		"""
-		return self.client[self.db]["articles"].update_one({"_id": article['_id']}, {'$set': {'tweetId' : article['tweetId']}})
+		return self.client.update_one(
+			{
+				"url": url
+			},
+			{
+				'$push': {'tweetId': tweet_id}
+			})
 
 	def delete_all(self):
 		""""
 		Delete all articles from database
 		"""
-		return self.client[self.db]["articles"].delete_many({})
+		return self.client.delete_many({})
