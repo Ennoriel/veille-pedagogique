@@ -118,6 +118,7 @@ dmypy.json
 # project specific
 *.txt
 *.json
+*.csv
 credentials.yaml
 
 test.py
