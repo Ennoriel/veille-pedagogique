@@ -56,8 +56,6 @@ class HashtagMongo:
 		Saves hashtags
 		:param hashtags: hashtags
 		"""
-		for hashtag in hashtags:
-			print(str(hashtag))
 
 		res = {}
 
