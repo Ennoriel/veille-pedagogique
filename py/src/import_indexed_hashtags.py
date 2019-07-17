@@ -6,7 +6,7 @@ from hashtag_mongo import HashtagMongo
 
 
 def import_indexed_hashtags():
-	headers = {'Authorization': yaml_load(open("credentials.yaml"))["jeton"]["super_user"]}
+	headers = {'Authorization': yaml_load(open("./../resources/credentials.yaml"))["jeton"]["super_user"]}
 
 	with open('../resources/indexed_hashtags.csv', 'r') as f:
 		hashtags = f.read()
@@ -43,10 +43,10 @@ def import_indexed_hashtags():
 def dump_db():
 	dbs = ["articles", "hashtags", "themes", "tweets", "users"]
 
-	conf = yaml_load(open("credentials.yaml"))["mongodb"]
-	conf_dev = yaml_load(open("credentials.yaml"))["mongodb_dev"]
-	conf_prod = yaml_load(open("credentials.yaml"))["mongodb_prod"]
-	conf_dump = yaml_load(open("credentials.yaml"))["mongodb_dump"]
+	conf = yaml_load(open("./../resources/credentials.yaml"))["mongodb"]
+	conf_dev = yaml_load(open("./../resources/credentials.yaml"))["mongodb_dev"]
+	conf_prod = yaml_load(open("./../resources/credentials.yaml"))["mongodb_prod"]
+	conf_dump = yaml_load(open("./../resources/credentials.yaml"))["mongodb_dump"]
 
 	# conf_input = conf_prod
 	# conf_output = conf_dump
