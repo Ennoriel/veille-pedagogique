@@ -6,7 +6,7 @@ class ArticleMongo:
 
 	def __init__(self):
 
-		conf = yaml_load(open("credentials.yaml"))["mongodb"]
+		conf = yaml_load(open("./../resources/credentials.yaml"))["mongodb"]
 		self.db = conf["db"]
 		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 

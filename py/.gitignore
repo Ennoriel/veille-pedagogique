@@ -116,7 +116,6 @@ dmypy.json
 .pyre/
 
 # project specific
-*.txt
 *.json
 *.csv
 credentials.yaml

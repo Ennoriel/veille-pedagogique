@@ -74,13 +74,13 @@ class Tweet:
 	@staticmethod
 	def get_saved_tweet_ids(interval_max=5) -> List[int]:
 		"""
-		get tweet ids from a file (tweet_id.txt) where tweet ids are stored as a list.
-		removes the tweet_ids of the file and log them in antoher file (tweet_id_out.txt) as one id by line
+		get tweet ids from a file (./../resources/tweet_id.txt) where tweet ids are stored as a list.
+		removes the tweet_ids of the file and log them in antoher file (./../resources/tweet_id_out.txt) as one id by line
 
 		:param interval_max: number of tweet ids to fetch each time
 		:return: list of tweet ids
 		"""
-		with open('tweet_id.txt', 'r') as f:
+		with open('./../resources/tweet_id.txt', 'r') as f:
 			tweet_ids = f.read()
 
 		tweet_ids = literal_eval(tweet_ids)
@@ -90,14 +90,14 @@ class Tweet:
 		tweet_ids_to_fetch = tweet_ids[0:interval]
 
 		# saving remaining tweet ids TODO décommenter les lignes suivantes pour supprimer les identifiants traités
-		with open('tweet_id.txt', 'w') as f:
+		with open('./../resources/tweet_id.txt', 'w') as f:
 			if interval == interval_max:
 				f.write(str(tweet_ids[interval:len(tweet_ids)]))
 			else:
 				f.write('[]')
 
 		# logging tweet ids to be searched
-		with open('tweet_id_out.txt', 'a') as f:
+		with open('./../resources/tweet_id_out.txt', 'a') as f:
 			f.writelines("%s\n" % tweet_id_o for tweet_id_o in tweet_ids_to_fetch)
 
 		return tweet_ids_to_fetch
@@ -231,7 +231,7 @@ class ApiCusto:
 
 	def __init__(self):
 
-		conf = yaml_load(open("credentials.yaml"))["twitter_api"]
+		conf = yaml_load(open("./../resources/credentials.yaml"))["twitter_api"]
 
 		consumer_key = conf["consumer_key"]
 		consumer_secret = conf["consumer_secret"]
