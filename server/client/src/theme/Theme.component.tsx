@@ -14,8 +14,6 @@ import {
     ForceGraphLink
 } from 'react-vis-force';
 
-// import { Graph } from 'react-d3-graph';
-
 import { ThemeRepositoryService } from './Theme.repositoryService';
 
 import * as _ from 'lodash'
@@ -66,11 +64,6 @@ class ThemeGraph extends React.Component<Props> {
             themeNodes2.forEach(element => {
                 element.radius = 5 + element.radius
             })
-            // let themeLinks = value.data.map(node => node.themeLinks);
-            // themeLinks = themeLinks.reduce((res, next) => {
-            //     if ()
-            //     return res;
-            // }, [])
             this.setState({
                 themeNodes: themeNodes2,
                 themeLinks: value.data.map(node => node.themeLinks)
@@ -115,14 +108,6 @@ class ThemeGraph extends React.Component<Props> {
                                 ))
                             } 
                         </InteractiveForceGraph>
-                    </Card>
-                    <Card>
-                        {/* <Graph
-                            data={{
-                                nodes: this.state.themeNodes,
-                                links: this.state.themeLinks,
-                            }}
-                        /> */}
                     </Card>
                 </Grid>
             </Grid>
