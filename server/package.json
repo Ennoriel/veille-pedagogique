@@ -6,8 +6,7 @@
         "build": "tsc",
         "start": "node ./build/server.js",
         "ib": "npm i && npm i --only=dev && npm run build",
-        "hot": "ts-node src/server.ts",
-        "nodemonz": "./node_modules/nodemon/bin/nodemon.js"
+        "hot": "ts-node src/server.ts"
     },
     "dependencies": {
         "bcryptjs": "^2.4.3",
