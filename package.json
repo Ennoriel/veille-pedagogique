@@ -4,9 +4,10 @@
   "description": "> Make knowledge valuable.",
   "main": "index.js",
   "scripts": {
+    "installGlobal": "npm i -g nodemon ts-node",
     "start": "cd server && npm run start",
     "heroku-postbuild": "concurrently \"cd server && npm run ib\" \"cd server/client && npm run ib\" ",
-    "nodemonz": "concurrently \"cd server && npm run nodemonz\" \"cd server/client && npm run nodemonz\" "
+    "nodemonz": "concurrently \"cd server && nodemon\" \"cd server/client && nodemon\" "
   },
   "repository": {
     "type": "git",
