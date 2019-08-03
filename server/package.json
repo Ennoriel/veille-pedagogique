@@ -1,7 +1,7 @@
 {
     "name": "veille-pedago",
     "version": "1.0.0",
-    "main": "build/server.js",
+    "main": "build/server",
     "scripts": {
         "build": "tsc",
         "start": "node ./build/server.js",
