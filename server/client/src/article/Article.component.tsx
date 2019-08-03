@@ -36,7 +36,7 @@ import { IncrementArticlePage, ResetArticlePage } from 'src/redux.services/actio
 import ArticleCriteresComponent from './ArticleCriteres.component';
 
 import { UserRight } from "src/user/User.types";
-import { isNullOrUndefined } from 'util';
+
 import ArticleMiseAJourComponent from './ArticleMiseAJour.component';
 
 import { toFrenchFormatDate } from 'src/shared/date.utils';
@@ -288,7 +288,7 @@ class Article extends React.Component<Props> {
                                                     par {this.auteurs[auteurId].nom}
                                                 </Typography>
                                             </div>
-                                        ) : isNullOrUndefined
+                                        ) : null
                                     }
                                 </CardActions>
                                 <span>
