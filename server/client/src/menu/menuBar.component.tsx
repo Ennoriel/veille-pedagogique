@@ -62,7 +62,7 @@ class MenuBar extends React.Component<Props> {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="title" color="inherit" noWrap>
+                    <Typography variant="h5" color="inherit" noWrap>
                         {store.getState().route.label}
                     </Typography>
                 </Toolbar>
