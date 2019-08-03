@@ -63,43 +63,18 @@ export class ThemeController {
                         {
                             'id': '$node.theme',
                             'label': '$node.theme',
-                            'labelProperty': '$node.theme',
-                            'radius': '$node.neighboors.weight',
-                            'size': '$node.neighboors.weight'
+                            'radius': '$node.neighboors.weight'
                         },
                         {
                             'id': '$node.neighboors.node',
                             'label': '$node.neighboors.node',
-                            'labelProperty': '$node.theme',
-                            'radius': '$node.neighboors.weight',
-                            'size': '$node.neighboors.weight'
+                            'radius': '$node.neighboors.weight'
                         }
                     ],
-                    'themeLinks': 
-                        {
-                            'source': '$node.theme',
-                            'target': '$node.neighboors.node'
-                        }
-                    ,
-                    // 'themeNodes': [
-                    //     {
-                    //         'id': '$node._id',
-                    //         'label': '$node.theme',
-                    //         'radius': '$node.neighboors.weight'
-                    //     },
-                    //     {
-                    //         'id': '$node.neighboors._id',
-                    //         'label': '$node.neighboors.node',
-                    //         'radius': '$node.neighboors.weight'
-                    //     }
-                    // ],
-                    // 'themeLinks': 
-                    //     {
-                    //         'source': '$node._id',
-                    //         'target': '$node.neighboors._id'
-                    //     }
-                    // ,
-                    // 'weight': '$node.neighboors.weight'
+                    'themeLinks': {
+                        'source': '$node.theme',
+                        'target': '$node.neighboors.node'
+                    }
                 }
             }
         ]
