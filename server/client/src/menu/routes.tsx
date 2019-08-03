@@ -5,6 +5,7 @@ import Register from '../user/register/Register.components';
 import Login from '../user/login/Login.component';
 import Article from '../article/Article.component';
 import Hashtag from '../hashtag/Hashtag.component';
+import Theme from '../theme/Theme.component';
 
 import HomeIcon from '@material-ui/icons/Home';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
@@ -60,6 +61,16 @@ export const routes = [
             UserRight.SUPER_USER
         ],
         component: Hashtag,
+        icon: <SubjectIcon color="primary"/>
+    },
+    {
+        path: '/themes',
+        label: 'Themes',
+        userRights: [
+            UserRight.BEARER_PREMIUM,
+            UserRight.SUPER_USER
+        ],
+        component: Theme,
         icon: <SubjectIcon color="primary"/>
     }
 ]
