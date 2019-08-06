@@ -11,6 +11,8 @@ import HomeIcon from '@material-ui/icons/Home';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SubjectIcon from '@material-ui/icons/Subject';
+import MemoryIcon from '@material-ui/icons/Memory';
+import TuneIcon from '@material-ui/icons/Tune';
 import { UserRight } from 'src/user/User.types';
 
 export const routes = [
@@ -61,7 +63,7 @@ export const routes = [
             UserRight.SUPER_USER
         ],
         component: Hashtag,
-        icon: <SubjectIcon color="primary"/>
+        icon: <TuneIcon color="primary"/>
     },
     {
         path: '/themes',
@@ -71,6 +73,6 @@ export const routes = [
             UserRight.SUPER_USER
         ],
         component: Theme,
-        icon: <SubjectIcon color="primary"/>
+        icon: <MemoryIcon color="primary"/>
     }
 ]

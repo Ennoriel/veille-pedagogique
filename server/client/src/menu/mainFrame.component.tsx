@@ -21,6 +21,7 @@ const styles = (theme : any) => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
+        background: 'rgb(240,245,255)'
     },
     contentShift: {
         transition: theme.transitions.create('margin', {
