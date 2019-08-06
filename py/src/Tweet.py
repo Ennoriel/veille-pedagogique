@@ -1,6 +1,6 @@
 from pymongo.errors import BulkWriteError
 from tweepy.models import Status
-from datetime import datetime
+from datetime import datetime, date
 from ast import literal_eval
 from tweepy import OAuthHandler, API
 
@@ -346,7 +346,7 @@ class ApiCusto:
 					def __init__(self):
 						self.title = "title"
 						self.top_img = "top_img"
-						self.publish_date = "publish_date"
+						self.publish_date = date(year = 2018, month = 1, day = 1)
 						self.text = "text"
 						self.authors = [
 							"tom",
