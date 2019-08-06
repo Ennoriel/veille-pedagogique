@@ -203,6 +203,15 @@ class Article extends React.Component<Props> {
         return (
             <Grid container justify='center'>
                 <Grid item xs={12} lg={8}>
+                {!isSuperUser() ? null :
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Typography variant="body1">
+                            Texte à destination des administrateurs : tous les articles sont affichés aux administrateurs. Les messages cachés apparaissent avec l'icone caché (oeil barré). Une fois un article édité, celui-ci sera visible par tous les utilisateurs.
+                        </Typography>
+                    </CardContent>
+                </Card>
+                }
                 <ArticleCriteresComponent
                     handleSearch={this.handleSearch}
                 />
@@ -222,15 +231,27 @@ class Article extends React.Component<Props> {
                                         <div>
                                             {!isSuperUser() ? null :
                                             [
-                                                <IconButton key={0} onClick={() => this.handlOpenUpdateArticlePanel(index)}>
+                                                <IconButton
+                                                    key={0}
+                                                    color="primary"
+                                                    onClick={() => this.handlOpenUpdateArticlePanel(index)}
+                                                >
                                                     <CreateIcon />
                                                 </IconButton>,
-                                                <IconButton key={1} onClick={() => this.handleHideArticle(article, index)}>
+                                                <IconButton
+                                                    key={1}
+                                                    color="primary"
+                                                    onClick={() => this.handleHideArticle(article, index)}
+                                                >
                                                     {
                                                         article.isVisible ? <VisibilityIcon/> : <VisibilityOffIcon/>
                                                     }
                                                 </IconButton>,
-                                                <IconButton key={2} onClick={() => this.handleDeleteArticle(article, index)}>
+                                                <IconButton
+                                                    key={2}
+                                                    color="primary"
+                                                    onClick={() => this.handleDeleteArticle(article, index)}
+                                                >
                                                     <DeleteIcon />
                                                 </IconButton>
                                             ]
@@ -269,7 +290,7 @@ class Article extends React.Component<Props> {
                                 <CardActions className={classes.cardActions}>
                                     <Tooltip title="Accès direct sur le site" placement="top">
                                         <IconButton href={article.url} target="_blank">
-                                            <LinkIcon />
+                                            <LinkIcon color="primary" />
                                         </IconButton>
                                     </Tooltip>
                                     <Typography>
@@ -281,7 +302,7 @@ class Article extends React.Component<Props> {
                                             <div key={index} className={classNames({[classes.iconeDroite]: index === 0})}>
                                                 <Tooltip title="Accès à la page auteur" placement="top">
                                                     <IconButton>
-                                                        <CreateIcon />
+                                                        <CreateIcon color="primary" />
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Typography className={classes.inlineFlex}>
