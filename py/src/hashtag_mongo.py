@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
-from yaml import load as yaml_load
+from yaml import load as yaml_load, BaseLoader
 from typing import List
 
 
@@ -10,7 +10,7 @@ class HashtagMongo:
 		"""
 		Initializes mongo connexion
 		"""
-		conf = yaml_load(open("./../resources/credentials.yaml"))["mongodb"]
+		conf = yaml_load(open("./../resources/credentials.yaml"), Loader=BaseLoader)["mongodb"]
 		self.db = conf["db"]
 		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 
