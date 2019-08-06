@@ -14,7 +14,9 @@ var articleSchema = new Schema({
     auteur: [{type: Number}],
     tweetId: [{type: Number}],
     isVisible: Boolean,
-    createdAt: {type: Date, default: new Date()}
+    createdAt: {type: Date, default: new Date()},
+    approvedAt: {type: Date, default: new Date()},
+    indexedAt: {type: Date, default: new Date()}
 });
 
 export var ArticleModel = mongoose.model('Article', articleSchema);

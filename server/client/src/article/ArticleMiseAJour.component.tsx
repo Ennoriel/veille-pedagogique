@@ -107,13 +107,13 @@ class ArticleMiseAJour extends React.Component<Props> {
      */
     handleArticleMaj() {
         this.setState({
-            ...this.state.article,
             article : {
+                ...this.state.article,
                 approvedAt: new Date().getTime()
             }
-        })
-        
-        this.props.handleArticleMaj(this.state.article)
+        }, () =>
+            this.props.handleArticleMaj(this.state.article)
+        );
     }
 
     render() {

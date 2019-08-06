@@ -83,8 +83,8 @@ export class ArticleController{
         if(article._id) {
             delete article._id;
         }
-        
-        ArticleModel.findOneAndReplace({ _id: req.params._id }, article, (err, article) => {
+
+        ArticleModel.replaceOne({ _id: req.params._id }, article, (err, article) => {
             if(err){
                 res.send(err);
             }
