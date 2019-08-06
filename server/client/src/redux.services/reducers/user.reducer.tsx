@@ -5,7 +5,7 @@ const defaultUser: IUser = {
     right: UserRight.NOT_AUTH
 };
 
-export default (state: IUser = defaultUser, action: SaveUserData | Logout) => {
+export default (state: IUser = defaultUser, action: SaveUserData | Logout): IUser => {
     switch(action.type) {
         case SAVE_USER_DATA:
             return {

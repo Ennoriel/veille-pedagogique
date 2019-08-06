@@ -1,6 +1,6 @@
 import axios, { AxiosPromise } from 'axios';
 import { BASE_URI_SERVER } from '../shared/uri.constants';
-import store from 'src/redux.services/index.store';
+import { store } from 'src/redux.services/index.store';
 import { ThemeGraphItem } from './Theme.type';
 
 const URI_THEMEGRAPH = '/themeGraph/';

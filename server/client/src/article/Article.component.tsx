@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import store from 'src/redux.services/index.store';
+import { store } from 'src/redux.services/index.store';
 
 import * as _ from "lodash";
 import {

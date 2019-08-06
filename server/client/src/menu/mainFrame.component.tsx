@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { withStyles } from '@material-ui/core';
-import { Route, Redirect, RouteProps } from 'react-router';
+import { Route, Redirect, RouteProps, RouteComponentProps, withRouter, Switch } from 'react-router';
 import { routes } from './routes';
 import classNames from 'classnames';
 import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
-import store from 'src/redux.services/index.store';
+import { store } from 'src/redux.services/index.store';
 import { UserRight } from 'src/user/User.types';
 import { WithStyleComponent } from 'src/shared/standard.types';
+import { saveActiveRoute } from 'src/redux.services/action/route.action';
+
+import * as _ from "lodash";
 
 const drawerWidth = 240;
 
@@ -35,7 +38,7 @@ const styles = (theme : any) => ({
     }
 })
 
-export interface Props {
+type Props = RouteComponentProps<any> & {
     open: boolean;
     classes: any;
 }
@@ -44,6 +47,17 @@ export interface Props {
  * Page principale de l'application
  */
 class MainFrame extends React.Component<Props> {
+    
+    constructor(props: Props) {
+        super(props);
+
+        const currentRoute = _.chain(routes)
+                        .keyBy('path')
+                        .value()
+                        [this.props.history.location.pathname]
+
+        store.dispatch(saveActiveRoute(currentRoute ? currentRoute : DEFAULT_ROUTE));
+    }
     
     render() {
         const { classes, open } = this.props;
@@ -55,17 +69,20 @@ class MainFrame extends React.Component<Props> {
                 })}
             >
                 <div className={classes.drawerHeader} />
-                {routes.map((route, i) =>
-                    <CustomRoute
-                        component={route.component}
-                        privilege={route.userRights}
-                        key={i}
-                        exact path={route.path}
+                <Switch>
+                    {routes.map((route, i) =>
+                        <CustomRoute
+                            component={route.component}
+                            privilege={route.userRights}
+                            key={i}
+                            exact
+                            path={route.path}
+                        />
+                    )}
+                    <Redirect
+                        to={DEFAULT_ROUTE.path}
                     />
-                )}
-                <Redirect
-                    to={DEFAULT_ROUTE.path}
-                />
+                </Switch>
             </main>
         );
     }
@@ -78,30 +95,30 @@ interface CustomRouteProps {
 
 class CustomRoute extends React.Component<CustomRouteProps & RouteProps> {
 
-    isAuthenticated(routePrivilege: Array<UserRight>) {
+    isAllowed(routePrivilege: Array<UserRight>) {
         return routePrivilege.includes(store.getState().user.right!);
     }
 
     render() {
-       const {component: Component, privilege, ...rest} = this.props;
+        const {component: Component, privilege, ...rest} = this.props;
+ 
+        const renderRoute = (props: any) => {
 
-       const renderRoute = (props: any) => {
-           
-           if (this.isAuthenticated(privilege)) {
-              return (
-                  <Component {...props} />
-              );
-           }
+            if (this.isAllowed(privilege)) {
+                return (
+                    <Component {...props} />
+                );
+            }
+ 
+            return (
+                <Redirect to={DEFAULT_ROUTE.path} />
+            );
+        }
 
-           return (
-               <Redirect to={DEFAULT_ROUTE.path} />
-           );
-       }
-
-       return (
-           <Route {...rest} render={renderRoute}/>
-       );
+        return (
+            <Route {...rest} render={renderRoute}/>
+        );
     }
 }
 
-export default withStyles(styles, { withTheme: true })(MainFrame);
+export default withStyles(styles, { withTheme: true })(withRouter(MainFrame));

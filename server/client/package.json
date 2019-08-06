@@ -22,9 +22,10 @@
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
     "react-scripts-ts": "^4.0.8",
+    "react-vis-force": "^0.3.1",
     "redux": "^4.0.4",
-    "rxjs": "^6.5.2",
-    "react-vis-force": "^0.3.1"
+    "redux-persist": "^5.9.1",
+    "rxjs": "^6.5.2"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.9",

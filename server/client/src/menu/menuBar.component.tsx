@@ -4,7 +4,7 @@ import { AppBar, Toolbar, IconButton, Typography, withStyles } from '@material-u
 import classNames from 'classnames';
 
 import MenuIcon from '@material-ui/icons/Menu';
-import store from 'src/redux.services/index.store';
+import { store } from 'src/redux.services/index.store';
 
 const drawerWidth = 240;
 
