@@ -196,7 +196,7 @@ class Register extends React.Component<Props & ClassNames> {
                             <Grid item xs={12} className={classes.gridInput}>
                                 <TextField
                                     id="username"
-                                    label="Username"
+                                    label="Nom d'utilisateur"
                                     name="username"
                                     value={this.state.user.username}
                                     onChange={this.handleInputChange}
@@ -211,7 +211,7 @@ class Register extends React.Component<Props & ClassNames> {
                             <Grid item xs={12} lg={6} className={classes.gridInput}>
                                 <TextField
                                     id="firstname"
-                                    label="Firstname"
+                                    label="Prénom"
                                     name="firstname"
                                     value={this.state.user.firstname}
                                     onChange={this.handleInputChange}
@@ -225,7 +225,7 @@ class Register extends React.Component<Props & ClassNames> {
                             <Grid item xs={12} lg={6} className={classes.gridInput}>
                                 <TextField
                                     id="lastname"
-                                    label="Lastname"
+                                    label="Nom"
                                     name="lastname"
                                     value={this.state.user.lastname}
                                     onChange={this.handleInputChange}
@@ -254,13 +254,13 @@ class Register extends React.Component<Props & ClassNames> {
                                 <TextField
                                     id="password"
                                     type="password"
-                                    label="Password"
+                                    label="Mot de passe"
                                     name="password"
                                     error={this.state.error.password.length > 0}
                                     value={this.state.user.password}
                                     onChange={this.handleInputChange}
                                     required
-                                    helperText="Please write a minimum of 12 characters."
+                                    helperText="(doit être composé d'au moins 12 caractères)"
                                     fullWidth
                                     margin="normal"
                                     variant="outlined"
@@ -270,13 +270,13 @@ class Register extends React.Component<Props & ClassNames> {
                                 <TextField
                                     id="passwordBis"
                                     type="password"
-                                    label="Password"
+                                    label="Mot de passe"
                                     name="passwordBis"
                                     error={this.state.error.passwordBis.length > 0}
                                     value={this.state.user.passwordBis}
                                     onChange={this.handleInputChange}
                                     required
-                                    helperText="Should (obviously) be the same."
+                                    helperText="Doit (évidemment) être le même."
                                     fullWidth
                                     margin="normal"
                                     variant="outlined"
@@ -289,7 +289,7 @@ class Register extends React.Component<Props & ClassNames> {
                                     size="large" 
                                     color="primary"
                                     className={classes.buttonWidth}>
-                                        register
+                                        S'enregistrer
                                 </Button>
                             </Grid>
                             <Grid item className={classes.gridButton}>
@@ -299,7 +299,7 @@ class Register extends React.Component<Props & ClassNames> {
                                     size="large" 
                                     color="primary"
                                     className={classes.buttonWidth}>
-                                        empty fields
+                                        Réinitialiser les champs
                                 </Button>
                             </Grid>
                         </Grid>

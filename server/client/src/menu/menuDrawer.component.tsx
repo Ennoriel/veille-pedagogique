@@ -117,7 +117,7 @@ class MenuDrawer extends React.Component<Props> {
                                 >
                                     <ListItem button className={classes.logout}>
                                         <ListItemIcon><PauseIcon color="primary"/></ListItemIcon>
-                                        <ListItemText primary="Logout" />
+                                        <ListItemText primary="Se déconnecter" />
                                     </ListItem>
                                 </Link>
                             )}
