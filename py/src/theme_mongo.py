@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from yaml import load as yaml_load
+from yaml import load as yaml_load, BaseLoader
 
 class ThemeMongo:
 
@@ -7,7 +7,7 @@ class ThemeMongo:
 		"""
 		Initializes mongo connexion
 		"""
-		conf = yaml_load(open("./../resources/credentials.yaml"))["mongodb"]
+		conf = yaml_load(open("./../resources/credentials.yaml"), Loader=BaseLoader)["mongodb"]
 		self.db = conf["db"]
 		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 

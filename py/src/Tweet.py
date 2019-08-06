@@ -12,7 +12,7 @@ from re import compile, escape, findall, search
 from url_utils import unshorten
 from itertools import chain, combinations
 from newspaper import Config as NPConfig, Article as NPArticle, ArticleException
-from yaml import load as yaml_load
+from yaml import load as yaml_load, BaseLoader
 from logg import dir_log
 from typing import List
 from urllib.parse import urlparse
@@ -231,7 +231,7 @@ class ApiCusto:
 
 	def __init__(self):
 
-		conf = yaml_load(open("./../resources/credentials.yaml"))["twitter_api"]
+		conf = yaml_load(open("./../resources/credentials.yaml"), Loader=BaseLoader)["twitter_api"]
 
 		consumer_key = conf["consumer_key"]
 		consumer_secret = conf["consumer_secret"]
