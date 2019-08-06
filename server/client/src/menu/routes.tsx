@@ -15,8 +15,8 @@ import { UserRight } from 'src/user/User.types';
 
 export const routes = [
     {
-        path: '/home',
-        label: 'Home',
+        path: '/accueil',
+        label: 'Accueil',
         userRights: [
             UserRight.NOT_AUTH,
             UserRight.BEARER_FREE,
@@ -27,8 +27,8 @@ export const routes = [
         icon: <HomeIcon color="primary"/>
     },
     {
-        path: '/register',
-        label: 'Register',
+        path: '/creer-un-compte',
+        label: 'Créer un nouveau compte',
         userRights: [
             UserRight.NOT_AUTH,
         ],
@@ -36,8 +36,8 @@ export const routes = [
         icon: <GroupAddIcon color="primary"/>
     },
     {
-        path: '/login',
-        label: 'Login',
+        path: '/authentification',
+        label: 'Authentification',
         userRights: [
             UserRight.NOT_AUTH,
         ],
@@ -65,7 +65,7 @@ export const routes = [
     },
     {
         path: '/themes',
-        label: 'Themes',
+        label: 'Thèmes',
         userRights: [
             UserRight.BEARER_PREMIUM,
             UserRight.SUPER_USER

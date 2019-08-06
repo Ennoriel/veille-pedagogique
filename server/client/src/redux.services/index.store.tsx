@@ -9,7 +9,7 @@ import auteur from "./reducers/auteur.reducer";
 import config, { configState } from "./reducers/config.reducer";
 
 import {
-    persistStore
+    persistStore,
     persistCombineReducers
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web

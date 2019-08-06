@@ -161,7 +161,7 @@ class Login extends React.Component<Props> {
                             <Grid item xs={12} className={classes.gridInput}>
                                 <TextField
                                         id="username"
-                                        label="Username"
+                                        label="Nom d'utilisateur"
                                         name="username"
                                         value={this.state.user.username}
                                         onChange={this.handleInputChange}
@@ -176,13 +176,13 @@ class Login extends React.Component<Props> {
                                 <TextField
                                     id="password"
                                     type="password"
-                                    label="Password"
+                                    label="Mot de passe"
                                     name="password"
                                     error={this.state.error.password.length > 0}
                                     value={this.state.user.password}
                                     onChange={this.handleInputChange}
                                     required
-                                    helperText="(at least 12 characters)"
+                                    helperText="(est composé d'au moins 12 caractères)"
                                     fullWidth
                                     margin="normal"
                                     variant="outlined"
@@ -195,7 +195,7 @@ class Login extends React.Component<Props> {
                                     size="large" 
                                     color="primary"
                                     className={classes.buttonWidth}>
-                                        login
+                                        Se connecter
                                 </Button>
                             </Grid>
                             <Grid item className={classes.gridButton}>
@@ -205,7 +205,7 @@ class Login extends React.Component<Props> {
                                     size="large" 
                                     color="primary"
                                     className={classes.buttonWidth}>
-                                        empty fields
+                                        Réinitialiser les champs
                                 </Button>
                             </Grid>
                         </Grid> 

@@ -123,7 +123,7 @@ class ArticleMiseAJour extends React.Component<Props> {
             <div>
                 <TextField
                     id="title"
-                    label="Title"
+                    label="Titre"
                     name="title"
                     onChange={this.handleInputChange}
                     value={this.state.article.title}
@@ -145,7 +145,7 @@ class ArticleMiseAJour extends React.Component<Props> {
                     value={this.state.article.createdAt}
                     onChange={this.handleInputChange}
                     id="createdAt"
-                    label="Created at"
+                    label="Publié le"
                     name="createdAt"
                 />
                 <TextField
@@ -185,7 +185,7 @@ class ArticleMiseAJour extends React.Component<Props> {
                     ))}
                 </TextField>
                 <DownShiftMultipleComponent
-                    label="themes"
+                    label="Thèmes"
                     liste={this.state.suggestions}
                     addNewItems={true}
                     value={this.state.article.themes}
@@ -196,7 +196,7 @@ class ArticleMiseAJour extends React.Component<Props> {
                     variant="outlined" 
                     size="large" 
                     color="primary">
-                        Save
+                        Enregistrer
                 </Button>
             </div>
         );

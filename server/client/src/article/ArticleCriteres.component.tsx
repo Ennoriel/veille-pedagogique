@@ -197,7 +197,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 })}
                             onClick={this.handleExpandClick}
                             aria-expanded={this.state.expanded}
-                            aria-label="Show more"
+                            aria-label="Afficher plus de critères"
                         >
                             <ExpandMoreIcon />
                         </IconButton>
@@ -209,7 +209,7 @@ class ArticleCriteres extends React.Component<Props> {
                         <Grid item xs={12} lg={3} className={classes.gridInput}>
                             <TextField
                                 id="title"
-                                label="Title"
+                                label="Titre"
                                 name="title"
                                 onChange={this.handleInputChange}
                                 value={this.state.article.title}
@@ -246,7 +246,7 @@ class ArticleCriteres extends React.Component<Props> {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        name="video"
+                                        name="vidéo"
                                         onChange={this.handleCheckboxChange}
                                         checked={this.state.articleMedium.video}
                                         color="primary"
@@ -279,7 +279,7 @@ class ArticleCriteres extends React.Component<Props> {
                         </Grid>
                         <Grid item xs={12} lg={6} className={classes.gridInput}>
                             <DownShiftMultipleComponent
-                                label="themes"
+                                label="Thèmes"
                                 liste={this.state.suggestions}
                                 addNewItems={false}
                                 value={this.state.article.themes}
@@ -291,7 +291,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 value={this.state.article.createdAt}
                                 onChange={this.handleInputChange}
                                 id="createdAt"
-                                label="Created after"
+                                label="Publié après le"
                                 name="createdAt"
                             />
                         </Grid>
@@ -302,7 +302,7 @@ class ArticleCriteres extends React.Component<Props> {
                                 size="large" 
                                 color="primary"
                                 className={classes.buttonWidth}>
-                                    Search
+                                    Rechercher
                             </Button>
                         </Grid>
                     </Grid>

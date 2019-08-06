@@ -4,8 +4,8 @@ import { LOGOUT } from "src/user/User.types";
 import { Logout } from "../action/user.action";
 
 export const DEFAULT_ROUTE = {
-    path: '/home',
-    label: 'Home',
+    path: '/accueil',
+    label: 'Accueil',
 }
 
 export default (state: RouteState = DEFAULT_ROUTE, action: SaveActiveRoute | Logout) => {
