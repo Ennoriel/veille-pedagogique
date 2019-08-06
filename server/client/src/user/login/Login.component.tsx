@@ -4,7 +4,7 @@ import * as React from 'react';
 import { User } from '../User.types';
 import { Button, Grid, TextField, withStyles } from '@material-ui/core';
 import { UserRepositoryService } from '../User.repositoryService';
-import store from 'src/redux.services/index.store';
+import { store } from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
 import { Redirect } from 'react-router';
 import { UserService } from '../User.service';

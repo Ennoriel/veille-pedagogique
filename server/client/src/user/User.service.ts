@@ -1,4 +1,4 @@
-import store from "src/redux.services/index.store";
+import { store } from "src/redux.services/index.store";
 import { UserRight } from "./User.types";
 
 export class UserService {

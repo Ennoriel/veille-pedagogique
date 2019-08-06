@@ -5,7 +5,7 @@ import { User, EMAIL_REGEXP } from '../User.types';
 import { Grid, Button, TextField, withStyles } from '@material-ui/core';
 import { UserRepositoryService } from '../User.repositoryService';
 
-import store from 'src/redux.services/index.store';
+import { store } from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import { Redirect } from 'react-router';

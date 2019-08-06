@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BASE_URI_SERVER } from '../shared/uri.constants';
-import store from 'src/redux.services/index.store';
+import { store } from 'src/redux.services/index.store';
 import { IArticleCritere, ArticleItem } from 'src/redux.services/constants/article.types';
 
 const URI_ARTICLES = '/article';

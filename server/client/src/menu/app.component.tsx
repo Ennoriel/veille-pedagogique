@@ -3,7 +3,7 @@ import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { CssBaseline, withStyles } from '@material-ui/core';
-import store from 'src/redux.services/index.store';
+import { store } from 'src/redux.services/index.store';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
 
 import MenuBar from './menuBar.component';
