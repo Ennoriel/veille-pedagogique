@@ -288,14 +288,15 @@ class Article extends React.Component<Props> {
                                 </CardContent>
                                 <Divider />
                                 <CardActions className={classes.cardActions}>
-                                    <Tooltip title="Accès direct sur le site" placement="top">
-                                        <IconButton href={article.url} target="_blank">
-                                            <LinkIcon color="primary" />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Typography>
-                                        sur {article.siteInternet}
-                                    </Typography>
+                                    <a href={article.url} target="_blank">
+                                        <Chip
+                                            icon={<LinkIcon />}
+                                            label={"sur " + article.siteInternet}
+                                            onClick={() => null}
+                                            color="primary"
+                                            variant="outlined"
+                                        />
+                                    </a>
                                     {
                                         article.auteur ?
                                         article.auteur.map((auteurId, index) => 
