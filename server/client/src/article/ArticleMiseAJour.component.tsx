@@ -10,10 +10,7 @@ import {
 import { WithStyleComponent } from 'src/shared/standard.types';
 import { ArticleItem } from 'src/redux.services/constants/article.types';
 import DateFieldComponent from 'src/shared/DateField.component';
-import { ArticleRepositoryService } from './Article.repositoryService';
-import DownShiftMultipleComponent from 'src/shared/DownShiftMultiple.component';
-
-let articleRepositoryService: ArticleRepositoryService;
+import ThemeInput from 'src/theme/ThemeInput.component';
 
 const styles = (theme : any) => ({
     medium: {
@@ -32,7 +29,6 @@ export interface Props {
 
 interface State {
     article: ArticleItem;
-    suggestions: Array<string>;
 }
 
 /**
@@ -43,34 +39,16 @@ class ArticleMiseAJour extends React.Component<Props> {
     constructor (props: Props) {
         super (props);
 
-        articleRepositoryService = new ArticleRepositoryService;
-
         this.state = {
             article: this.props.article,
-            suggestions: new Array<string>(),
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleArticleMaj = this.handleArticleMaj.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-
-        this.getSuggestions();
+        this.handleArticleMaj = this.handleArticleMaj.bind(this);
     }
 
     readonly state: State;
-
-    /**
-     * Initialise les suggestions de thèmes
-     */
-    getSuggestions() {
-        articleRepositoryService.getThemes().then(themes => {
-            this.setState({
-                suggestions: themes.data
-            });
-        }).catch(error => {
-            // TODO gérer l'erreur
-        });
-    }
 
     /**
      * Gestion des valeurs et erreurs
@@ -184,11 +162,8 @@ class ArticleMiseAJour extends React.Component<Props> {
                         </MenuItem>
                     ))}
                 </TextField>
-                <DownShiftMultipleComponent
-                    label="Thèmes"
-                    liste={this.state.suggestions}
-                    addNewItems={true}
-                    value={this.state.article.themes}
+                <ThemeInput
+                    addNewItems={false}
                     handleRes={this.handleThemes}
                 />
                 <Button
