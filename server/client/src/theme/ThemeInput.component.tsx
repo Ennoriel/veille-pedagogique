@@ -25,7 +25,7 @@ interface State {
 let articleRepositoryService: ArticleRepositoryService;
 
 /**
- * Composant d'affichage des thèmes
+ * Composant d'un input Theme
  */
 class ThemeInput extends React.Component<Props> {
 
@@ -66,11 +66,7 @@ class ThemeInput extends React.Component<Props> {
         this.props.handleRes(selectedThemes)
     }
 
-    // readonly state: State;
-
     render(): JSX.Element {
-        // const { classes } = this.props;
-
         return (
             <DownShiftMultipleComponent
                 label="Thèmes"
