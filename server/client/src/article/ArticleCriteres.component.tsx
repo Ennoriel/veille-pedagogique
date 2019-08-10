@@ -16,13 +16,12 @@ import {
 } from '@material-ui/core';
 import { WithStyleComponent } from 'src/shared/standard.types';
 import { ArticleCritere, IArticleCritere } from 'src/redux.services/constants/article.types';
-import DownShiftMultipleComponent from 'src/shared/DownShiftMultiple.component';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import classNames from 'classnames';
-import { ArticleRepositoryService } from './Article.repositoryService';
 import DateFieldComponent from 'src/shared/DateField.component';
+import ThemeInput from 'src/theme/ThemeInput.component';
 
 const styles = (theme : any) => ({
     card: {
@@ -48,7 +47,6 @@ export interface Props {
 interface State {
     article: IArticleCritere;
     expanded: boolean;
-    suggestions: Array<string>;
     articleMedium: {
         'video': boolean,
         'blog': boolean,
@@ -56,14 +54,10 @@ interface State {
     }
 }
 
-let articleRepositoryService: ArticleRepositoryService;
-
 class ArticleCriteres extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-
-        articleRepositoryService = new ArticleRepositoryService;
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
@@ -72,31 +66,15 @@ class ArticleCriteres extends React.Component<Props> {
         this.state = {
             article: new ArticleCritere(),
             expanded: false,
-            suggestions: new Array<string>(),
             articleMedium: {
                 'video': true,
                 'blog': true,
                 'presse': true
             }
         };
-
-        this.getSuggestions();
     }
 
     readonly state: State;
-
-    /**
-     * Initialise les suggestions de thèmes
-     */
-    getSuggestions() {
-        articleRepositoryService.getThemes().then(themes => {
-            this.setState({
-                suggestions: themes.data
-            });
-        }).catch(error => {
-            // TODO gérer l'erreur
-        });
-    }
 
     /**
      * Gestion de la sauvegarde des termes à rechercher
@@ -278,11 +256,8 @@ class ArticleCriteres extends React.Component<Props> {
                             />
                         </Grid>
                         <Grid item xs={12} lg={6} className={classes.gridInput}>
-                            <DownShiftMultipleComponent
-                                label="Thèmes"
-                                liste={this.state.suggestions}
+                            <ThemeInput
                                 addNewItems={false}
-                                value={this.state.article.themes}
                                 handleRes={this.handleThemes}
                             />
                         </Grid>
