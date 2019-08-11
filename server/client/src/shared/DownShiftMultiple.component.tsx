@@ -17,12 +17,12 @@ const styles = (theme : any) => ({
     paper: {
         position: 'absolute' as 'absolute',
         zIndex: 2,
-        marginTop: theme.spacing.unit(1),
+        marginTop: theme.spacing(1),
         left: 0,
         right: 0,
     },
     chip: {
-        margin: `${theme.spacing.unit(1) / 2}px ${theme.spacing.unit(1) / 4}px`,
+        margin: `${theme.spacing(1) / 2}px ${theme.spacing(1) / 4}px`,
     },
     inputRoot: {
         flexWrap: 'wrap' as 'wrap',
@@ -32,7 +32,7 @@ const styles = (theme : any) => ({
         flexGrow: 1,
     },
     divider: {
-        height: theme.spacing.unit(2),
+        height: theme.spacing(2),
     },
 });
 

@@ -263,7 +263,7 @@ class ArticleCriteres extends React.Component<Props> {
                         </Grid>
                         <Grid item xs={12} lg={3} className={classes.gridInput}>
                             <DateFieldComponent
-                                value={this.state.article.createdAt}
+                                defaultValue={this.state.article.createdAt}
                                 onChange={this.handleInputChange}
                                 id="createdAt"
                                 label="Publié après le"

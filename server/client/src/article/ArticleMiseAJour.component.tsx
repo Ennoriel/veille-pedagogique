@@ -120,7 +120,7 @@ class ArticleMiseAJour extends React.Component<Props> {
                     variant="outlined"
                 />
                 <DateFieldComponent
-                    value={this.state.article.createdAt}
+                    defaultValue={this.state.article.createdAt}
                     onChange={this.handleInputChange}
                     id="createdAt"
                     label="Publié le"

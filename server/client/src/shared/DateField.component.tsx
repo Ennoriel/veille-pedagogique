@@ -9,7 +9,7 @@ import { WithStyleComponent } from 'src/shared/standard.types';
 const styles = (theme : any) => ({});
 
 export interface Props {
-    value: number,
+    defaultValue: number,
     handleInputChange: (date: number) => void;
 }
 
@@ -27,7 +27,7 @@ class DateField extends React.Component<Props> {
         super(props);
 
         this.state = {
-            date: this.props.value
+            date: this.props.defaultValue
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
