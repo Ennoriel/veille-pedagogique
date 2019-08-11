@@ -40,6 +40,7 @@ import { UserRight } from "src/user/User.types";
 import ArticleMiseAJourComponent from './ArticleMiseAJour.component';
 
 import { toFrenchFormatDate } from 'src/shared/date.utils';
+import RedirectIf from 'src/shared/RedirectIf.component';
 
 const styles = (theme : any) => ({
     card: {
@@ -82,6 +83,10 @@ let articles: articleState;
 interface State {
     articleCritere: IArticleCritere;
     isBeingUpdated: number;
+    redirect: {
+        condition: boolean,
+        themeRoute: string
+    }
 }
 
 function isSuperUser() {
@@ -100,7 +105,11 @@ class Article extends React.Component<Props> {
 
         this.state = {
             articleCritere: new ArticleCritere(),
-            isBeingUpdated: -1
+            isBeingUpdated: -1,
+            redirect: {
+                condition: false,
+                themeRoute: ''
+            }
         };
 
         if (store.getState().config.articlePage === 0){
@@ -113,6 +122,7 @@ class Article extends React.Component<Props> {
         this.handleDeleteArticle = this.handleDeleteArticle.bind(this);
         this.handlOpenUpdateArticlePanel = this.handlOpenUpdateArticlePanel.bind(this);
         this.handleArticleMaj = this.handleArticleMaj.bind(this);
+        this.handleThemeClick = this.handleThemeClick.bind(this);
     }
 
     readonly state: State;
@@ -191,6 +201,19 @@ class Article extends React.Component<Props> {
         articleRepositoryService.updateArticle(articleNew).then(() => {
             store.dispatch(ReplaceArticle(index, articleNew));
         });
+    }
+
+    /**
+     * Redirection vers la page de déscription d'un thème
+     * @param theme le thème sur lequel la description sera faite
+     */
+    handleThemeClick(theme: string) {
+        this.setState({
+            redirect: {
+                condition: true,
+                themeRoute: 'themes/' + theme
+            }
+        })
     }
 
     // récupération des auteurs
@@ -278,6 +301,7 @@ class Article extends React.Component<Props> {
                                                     className={classes.chip}
                                                     key={index}
                                                     label={theme}
+                                                    onClick={() => this.handleThemeClick(theme)}
                                                 />
                                             ) : null
                                         }
@@ -347,6 +371,10 @@ class Article extends React.Component<Props> {
                 }
             
             </Grid>
+                <RedirectIf
+                    condition={this.state.redirect.condition}
+                    route={this.state.redirect.themeRoute}
+                />
             </Grid>
         );
     }
