@@ -6,6 +6,7 @@ import Login from '../user/login/Login.component';
 import Article from '../article/Article.component';
 import Hashtag from '../hashtag/Hashtag.component';
 import Theme from '../theme/Theme.component';
+import ThemeSearch from 'src/theme/ThemeSearch.component';
 
 import HomeIcon from '@material-ui/icons/Home';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
@@ -19,6 +20,7 @@ export const routes = [
     {
         path: '/accueil',
         label: 'Accueil',
+        isDisplayedInMenu: true,
         userRights: [
             UserRight.NOT_AUTH,
             UserRight.BEARER_FREE,
@@ -31,6 +33,7 @@ export const routes = [
     {
         path: '/creer-un-compte',
         label: 'Créer un nouveau compte',
+        isDisplayedInMenu: true,
         userRights: [
             UserRight.NOT_AUTH,
         ],
@@ -40,6 +43,7 @@ export const routes = [
     {
         path: '/authentification',
         label: 'Authentification',
+        isDisplayedInMenu: true,
         userRights: [
             UserRight.NOT_AUTH,
         ],
@@ -49,6 +53,7 @@ export const routes = [
     {
         path: '/articles',
         label: 'Articles',
+        isDisplayedInMenu: true,
         userRights: [
             UserRight.BEARER_PREMIUM,
             UserRight.SUPER_USER
@@ -59,6 +64,7 @@ export const routes = [
     {
         path: '/hashtags',
         label: 'Hashtags',
+        isDisplayedInMenu: true,
         userRights: [
             UserRight.SUPER_USER
         ],
@@ -68,6 +74,18 @@ export const routes = [
     {
         path: '/themes',
         label: 'Thèmes',
+        isDisplayedInMenu: true,
+        userRights: [
+            UserRight.BEARER_PREMIUM,
+            UserRight.SUPER_USER
+        ],
+        component: ThemeSearch,
+        icon: <MemoryIcon color="primary"/>
+    },
+    {
+        path: '/themes/:theme',
+        label: 'Thèmes',
+        isDisplayedInMenu: false,
         userRights: [
             UserRight.BEARER_PREMIUM,
             UserRight.SUPER_USER
