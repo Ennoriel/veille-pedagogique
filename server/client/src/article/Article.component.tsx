@@ -367,7 +367,14 @@ class Article extends React.Component<Props> {
                             </Grid>
                         </Grid>
                     </div>
-                    : <Typography>Aucun article ne correspond à votre recherche. Merci de choisir d'autres critères de recherche.</Typography>
+                    :
+                    <Card>
+                        <CardContent>
+                            <Typography variant="body1">
+                                Aucun article ne correspond à votre recherche. Merci de choisir d'autres critères de recherche.
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 }
             
             </Grid>
