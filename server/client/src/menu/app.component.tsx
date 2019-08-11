@@ -18,6 +18,8 @@ import { ReplaceAllArticles } from 'src/redux.services/action/article.action';
 const styles = (theme : any) => ({
     root: {
         display: 'flex',
+        height: '100vh',
+        background: 'rgb(240,245,255)'
     },
     main: {
         flex: '0 0 100%'
