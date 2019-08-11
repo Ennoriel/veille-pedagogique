@@ -9,7 +9,6 @@ import {
 
 import { WithStyleComponent } from 'src/shared/standard.types';
 import { ArticleItem } from 'src/redux.services/constants/article.types';
-import DateFieldComponent from 'src/shared/DateField.component';
 import ThemeInput from 'src/theme/ThemeInput.component';
 
 const styles = (theme : any) => ({
@@ -119,12 +118,19 @@ class ArticleMiseAJour extends React.Component<Props> {
                     margin="normal"
                     variant="outlined"
                 />
-                <DateFieldComponent
-                    defaultValue={this.state.article.createdAt}
-                    onChange={this.handleInputChange}
+                <TextField
+                    type="date"
                     id="createdAt"
                     label="Publié le"
                     name="createdAt"
+                    onChange={this.handleInputChange}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    fullWidth
+                    margin="normal"
+                    variant="outlined"
+                    defaultValue={new Date(this.state.article.createdAt).toISOString().substr(0,10)}
                 />
                 <TextField
                     id="description"
