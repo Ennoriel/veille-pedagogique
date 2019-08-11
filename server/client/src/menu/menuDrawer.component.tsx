@@ -87,7 +87,9 @@ class MenuDrawer extends React.Component<Props> {
                 <Divider />
                 <List className={classes.routeList}>
                     {routes.filter(route => route.userRights
-                            .some(routeRight => routeRight === userRight))
+                                .some(routeRight => routeRight === userRight)
+                            )
+                            .filter(route => route.isDisplayedInMenu)
                             .map((route, index) => (
                         <Route
                             path={route.path}

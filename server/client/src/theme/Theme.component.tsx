@@ -12,6 +12,7 @@ import { WithStyleComponent } from 'src/shared/standard.types';
 
 import * as _ from 'lodash'
 import ThemeGraphComponent from './ThemeGraph.component';
+import { RouteComponentProps } from 'react-router';
 
 const styles = (theme : any) => ({
     root: {
@@ -25,7 +26,11 @@ const styles = (theme : any) => ({
     }
 });
 
-interface Props {
+interface MatchParams {
+    theme: string;
+}
+
+interface Props extends RouteComponentProps<MatchParams> {
     classes?: any;
 }
 
@@ -42,7 +47,7 @@ class Theme extends React.Component<Props> {
         super(props);
 
         this.state = {
-            theme: "Education"
+            theme: this.props.match.params.theme
         }
     }
 
