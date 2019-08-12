@@ -52,14 +52,21 @@ class MainFrame extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
+        this.redirectToHomeIfNotAllowed();
+    }
+    
+    /**
+     * Redirect to Home if not allowed
+     */
+    private redirectToHomeIfNotAllowed() {
+        
         const currentRoute = _.chain(routes)
-                        .keyBy('path')
-                        .value()
-                        [this.props.history.location.pathname]
+            .keyBy('path')
+            .value()[this.props.history.location.pathname];
 
         store.dispatch(saveActiveRoute(currentRoute ? currentRoute : DEFAULT_ROUTE));
     }
-    
+
     render() {
         const { classes, open } = this.props;
         
