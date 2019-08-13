@@ -32,7 +32,7 @@ export class ArticleCritere implements IArticleCritere {
     constructor() {
         this.page = 0;
         this.title = '';
-        this.description;
+        this.description = '';
         this.medium = ['video', 'blog', 'presse'];
         this.siteInternet = '';
         this.createdAt;

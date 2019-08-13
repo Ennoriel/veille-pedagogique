@@ -6,7 +6,6 @@ import { Button, Grid, TextField, withStyles } from '@material-ui/core';
 import { UserRepositoryService } from '../User.repositoryService';
 import { store } from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
-import { Redirect } from 'react-router';
 import { UserService } from '../User.service';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import ErrorDialog from 'src/shared/ErrorDialog.component';
@@ -111,18 +110,25 @@ class Login extends React.Component<Props> {
                 username : this.isRequiredTextOk(this.state.user.username) ? OK : ERREUR,
                 password : this.isPasswordOk(this.state.user.password) ? OK : ERREUR,
             }
-        })
+        }, () => {
+            if(this.isRequiredTextOk(this.state.user.username) &&
+                    this.isPasswordOk(this.state.user.password)) {
+                userRepositoryService.authenticate(this.state.user).then(value => {
+                    store.dispatch(saveUserData(value.data, value.headers.authorization));
+                    store.dispatch(saveActiveRoute(DEFAULT_ROUTE));
 
-        if(this.isRequiredTextOk(this.state.user.username) &&
-                this.isPasswordOk(this.state.user.password)) {
-            userRepositoryService.authenticate(this.state.user).then(value => {
-                store.dispatch(saveUserData(value.data, value.headers.authorization));
-                store.dispatch(saveActiveRoute(DEFAULT_ROUTE));
-                this.setState({"redirectToHome": true})
-            }).catch(error => {
-                this.setState({"messageErreur": error.response.data.message});
-            });
-        }
+                    /*
+                     * Redirection to home is implied by the fact that a logon user
+                     * is not allowed on this page
+                     */
+                })
+                .catch(error => {
+                    this.setState({"messageErreur": error.response.data.message});
+                })
+                ;
+            }
+
+        })
     }
 
     /**
@@ -150,8 +156,6 @@ class Login extends React.Component<Props> {
 
     render() {
         const { classes } = this.props;
-
-        if (this.state.redirectToHome) return <Redirect to={DEFAULT_ROUTE.path}/>
 
         return (
             <div className={classes.root}>

@@ -264,6 +264,7 @@ class Register extends React.Component<Props & ClassNames> {
                                     fullWidth
                                     margin="normal"
                                     variant="outlined"
+                                    autoComplete="new-password"
                                 />
                             </Grid>
                             <Grid item xs={12} lg={6} className={classes.gridInput}>
@@ -280,6 +281,7 @@ class Register extends React.Component<Props & ClassNames> {
                                     fullWidth
                                     margin="normal"
                                     variant="outlined"
+                                    autoComplete="new-password"
                                 />
                             </Grid>
                             <Grid item className={classes.gridButton}>

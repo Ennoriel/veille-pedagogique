@@ -20,7 +20,6 @@ import { ArticleCritere, IArticleCritere } from 'src/redux.services/constants/ar
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import classNames from 'classnames';
-import DateFieldComponent from 'src/shared/DateField.component';
 import ThemeInput from 'src/theme/ThemeInput.component';
 
 const styles = (theme : any) => ({
@@ -262,12 +261,19 @@ class ArticleCriteres extends React.Component<Props> {
                             />
                         </Grid>
                         <Grid item xs={12} lg={3} className={classes.gridInput}>
-                            <DateFieldComponent
-                                value={this.state.article.createdAt}
-                                onChange={this.handleInputChange}
+                            <TextField
+                                type="date"
                                 id="createdAt"
                                 label="Publié après le"
                                 name="createdAt"
+                                onChange={this.handleInputChange}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                fullWidth
+                                margin="normal"
+                                variant="outlined"
+                                defaultValue={this.state.article.createdAt}
                             />
                         </Grid>
                         <Grid item xs={12} lg={3} className={classNames(classes.gridInput, classes.gridButton)}>

@@ -16,7 +16,7 @@ const drawerWidth = 240;
 const styles = (theme : any) => ({
     content: {
         flexGrow: 1,
-        padding: theme.spacing.unit * 3,
+        padding: theme.spacing(3),
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -52,14 +52,21 @@ class MainFrame extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
+        this.redirectToHomeIfNotAllowed();
+    }
+    
+    /**
+     * Redirect to Home if not allowed
+     */
+    private redirectToHomeIfNotAllowed() {
+        
         const currentRoute = _.chain(routes)
-                        .keyBy('path')
-                        .value()
-                        [this.props.history.location.pathname]
+            .keyBy('path')
+            .value()[this.props.history.location.pathname];
 
         store.dispatch(saveActiveRoute(currentRoute ? currentRoute : DEFAULT_ROUTE));
     }
-    
+
     render() {
         const { classes, open } = this.props;
         

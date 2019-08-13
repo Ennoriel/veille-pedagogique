@@ -73,7 +73,8 @@ export class ThemeController {
                     ],
                     'themeLinks': {
                         'source': '$node.theme',
-                        'target': '$node.neighboors.node'
+                        'target': '$node.neighboors.node',
+                        'value': '$node.neighboors.weight'
                     }
                 }
             }
