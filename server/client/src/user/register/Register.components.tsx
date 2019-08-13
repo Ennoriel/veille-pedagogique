@@ -8,7 +8,6 @@ import { UserRepositoryService } from '../User.repositoryService';
 import { store } from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
 import { saveActiveRoute } from 'src/redux.services/action/route.action';
-import { Redirect } from 'react-router';
 import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
 import { WithStyleComponent } from 'src/shared/standard.types';
 import ErrorDialog from 'src/shared/ErrorDialog.component';
@@ -36,7 +35,6 @@ interface State {
     user: User,
     error: User,
     usernameHelperText: string,
-    redirectToHome: boolean,
     messageErreur: string
 }
 
@@ -70,7 +68,6 @@ class Register extends React.Component<Props & ClassNames> {
         user : new User(),
         error: new User(),
         usernameHelperText: '',
-        redirectToHome: false,
         messageErreur: ''
     };
   
@@ -133,7 +130,7 @@ class Register extends React.Component<Props & ClassNames> {
             userRepositoryService.register(this.state.user).then(value => {
                 store.dispatch(saveUserData(value.data, value.headers.authorization));
                 store.dispatch(saveActiveRoute(DEFAULT_ROUTE));
-                this.setState({"redirectToHome": true})
+
             }).catch(error => {
                 this.setState({"messageErreur": error.response.data.message});
             });
@@ -185,8 +182,6 @@ class Register extends React.Component<Props & ClassNames> {
 
     render() {
         const { classes } = this.props;
-
-        if (this.state.redirectToHome) return <Redirect to={DEFAULT_ROUTE.path}/>
         
         return (
             <div className={classes.root}>

@@ -55,12 +55,12 @@ class ThemeSearch extends React.Component<Props> {
         this.setState({
             redirect: {
                 condition: true,
-                themeRoute: "themes/" + theme
+                themeRoute: "/themes/" + theme
             }
         });
 
         store.dispatch(saveActiveRoute({
-            path: 'themes/' + theme,
+            path: '/themes/' + theme,
             label: 'Thème : ' + theme
         }));
     }
@@ -79,7 +79,7 @@ class ThemeSearch extends React.Component<Props> {
                             />
                             <RedirectIf
                                 condition={this.state.redirect.condition} 
-                                to={this.state.redirect.themeRoute}
+                                route={this.state.redirect.themeRoute}
                             />
                         </CardContent>
                     </Card>
