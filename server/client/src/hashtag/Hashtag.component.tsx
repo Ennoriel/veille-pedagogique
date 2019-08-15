@@ -9,7 +9,7 @@ import {
     TableCell,
     TableHead,
     Checkbox,
-    TextField,
+    // TextField,
     IconButton,
 } from '@material-ui/core';
 
@@ -20,6 +20,7 @@ import classNames from 'classnames';
 
 import { HashtagItem } from './Hashtag.type';
 import { HashtagRepositoryService } from './Hashtag.repositoryService';
+import ThemeInput from 'src/theme/ThemeInput.component';
 
 const styles = (theme : any) => ({
     hashtagCellWidth: {
@@ -72,7 +73,7 @@ class Hashtag extends React.Component<Props> {
         });
 
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
+        // this.handleThemes = this.handleThemes.bind(this);
         this.handleSaveChange = this.handleSaveChange.bind(this);
     }
 
@@ -94,26 +95,40 @@ class Hashtag extends React.Component<Props> {
     }
 
     /**
-     * Mise à jour d'un input d'un hashtag
-     * @param event évènement de saisie
-     * @param index indice du hashtag à modifier
-     */
-    handleInputChange(event: any, index: number) {
-        let liste = this.state.listeHashtag;
-        liste[index]["associatedThemes"] = event.target.value;
-        this.setState({"listeHashtag": liste});
-    }
-
-    /**
      * Sauvegarde d'un hashtag
      * @param index indice du hashtag à modifier
      */
     handleSaveChange(index: number) {
-        hashtagRepositoryService.saveHashtags(this.state.listeHashtag[index]);
 
-        let liste = this.state.listeHashtag;
-        liste[index]["saved"] = true;
-        this.setState({"listeHashtag": liste});
+        let listeHashtag = this.state.listeHashtag;
+        let hashtag = listeHashtag[index]
+
+        console.log(listeHashtag);
+        console.log(hashtag);
+        console.log(hashtag.articleToBeDeleted);
+        console.log(hashtag.themeToBeDeleted);
+        console.log(hashtag.associatedThemes.length);
+        console.log(!!hashtag.associatedThemes.length);
+
+        if(hashtag.articleToBeDeleted || hashtag.themeToBeDeleted || !!hashtag.associatedThemes.length) {
+
+            hashtagRepositoryService.saveHashtags(hashtag);
+            listeHashtag[index]["saved"] = true;
+            this.setState({"listeHashtag": listeHashtag});
+        }
+    }
+
+    /**
+     * Gestion de la sauvegarde des termes à rechercher
+     */
+    handleThemes = (listeThemes: Array<string>, index: number) => {
+        let listeHashtag = this.state.listeHashtag;
+        listeHashtag[index]["associatedThemes"] = listeThemes;
+
+        console.log(listeHashtag);
+        console.log(listeThemes);
+
+        this.setState({"listeHashtag": listeHashtag});
     }
 
     render() {
@@ -180,15 +195,11 @@ class Hashtag extends React.Component<Props> {
                                             className={classNames(classes.cell, classes.synonymeCellWidth)}
                                             align="center"
                                         >
-                                            <TextField
-                                                id="synonyme"
-                                                name="synonyme"
-                                                className={classes.dense}
-                                                onChange={(event) => this.handleInputChange(event, index)}
-                                                value={hashtag.synonyme}
-                                                fullWidth
+                                            <ThemeInput
+                                                addNewItems={true}
+                                                handleRes={(liste:Array<string>) => this.handleThemes(liste, index)}
+                                                noLabel={true}
                                                 margin="dense"
-                                                variant="outlined"
                                             />
                                         </TableCell>
                                         <TableCell

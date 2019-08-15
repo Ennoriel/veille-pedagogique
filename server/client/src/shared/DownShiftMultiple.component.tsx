@@ -46,6 +46,7 @@ interface IInputProps {
     classes: any;
     fullWidth: boolean;
     label: string;
+    margin: "normal" | "none" | "dense" | undefined,
 }
 
 /**
@@ -65,7 +66,6 @@ function renderInput(inputProps: IInputProps) {
             }}
             {...other}
             variant='outlined'
-            margin="normal"
         />
     );
 }
@@ -127,6 +127,7 @@ interface State {
 
 export interface Props {
     label: string;
+    margin: "normal" | "none" | "dense" | undefined;
     liste: string[];
     value: string[];
     addNewItems: boolean
@@ -153,6 +154,7 @@ class DownshiftMultiple extends React.Component<Props> {
   
     /**
      * Gestion de la suppression d'un élément par la touche "suppr" du clavier
+     * ou de l'ajout d'un élément hors liste de suggestion par la touche "entrée"
      */
     handleKeyDown = (event: number) => {
         const { inputValue } = this.state;
@@ -190,7 +192,7 @@ class DownshiftMultiple extends React.Component<Props> {
                 inputValue: '',
                 selectedItem,
             });
-            this.props.handleRes(this.state.selectedItem);
+            this.props.handleRes(selectedItem);
         }
     };
   
@@ -273,6 +275,7 @@ class DownshiftMultiple extends React.Component<Props> {
                                 placeholder: this.props.label,
                             }),
                             label: this.props.label,
+                            margin: this.props.margin,
                         })}
                         {isOpen ? (
                             <Paper className={classes.paper} square>

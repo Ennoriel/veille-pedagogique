@@ -3,6 +3,6 @@ export interface HashtagItem {
     entry: string,
     articleToBeDeleted: boolean,
     themeToBeDeleted: boolean,
-    synonyme: string,
+    associatedThemes: Array<string>,
     saved?: boolean
 }

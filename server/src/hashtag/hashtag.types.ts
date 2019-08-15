@@ -6,7 +6,7 @@ var hashtagSchema = new Schema({
     entry: {type: String, unique: true},
     articleToBeDeleted: Boolean,
     themeToBeDeleted: Boolean,
-    associatedTheme: String,
+    associatedThemes: [{type: String}],
 });
 
 export var HashtagModel = mongoose.model('Hashtag', hashtagSchema);
