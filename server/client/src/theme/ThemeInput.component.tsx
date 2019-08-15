@@ -14,7 +14,9 @@ const styles = (theme : any) => ({
 interface Props {
     classes?: any;
     addNewItems: boolean;
-    handleRes: ((liste: string[]) => never);
+    handleRes: (liste: Array<string>) => void;
+    noLabel: boolean;
+    margin: "normal" | "none" | "dense" | undefined;
 }
 
 interface State {
@@ -69,11 +71,12 @@ class ThemeInput extends React.Component<Props> {
     render(): JSX.Element {
         return (
             <DownShiftMultipleComponent
-                label="Thèmes"
+                label={this.props.noLabel ? null : "Thèmes"}
                 liste={this.state.suggestions}
                 addNewItems={this.props.addNewItems}
                 value={this.state.selectedThemes}
                 handleRes={this.handleRes}
+                margin={this.props.margin}
             />
         );
     }

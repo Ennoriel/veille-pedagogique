@@ -39,10 +39,6 @@ export class HashtagController {
         if(hashtag._id) {
             delete hashtag._id;
         }
-
-        if(hashtag.associatedThemes.length) {
-            hashtag.associatedThemes = hashtag.associatedThemes.split(";")
-        }
         
         let articlesBeforeUpdatePromise = await this.getArticlesBeforeUpdate(hashtag)
 
@@ -138,6 +134,9 @@ export class HashtagController {
      * @param hashtag hashtag to be updated
      */
     public updateHashtag (_id: number, hashtag: any) {
+delete hashtag.saved
+console.log(_id)
+console.log(hashtag)
 
         HashtagModel.findOneAndReplace({ _id: _id }, hashtag)
                     .exec()
@@ -190,7 +189,7 @@ export class HashtagController {
                     "$pull": {
                         "notYetIndexedThemes": hashtag.entry
                     },
-                    "$push": {
+                    "$addToSet": {
                         "themes": hashtag.associatedThemes
                     }
                 }
