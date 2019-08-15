@@ -189,10 +189,9 @@ console.log(hashtag)
                     "$pull": {
                         "notYetIndexedThemes": hashtag.entry
                     },
-                    // "$push": {
-                    //     "themes": hashtag.associatedThemes
-                    // },
-                    "$addToSet": { "themes": hashtag.associatedThemes }
+                    "$addToSet": {
+                        "themes": hashtag.associatedThemes
+                    }
                 }
             ).exec().then(()=>{});
 

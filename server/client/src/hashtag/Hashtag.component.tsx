@@ -9,7 +9,6 @@ import {
     TableCell,
     TableHead,
     Checkbox,
-    // TextField,
     IconButton,
 } from '@material-ui/core';
 
@@ -73,7 +72,6 @@ class Hashtag extends React.Component<Props> {
         });
 
         this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-        // this.handleThemes = this.handleThemes.bind(this);
         this.handleSaveChange = this.handleSaveChange.bind(this);
     }
 
