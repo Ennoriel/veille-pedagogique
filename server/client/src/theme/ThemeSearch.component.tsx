@@ -7,8 +7,6 @@ import {
 import { WithStyleComponent } from 'src/shared/standard.types';
 import ThemeInput from './ThemeInput.component';
 import RedirectIf from 'src/shared/RedirectIf.component';
-import { store } from 'src/redux.services/index.store';
-import { saveActiveRoute } from 'src/redux.services/action/route.action';
 
 const styles = (theme : any) => ({
     card: {
@@ -58,11 +56,6 @@ class ThemeSearch extends React.Component<Props> {
                 themeRoute: "/themes/" + theme
             }
         });
-
-        store.dispatch(saveActiveRoute({
-            path: '/themes/' + theme,
-            label: 'Thème : ' + theme
-        }));
     }
 
     render(): JSX.Element {

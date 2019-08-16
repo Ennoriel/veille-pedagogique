@@ -6,12 +6,11 @@ import { Link } from 'react-router-dom';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { routes } from './routes';
-import { MenuRoute } from './menu.types';
 import { UserService } from 'src/user/User.service';
 
 import PauseIcon from '@material-ui/icons/Pause';
 import { UserRight } from 'src/user/User.types';
-import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
+import { DEFAULT_ROUTE } from 'src/menu/routes';
 
 const drawerWidth = 240;
 
@@ -46,7 +45,6 @@ const styles = (theme: any) => ({
 interface Props {
     open: boolean;
     handleDrawerClose: () => void;
-    handleRouteChange: (route: MenuRoute) => void;
     handleLogout: () => void;
     classes: any;
     theme: any;
@@ -97,7 +95,7 @@ class MenuDrawer extends React.Component<Props> {
                             children={({ match }) => (
                                 <Link
                                     to={route.path}
-                                    onClick={() => this.props.handleRouteChange(route)}
+                                    onClick={() => this.props.handleDrawerClose()}
                                     className={classes.liens}
                                 >
                                     <ListItem button>

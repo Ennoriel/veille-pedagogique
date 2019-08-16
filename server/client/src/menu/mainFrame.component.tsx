@@ -3,11 +3,10 @@ import { withStyles } from '@material-ui/core';
 import { Route, Redirect, RouteProps, RouteComponentProps, withRouter, Switch } from 'react-router';
 import { routes } from './routes';
 import classNames from 'classnames';
-import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
+import { DEFAULT_ROUTE } from 'src/menu/routes';
 import { store } from 'src/redux.services/index.store';
 import { UserRight } from 'src/user/User.types';
 import { WithStyleComponent } from 'src/shared/standard.types';
-import { saveActiveRoute } from 'src/redux.services/action/route.action';
 
 import * as _ from "lodash";
 
@@ -48,24 +47,6 @@ type Props = RouteComponentProps<any> & {
  * Page principale de l'application
  */
 class MainFrame extends React.Component<Props> {
-    
-    constructor(props: Props) {
-        super(props);
-
-        this.redirectToHomeIfNotAllowed();
-    }
-    
-    /**
-     * Redirect to Home if not allowed
-     */
-    private redirectToHomeIfNotAllowed() {
-        
-        const currentRoute = _.chain(routes)
-            .keyBy('path')
-            .value()[this.props.history.location.pathname];
-
-        store.dispatch(saveActiveRoute(currentRoute ? currentRoute : DEFAULT_ROUTE));
-    }
 
     render() {
         const { classes, open } = this.props;
