@@ -4,7 +4,8 @@ import { AppBar, Toolbar, IconButton, Typography, withStyles } from '@material-u
 import classNames from 'classnames';
 
 import MenuIcon from '@material-ui/icons/Menu';
-import { store } from 'src/redux.services/index.store';
+import { routes } from './routes';
+import { Route, Switch } from 'react-router';
 
 const drawerWidth = 240;
 
@@ -62,13 +63,27 @@ class MenuBar extends React.Component<Props> {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h5" color="inherit" noWrap>
-                        {store.getState().route.label}
-                    </Typography>
+                    <Switch>
+                        {routes.map((route, i) =>
+                            <Route
+                                key={i}
+                                path={route.path}
+                                render={() => <Title label={route.label} />}
+                            />
+                        )}
+                    </Switch>
                 </Toolbar>
             </AppBar>
         );
     }
+}
+
+function Title(props: {label: string}) {
+    return (
+        <Typography variant="h5" color="inherit" noWrap>
+            {props.label}
+        </Typography>
+    );
 }
 
 export default withStyles(styles, { withTheme: true })(MenuBar);

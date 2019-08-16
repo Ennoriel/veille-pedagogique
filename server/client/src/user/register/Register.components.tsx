@@ -7,8 +7,6 @@ import { UserRepositoryService } from '../User.repositoryService';
 
 import { store } from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
-import { saveActiveRoute } from 'src/redux.services/action/route.action';
-import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
 import { WithStyleComponent } from 'src/shared/standard.types';
 import ErrorDialog from 'src/shared/ErrorDialog.component';
 
@@ -129,7 +127,6 @@ class Register extends React.Component<Props & ClassNames> {
                 this.isPasswordBisOk(this.state.user.password, this.state.user.passwordBis)) {
             userRepositoryService.register(this.state.user).then(value => {
                 store.dispatch(saveUserData(value.data, value.headers.authorization));
-                store.dispatch(saveActiveRoute(DEFAULT_ROUTE));
 
             }).catch(error => {
                 this.setState({"messageErreur": error.response.data.message});

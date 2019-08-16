@@ -40,7 +40,6 @@ import { UserRight } from "src/user/User.types";
 import ArticleMiseAJourComponent from './ArticleMiseAJour.component';
 
 import { toFrenchFormatDate } from 'src/shared/date.utils';
-import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import RedirectIf from 'src/shared/RedirectIf.component';
 
 const styles = (theme : any) => ({
@@ -215,10 +214,6 @@ class Article extends React.Component<Props> {
                 themeRoute: 'themes/' + theme
             }
         })
-        store.dispatch(saveActiveRoute({
-            path: 'themes/' + theme,
-            label: 'Thème : ' + theme
-        }))
     }
 
     // récupération des auteurs

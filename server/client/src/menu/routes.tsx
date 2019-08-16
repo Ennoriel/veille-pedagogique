@@ -16,6 +16,11 @@ import MemoryIcon from '@material-ui/icons/Memory';
 import TuneIcon from '@material-ui/icons/Tune';
 import { UserRight } from 'src/user/User.types';
 
+export const DEFAULT_ROUTE = {
+    path: '/accueil',
+    label: 'Accueil',
+}
+
 export const routes = [
     {
         path: '/accueil',

@@ -4,12 +4,10 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { CssBaseline, withStyles } from '@material-ui/core';
 import { store } from 'src/redux.services/index.store';
-import { saveActiveRoute } from 'src/redux.services/action/route.action';
 
 import MenuBar from './menuBar.component';
 import MenuDrawer from './menuDrawer.component';
 import MainFrame from './mainFrame.component';
-import { MenuRoute } from './menu.types';
 import { logout } from 'src/redux.services/action/user.action';
 import { ResetArticlePage } from 'src/redux.services/action/config.action';
 import { ReplaceAllArticles } from 'src/redux.services/action/article.action';
@@ -42,11 +40,6 @@ class App extends React.Component<Props> {
     handleDrawerClose = () => {
         this.setState({ open: false });
     };
-    
-    handleRouteChange(route: MenuRoute): void {
-        store.dispatch(saveActiveRoute(route));
-        this.handleDrawerClose();
-    }
 
     handleLogout(): void {
         store.dispatch(logout());
@@ -62,16 +55,15 @@ class App extends React.Component<Props> {
         return (
             <div className={classes.root}>
                 <CssBaseline />
-                <MenuBar
-                    open={open}
-                    handleDrawerOpen={this.handleDrawerOpen}
-                />
                 <Router>
+                    <MenuBar
+                        open={open}
+                        handleDrawerOpen={this.handleDrawerOpen}
+                    />
                     <div className={classes.main}>
                         <MenuDrawer
                             open={open}
                             handleDrawerClose={this.handleDrawerClose}
-                            handleRouteChange={this.handleRouteChange}
                             handleLogout={this.handleLogout}
                         />
                         <MainFrame open={open}/>

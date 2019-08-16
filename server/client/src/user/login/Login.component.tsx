@@ -7,9 +7,7 @@ import { UserRepositoryService } from '../User.repositoryService';
 import { store } from 'src/redux.services/index.store';
 import { saveUserData } from 'src/redux.services/action/user.action';
 import { UserService } from '../User.service';
-import { saveActiveRoute } from 'src/redux.services/action/route.action';
 import ErrorDialog from 'src/shared/ErrorDialog.component';
-import { DEFAULT_ROUTE } from 'src/redux.services/reducers/route.reducer';
 import { WithStyleComponent } from 'src/shared/standard.types';
 
 const styles = (theme : any) => ({
@@ -115,7 +113,6 @@ class Login extends React.Component<Props> {
                     this.isPasswordOk(this.state.user.password)) {
                 userRepositoryService.authenticate(this.state.user).then(value => {
                     store.dispatch(saveUserData(value.data, value.headers.authorization));
-                    store.dispatch(saveActiveRoute(DEFAULT_ROUTE));
 
                     /*
                      * Redirection to home is implied by the fact that a logon user

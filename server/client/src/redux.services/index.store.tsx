@@ -3,7 +3,7 @@ import {
 } from "redux";
 
 import user from "./reducers/user.reducer";
-import route from "./reducers/route.reducer";
+// import route from "./reducers/route.reducer";
 import article from "./reducers/article.reducer";
 import auteur from "./reducers/auteur.reducer";
 import config, { configState } from "./reducers/config.reducer";
@@ -14,7 +14,7 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import { IUser } from "src/user/User.types";
-import { RouteState } from "./constants/route.types";
+// import { RouteState } from "./constants/route.types";
 import { articleState } from "./constants/article.types";
 import { auteurState } from "./constants/auteur.types";
 
@@ -26,7 +26,7 @@ const persistConfig = {
 
 const reducers = {
     user: user,
-    route: route,
+    // route: route,
     article: article,
     auteur: auteur,
     config: config
@@ -34,7 +34,7 @@ const reducers = {
 
 type reducerType = {
     user: IUser,
-    route: RouteState,
+    // route: RouteState,
     article: articleState,
     auteur: auteurState,
     config: configState
