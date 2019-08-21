@@ -7,6 +7,7 @@ import Article from '../article/Article.component';
 import Hashtag from '../hashtag/Hashtag.component';
 import Theme from '../theme/Theme.component';
 import ThemeSearch from 'src/theme/ThemeSearch.component';
+import UserManagement from 'src/user/management/UserManagement.component';
 
 import HomeIcon from '@material-ui/icons/Home';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
@@ -14,6 +15,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SubjectIcon from '@material-ui/icons/Subject';
 import MemoryIcon from '@material-ui/icons/Memory';
 import TuneIcon from '@material-ui/icons/Tune';
+import PanToolIcon from '@material-ui/icons/PanTool'
+
 import { UserRight } from 'src/user/User.types';
 
 export const DEFAULT_ROUTE = {
@@ -97,5 +100,15 @@ export const routes = [
         ],
         component: Theme,
         icon: <MemoryIcon color="primary"/>
+    },
+    {
+        path: '/users',
+        label: 'Gestion des utilisateurs',
+        isDisplayedInMenu: true,
+        userRights: [
+            UserRight.SUPER_USER
+        ],
+        component: UserManagement,
+        icon: <PanToolIcon color="primary"/>
     }
 ]

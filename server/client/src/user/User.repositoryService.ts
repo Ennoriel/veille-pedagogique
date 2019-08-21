@@ -1,6 +1,7 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, AxiosPromise } from 'axios';
 import { BASE_URI_SERVER } from '../shared/uri.constants';
 import { User } from './User.types';
+import { store } from 'src/redux.services/index.store';
 
 const URI_USER = '/user';
 const URI_USER_SLASH = URI_USER + '/';
@@ -11,8 +12,16 @@ axios.defaults.baseURL = BASE_URI_SERVER;
 
 export class UserRepositoryService  {
 
-    public getUsers() {
-        return axios.get(URI_USER);
+    config: AxiosRequestConfig;
+
+    constructor() {
+        this.config = {
+            headers: {Authorization: store.getState().user.token!}
+        }
+    }
+
+    public getUsers(): AxiosPromise<User> {
+        return axios.get(URI_USER, this.config);
     }
 
     register(newUser: User) {
@@ -28,7 +37,7 @@ export class UserRepositoryService  {
     }
 
     updateUser(_id: String, updatedUser: User) {
-        return axios.post(URI_USER_SLASH + _id, updatedUser);
+        return axios.put(URI_USER_SLASH + _id, updatedUser, this.config);
     }
 
     deleteUser(_id: String) {
