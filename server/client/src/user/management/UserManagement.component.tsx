@@ -8,7 +8,6 @@ import {
     TableRow,
     TableCell,
     TableHead,
-    // Checkbox,
     IconButton,
     Select,
     MenuItem,
@@ -81,6 +80,7 @@ class UserManagement extends React.Component<Props> {
     handleUserRight(event: any, index: number){
         let liste = this.state.listeUser;
         liste[index]["right"] = event.target.value;
+        liste[index]["saved"] = false;
         this.setState({"listeUser": liste});
     }
 
@@ -129,7 +129,6 @@ class UserManagement extends React.Component<Props> {
                                     <TableRow
                                         hover
                                         tabIndex={-1}
-                                        // selected={hashtag.saved}
                                         key={index}
                                     >
                                         <TableCell
