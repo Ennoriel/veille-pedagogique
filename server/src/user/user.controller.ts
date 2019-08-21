@@ -46,7 +46,15 @@ export class UserController{
      * @param res réponse
      */
     public getUsers (req: Request, res: Response) {           
-        UserModel.find({}, (err: MongoError, user: Array<User>) => {
+        UserModel.find({
+
+        }, {
+            username: 1,
+            lastname: 1,
+            firstname: 1,
+            email: 1,
+            right: 1
+        }, (err: MongoError, user: Array<User>) => {
             if(err){
                 res.send(err);
                 return;
@@ -112,6 +120,13 @@ export class UserController{
      * @param res réponse
      */
     public updateUser (req: Request, res: Response) {
+
+        let user = req.body;
+
+        if(user._id) {
+            delete user._id;
+        }
+
         UserModel.findOneAndUpdate({ _id: req.params._id }, req.body, { new: true }, (err: MongoError, user: User) => {
             if(err){
                 res.send(err);
