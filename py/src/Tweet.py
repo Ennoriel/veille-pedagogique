@@ -288,6 +288,7 @@ class ApiCusto:
 	def fetch(self, fetch_local=True):
 		"""
 		fetch remote or local if time is remote fetch limit is not reached
+		:param fetch_local: if true, retrieve tweets id from a file, otherwise from a hashtag on twitter
 		:return: tweets
 		"""
 		return self.fetch_local() if fetch_local else self.fetch_remote()
@@ -311,6 +312,10 @@ class ApiCusto:
 			return []
 
 	def parse(self, fetch_local):
+		"""
+		Gets statuses from Twitter, make an article out of links and dowload article content
+		:param fetch_local: if true, retrieve tweets id from a file, otherwise from a hashtag on twitter
+		"""
 
 		statuses = self.fetch(fetch_local)
 
@@ -381,8 +386,10 @@ class ApiCusto:
 
 			self.articles.extend(article_courants)
 
-	def fetch_and_parse(self, fetch_local):
-		self.parse(fetch_local)
+	def save(self):
+		"""
+		Save articles, tweets, hashtags and updates themes
+		"""
 
 		if self.articles:
 			for article in self.articles:
@@ -406,7 +413,6 @@ class ApiCusto:
 
 			# clean duplicates
 			hashtags = list(dict.fromkeys(hashtags))
-
 			hashtags = [Hashtag(hashtag).get() for hashtag in hashtags]
 
 			if len(hashtags):
@@ -417,6 +423,14 @@ class ApiCusto:
 				for [themeA, themeB] in combinations(article.indexed_theme_entries, 2):
 					self.theme_mongo.update_weight(themeA, themeB)
 					self.theme_mongo.update_weight(themeB, themeA)
+
+	def fetch_and_parse(self, fetch_local):
+		"""
+		fetch statuses, parse them to articles and saves articles
+		:param fetch_local: if true, retrieve tweets id from a file, otherwise from a hashtag on twitter
+		"""
+		self.parse(fetch_local)
+		self.save()
 
 
 def bulk_replace(text, tab):
