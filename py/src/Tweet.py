@@ -4,8 +4,8 @@ from datetime import datetime, date
 from ast import literal_eval
 from tweepy import OAuthHandler, API
 
-from tweetmongo import TweetMongo
-from articlemongo import ArticleMongo
+from tweet_mongo import TweetMongo
+from article_mongo import ArticleMongo
 from hashtag_mongo import HashtagMongo
 from theme_mongo import ThemeMongo
 from re import compile, escape, findall, search

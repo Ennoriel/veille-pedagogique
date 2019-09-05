@@ -7,8 +7,8 @@ from datetime import datetime
 from Tweet import ApiCusto
 from time import sleep
 
-from tweetmongo import TweetMongo
-from articlemongo import ArticleMongo
+from tweet_mongo import TweetMongo
+from article_mongo import ArticleMongo
 from hashtag_mongo import HashtagMongo
 
 
