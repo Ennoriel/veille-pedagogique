@@ -433,10 +433,16 @@ class ApiCusto:
 		self.save()
 
 
-def bulk_replace(text, tab):
-	if not tab:
+def bulk_replace(text, replacement):
+	"""
+	replace all occurence of the keys of the object replacement by its values in the text
+	:param text: text to modify
+	:param replacement: replacement object as {old_text: new_text}
+	:return: text modified
+	"""
+	if not replacement:
 		return text
 	else:
-		rep = dict((escape(k), v) for k, v in tab.items())
+		rep = dict((escape(k), v) for k, v in replacement.items())
 		pattern = compile("|".join(rep.keys()))
 		return pattern.sub(lambda m: rep[escape(m.group(0))], text)
