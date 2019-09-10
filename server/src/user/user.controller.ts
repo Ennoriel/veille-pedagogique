@@ -179,7 +179,7 @@ export class UserController{
      */
     private getAuthToken(user: User) {
         const { _id, right } = user;
-        return jwt.sign({ _id, right }, require('./../credentials.json')["jwt"]['secret']);
+        return jwt.sign({ _id, right }, process.env.JWT_SECRET);
     }
 
     /**
