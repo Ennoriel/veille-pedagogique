@@ -31,10 +31,20 @@ class Server {
      */
     constructor() {
 
+        this.dotEnv();
         this.serverConfig();
         this.dbConfig();
         this.serveurLaunch();
 
+    }
+
+    /**
+     * Configuration de .env si environnement hors production
+     */
+    private dotEnv(): void {
+        if(process.env.NODE_ENV != 'PRODUCTION') {
+            require('dotenv').config();
+        }
     }
 
     /**
@@ -69,11 +79,7 @@ class Server {
      */
     private dbConfig(): void {
         (<any>mongoose).Promise = global.Promise;
-
-        let conf = require('./credentials.json')["mongodb"];
-        let mongoUrl = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + conf["db"]
-    
-        mongoose.connect(mongoUrl, { useNewUrlParser: true });        
+        mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });        
     }
 
     /**

@@ -68,7 +68,7 @@ export class AuthorizationService {
      */
     private isTokenPreserved(encodedToken: string): any {
         try {
-            jwt.verify(encodedToken, require('./../credentials.json')["jwt"]['secret']);
+            jwt.verify(encodedToken, process.env.JWT_SECRET);
             return true;
         } catch(e) {
             return false;
