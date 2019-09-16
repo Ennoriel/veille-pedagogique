@@ -7,8 +7,8 @@ from datetime import datetime
 from Tweet import ApiCusto
 from time import sleep
 
-from tweetmongo import TweetMongo
-from articlemongo import ArticleMongo
+from tweet_mongo import TweetMongo
+from article_mongo import ArticleMongo
 from hashtag_mongo import HashtagMongo
 
 
@@ -37,7 +37,7 @@ class DoWork(Thread):
     def run(self):
         print("\n\n")
         print(datetime.now())
-        self.api_custo.fetch_and_parse()
+        self.api_custo.fetch_and_parse(fetch_local=True)
         print('- - - - - - - - -')
 
 

@@ -4,8 +4,8 @@ from datetime import datetime, date
 from ast import literal_eval
 from tweepy import OAuthHandler, API
 
-from tweetmongo import TweetMongo
-from articlemongo import ArticleMongo
+from tweet_mongo import TweetMongo
+from article_mongo import ArticleMongo
 from hashtag_mongo import HashtagMongo
 from theme_mongo import ThemeMongo
 from re import compile, escape, findall, search
@@ -89,7 +89,7 @@ class Tweet:
 
 		tweet_ids_to_fetch = tweet_ids[0:interval]
 
-		# saving remaining tweet ids TODO décommenter les lignes suivantes pour supprimer les identifiants traités
+		# saving remaining tweet ids
 		with open('./../resources/tweet_id.txt', 'w') as f:
 			if interval == interval_max:
 				f.write(str(tweet_ids[interval:len(tweet_ids)]))
@@ -134,34 +134,30 @@ class Article:
 
 		self.indexed_theme_entries = []
 		self.not_indexed_theme_entries = []
-		if not self.parse_themes(status):
-			self._is_valid = False
-		else:
-			self._is_valid = True
-			self.title = article_content.title
-			self.url = url
-			self.language = status.__getattribute__("lang")
-			self.medium = ""
-			self.top_image = article_content.top_img
-			self.created_at = article_content.publish_date
-			self.indexed_at = datetime.now()
-			self.approved_at = None
-			self.description = article_content.text[:500] if len(article_content.text) > 500 else article_content.text
-			self.full_text = article_content.text
 
-			self.site_internet = findall("[\\w-]+\.[\\w.-]+", url)[0]
-			self.auteur = article_content.authors
-			self.tweets = [Tweet(status)]
+		# initialize indexed_theme_entries and not_indexed_theme_entries
+		self.isVisible = self.parse_themes(status)
 
-	@property
-	def is_valid(self):
-		return self._is_valid
+		self.title = article_content.title
+		self.url = url
+		self.language = status.__getattribute__("lang")
+		self.medium = ""
+		self.top_image = article_content.top_img
+		self.created_at = article_content.publish_date
+		self.indexed_at = datetime.now()
+		self.approved_at = None
+		self.description = article_content.text[:500] if len(article_content.text) > 500 else article_content.text
+		self.full_text = article_content.text
+
+		self.site_internet = findall("[\\w-]+\.[\\w.-]+", url)[0]
+		self.auteur = article_content.authors
+		self.tweets = [Tweet(status)]
 
 	def parse_themes(self, status):
 		"""
 		Parse themes of one status
 		:param status: tweet status
-		:return: True or False whether the treatment is correct or not
+		:return: True or False whether there is a theme 'deletes' an article or not'
 		"""
 		hashtag_mongo = HashtagMongo()
 
@@ -173,15 +169,18 @@ class Article:
 
 		db_hashtags = list(hashtag_mongo.gets(article_hashtags))
 
+		is_article_to_keep = True
+
 		for theme in article_hashtags:
 			entry = next((db_hashtag for db_hashtag in db_hashtags if db_hashtag["entry"] == theme), False)
 			if entry:
-				if entry["articleToBeDeleted"]:
-					# articles to delete because the theme seems out of scope
-					return False
-				elif entry["themeToBeDeleted"]:
+				if entry["themeToBeDeleted"]:
 					# theme to delete because the theme seems irrelevent
 					continue
+				elif entry["articleToBeDeleted"] and entry["associatedThemes"]:
+					# articles to delete because the theme seems out of scope
+					is_article_to_keep = False
+					self.indexed_theme_entries.extend(entry["associatedThemes"])
 				elif entry["associatedThemes"]:
 					# theme to add as associated theme
 					self.indexed_theme_entries.extend(entry["associatedThemes"])
@@ -189,7 +188,7 @@ class Article:
 				# new theme to add as not yet indexed theme
 				self.not_indexed_theme_entries.append(theme)
 
-		return True
+		return is_article_to_keep
 
 	def add_tweet(self, status):
 		self.tweets.append(Tweet(status))
@@ -226,6 +225,43 @@ class Article:
 			"tweetId": [tweet.id for tweet in self.tweets]
 		}
 
+	@staticmethod
+	def get_article_content(url, status, fake=False):
+		"""
+		Search for page content with Newspaper3k and initialize a new article. Return False if treatment went wrong.
+		:param url: url of the webpage
+		:param status: status
+		:param fake: is True, use a fake article content to make the treatment faster
+		:return: a new article or False
+		"""
+
+		if fake:
+			class FakeArticleContent:
+				def __init__(self):
+					self.title = "title"
+					self.top_img = "top_img"
+					self.publish_date = date(year=2018, month=1, day=1)
+					self.text = "text"
+					self.authors = [
+						"tom",
+						"tom"
+					]
+
+			article_content = FakeArticleContent()
+
+		else:
+
+			article_content = Tweet.get_page_content(url)
+
+			try:
+				article_content.build()
+			except ArticleException:
+				# Lien ne renvoyant pas à une URL disponible, on ne l'enregistre pas
+				# TODO : enregistrer les articles non joignabes avec gestion de tentatives de retry
+				return False
+
+		return Article(status, article_content, url)
+
 
 class ApiCusto:
 
@@ -249,12 +285,13 @@ class ApiCusto:
 
 		self.articles = []
 
-	def fetch(self):
+	def fetch(self, fetch_local=True):
 		"""
 		fetch remote or local if time is remote fetch limit is not reached
+		:param fetch_local: if true, retrieve tweets id from a file, otherwise from a hashtag on twitter
 		:return: tweets
 		"""
-		return self.fetch_local()
+		return self.fetch_local() if fetch_local else self.fetch_remote()
 
 	def fetch_remote(self):
 		"""
@@ -274,9 +311,13 @@ class ApiCusto:
 		else:
 			return []
 
-	def parse(self):
+	def parse(self, fetch_local):
+		"""
+		Gets statuses from Twitter, make an article out of links and dowload article content
+		:param fetch_local: if true, retrieve tweets id from a file, otherwise from a hashtag on twitter
+		"""
 
-		statuses = self.fetch()
+		statuses = self.fetch(fetch_local)
 
 		for index_status, status in enumerate(statuses):
 
@@ -297,6 +338,7 @@ class ApiCusto:
 
 			# variable counting url already indexed as an article, in order to save the tweet eventhoug all its urls
 			# are already referenced. If the tweet as at least one url not indexed as an article, it will be saved later
+			# TODO vérifier l'utilité de ce truc car comme le tweet est ajouté à un article, il devrait être enregistré
 			count_url_already_indexed = 0
 
 			for index_article, url in enumerate(urls):
@@ -332,29 +374,9 @@ class ApiCusto:
 							break
 					continue
 
-				# article_content = Tweet.get_page_content(unshorten_url)
+				article_courant = Article.get_article_content(unshorten_url, status)
 
-				# try:
-				# 	article_content.build()
-				# except ArticleException:
-				# 	# Lien ne renvoyant pas à une URL disponible, on ne l'enregistre pas
-				# 	# TODO : enregistrer les articles non joignabes avec gestion de tentatives de retry
-				# 	continue
-
-				# TODO ajouté car temps de traitement trop long
-				class FakeArticleContent:
-					def __init__(self):
-						self.title = "title"
-						self.top_img = "top_img"
-						self.publish_date = date(year = 2018, month = 1, day = 1)
-						self.text = "text"
-						self.authors = [
-							"tom",
-							"tom"
-						]
-
-				article_courant = Article(status, FakeArticleContent(), unshorten_url)
-				if not article_courant.is_valid:
+				if not article_courant:
 					continue
 
 				article_courants.append(article_courant)
@@ -364,8 +386,10 @@ class ApiCusto:
 
 			self.articles.extend(article_courants)
 
-	def fetch_and_parse(self):
-		self.parse()
+	def save(self):
+		"""
+		Save articles, tweets, hashtags and updates themes
+		"""
 
 		if self.articles:
 			for article in self.articles:
@@ -389,7 +413,6 @@ class ApiCusto:
 
 			# clean duplicates
 			hashtags = list(dict.fromkeys(hashtags))
-
 			hashtags = [Hashtag(hashtag).get() for hashtag in hashtags]
 
 			if len(hashtags):
@@ -401,11 +424,25 @@ class ApiCusto:
 					self.theme_mongo.update_weight(themeA, themeB)
 					self.theme_mongo.update_weight(themeB, themeA)
 
+	def fetch_and_parse(self, fetch_local):
+		"""
+		fetch statuses, parse them to articles and saves articles
+		:param fetch_local: if true, retrieve tweets id from a file, otherwise from a hashtag on twitter
+		"""
+		self.parse(fetch_local)
+		self.save()
 
-def bulk_replace(text, tab):
-	if not tab:
+
+def bulk_replace(text, replacement):
+	"""
+	replace all occurence of the keys of the object replacement by its values in the text
+	:param text: text to modify
+	:param replacement: replacement object as {old_text: new_text}
+	:return: text modified
+	"""
+	if not replacement:
 		return text
 	else:
-		rep = dict((escape(k), v) for k, v in tab.items())
+		rep = dict((escape(k), v) for k, v in replacement.items())
 		pattern = compile("|".join(rep.keys()))
 		return pattern.sub(lambda m: rep[escape(m.group(0))], text)
