@@ -10,6 +10,9 @@ import {
     TableHead,
     Checkbox,
     IconButton,
+    Card,
+    CardContent,
+    Typography,
 } from '@material-ui/core';
 
 import SaveIcon from '@material-ui/icons/Save';
@@ -21,7 +24,12 @@ import { HashtagItem } from './Hashtag.type';
 import { HashtagRepositoryService } from './Hashtag.repositoryService';
 import ThemeInput from 'src/theme/ThemeInput.component';
 
+import * as _ from "lodash";
+
 const styles = (theme : any) => ({
+    card: {
+        marginBottom: "20px"
+    },
     hashtagCellWidth: {
         width: "30%"
     },
@@ -125,6 +133,16 @@ class Hashtag extends React.Component<Props> {
         return (
             <Grid container justify='center'>
                 <Grid item xs={12} lg={8}>
+                    <Card className={classes.card}>
+                        <CardContent>
+                            <Typography variant="body1">
+                                Texte à destination des administrateurs : cette page permet d'associer les thèmes aux hashtags twitter.
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                    {
+                        _.values(this.state.listeHashtag).length ?
+                    <div>
                     <Table aria-labelledby="tableTitle">
                         <TableHead>
                             <TableRow>
@@ -207,6 +225,16 @@ class Hashtag extends React.Component<Props> {
                             })}
                         </TableBody>
                     </Table>
+                    </div>
+                    :
+                    <Card>
+                        <CardContent>
+                            <Typography variant="body1">
+                                Il ne reste plus aucune hashtag à traiter !
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                    }
                 </Grid>
             </Grid>
         );
