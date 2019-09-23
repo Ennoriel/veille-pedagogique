@@ -230,7 +230,7 @@ class Hashtag extends React.Component<Props> {
                     <Card>
                         <CardContent>
                             <Typography variant="body1">
-                                Il ne reste plus aucune hashtag à traité !
+                                Il ne reste plus aucune hashtag à traiter !
                             </Typography>
                         </CardContent>
                     </Card>
