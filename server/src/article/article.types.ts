@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var articleSchema = new Schema({
     title: String,
-    url: {type: String, trim: true},
+    url: {type: String, trim: true, unique: true},
     language: {type: String},
     medium: {type: String, enum:['video', 'presse', 'blog']},
     description: String,
