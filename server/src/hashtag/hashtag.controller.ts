@@ -34,7 +34,10 @@ export class HashtagController {
      */
     public updateHashtagToTheme = async (req: Request, res: Response) => {
 
+        console.log("\n\n\n\n=== === === ===")
+
         let hashtag = req.body;
+        console.log(hashtag)
 
         if(hashtag._id) {
             delete hashtag._id;
@@ -58,7 +61,8 @@ export class HashtagController {
      * @param hashtag hashtag to be modified
      */
     async getArticlesBeforeUpdate(hashtag: any) {
-        
+        console.log("    getArticlesBeforeUpdate")
+
         const articleQuery = {
             "notYetIndexedThemes": {
                 "$all": [hashtag.entry]
@@ -76,16 +80,16 @@ export class HashtagController {
      * @param hashtag hastag to be modified
      * @param articles articles before beeing updated
      */
-    public updateThemes (hashtag: any, articles) {
+    public async updateThemes (hashtag: any, articles) {
+        console.log("    updateThemes")
 
         const hashtagThemes = hashtag.associatedThemes;
 
         articles.forEach(async article => {
+            console.log("        " + article.title)
 
             let oldArticleThemes = article.themes;
-            oldArticleThemes = oldArticleThemes.filter(item => {
-                return !hashtagThemes.includes(item)
-            })
+            oldArticleThemes = oldArticleThemes.filter(item => !hashtagThemes.includes(item))
 
             for (const oldTheme of oldArticleThemes) {
                 for (const newTheme of hashtagThemes) {
@@ -102,6 +106,7 @@ export class HashtagController {
      * @param themeB second theme
      */
     private async updateTheme(themeA, themeB) {
+        console.log("            " + themeA + " - " + themeB)
 
         let res = await ThemeModel.updateOne({
             "theme": themeA,
@@ -126,6 +131,12 @@ export class HashtagController {
                     "upsert": true
                 }).exec();
         }
+
+        if (res.nModified == 0) {
+            console.log("                nouveau")
+        } else {
+            console.log("                mise à jour")
+        }
     }
 
     /**
@@ -133,15 +144,20 @@ export class HashtagController {
      * @param _id identifiant
      * @param hashtag hashtag to be updated
      */
-    public updateHashtag (_id: number, hashtag: any) {
-delete hashtag.saved
-console.log(_id)
-console.log(hashtag)
+    public updateHashtag(_id: number, hashtag: any) {
+        console.log("    updateHashtag")
 
-        HashtagModel.findOneAndReplace({ _id: _id }, hashtag)
+        delete hashtag.saved;
+
+        HashtagModel.replaceOne({ _id: _id }, hashtag)
                     .exec()
                     .then(() => {});
 
+        // HashtagModel.updateOne({ _id }, {"$addToSet": {
+        //     "associatedThemes": hashtag.associatedThemes
+        // }})
+        // .exec()
+        // .then(() => {});
     }
 
     /**
@@ -149,6 +165,7 @@ console.log(hashtag)
      * @param hashtag hashtag to be updated
      */
     public async updateArticles (hashtag) {
+        console.log("    updateArticles")
 
         const articleQuery = {
             "notYetIndexedThemes": {
@@ -159,18 +176,19 @@ console.log(hashtag)
         let hasNewThemes = false;
 
         if (hashtag.articleToBeDeleted) {
+            console.log("        articleToBeDeleted")
 
-            await ArticleModel.updateMany(
+            ArticleModel.updateMany(
                 articleQuery,
                 {
                     "$set": {
                         "isVisible": false
                     }
                 }
-                ,()=>{}
-            );
+            ).exec().then(()=>{});
             
         } else if (hashtag.themeToBeDeleted) {
+            console.log("        themeToBeDeleted")
 
             ArticleModel.updateMany(
                 articleQuery,
@@ -182,6 +200,7 @@ console.log(hashtag)
             ).exec().then(()=>{});
 
         } else {
+            console.log("        themeToUpdate")
             
             ArticleModel.updateMany(
                 articleQuery,
