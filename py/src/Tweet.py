@@ -16,6 +16,7 @@ from yaml import load as yaml_load, BaseLoader
 from logg import dir_log
 from typing import List
 from urllib.parse import urlparse
+from re import sub as re_sub
 
 
 class Hashtag:
@@ -72,7 +73,7 @@ class Tweet:
 		self.url = "https://twitter.com/" + self.user.screen_name + "/status/" + _json["id_str"]
 
 	@staticmethod
-	def get_saved_tweet_ids(interval_max=5) -> List[int]:
+	def get_saved_tweet_ids(interval_max=25) -> List[int]:
 		"""
 		get tweet ids from a file (./../resources/tweet_id.txt) where tweet ids are stored as a list.
 		removes the tweet_ids of the file and log them in antoher file (./../resources/tweet_id_out.txt) as one id by line
@@ -146,8 +147,9 @@ class Article:
 		self.created_at = article_content.publish_date
 		self.indexed_at = datetime.now()
 		self.approved_at = None
-		self.description = article_content.text[:500] if len(article_content.text) > 500 else article_content.text
-		self.full_text = article_content.text
+		self.full_text = re_sub(' +', ' ', article_content.text)
+
+		self.description = self.full_text[:500] + "... [continuer sur le site de l'auteur]" if len(self.full_text[:500]) > 500 else self.full_text
 
 		self.site_internet = findall("[\\w-]+\.[\\w.-]+", url)[0]
 		self.auteur = article_content.authors
