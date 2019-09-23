@@ -37,7 +37,7 @@ class DoWork(Thread):
     def run(self):
         print("\n\n")
         print(datetime.now())
-        self.api_custo.fetch_and_parse(fetch_local=True)
+        self.api_custo.fetch_and_parse(fetch_local=False)
         print('- - - - - - - - -')
 
 
