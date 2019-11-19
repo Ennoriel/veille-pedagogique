@@ -18,11 +18,17 @@ export class UserController{
      * @param req requête
      * @param res réponse
      */
-    public addNewUser = (req: Request, res: Response) => {                
+    public addNewUser = async (req: Request, res: Response) => {                
         let newUser = new UserModel(req.body);
 
         if (newUser.password == null || newUser.password.length < 12) {
             res.status(400).send({code:"erreur", message: "Le mot de passse doit contenir au moins 12 caractères."});
+            return;
+        }
+
+        const user = await this.existsUserByEmail(newUser.email);
+        if (!!user) {
+            res.status(400).send({code:"erreur", message: "L'email que vous avez saisi est déjà utilisé."});
             return;
         }
 
@@ -111,6 +117,16 @@ export class UserController{
      */
     public existsUserById (_id: string) {
         return UserModel.findById(_id, {_id: 1})
+    }
+
+    /**
+     * Permet de tester l'existance d'un utilisateur
+     * Méthode asynchrone, pour usage interne
+     * 
+     * @param email email de l'utilisateur
+     */
+    public existsUserByEmail (email: string) {
+        return UserModel.findOne({'email': email}, {_id: 1})
     }
 
     /**
