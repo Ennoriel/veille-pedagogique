@@ -9,6 +9,7 @@ export interface ArticleItem {
     url: string,
     language: string,
     medium: string,
+    topImage: string,
     createdAt: number,
     approvedAt: number,
     indexedAt: number,

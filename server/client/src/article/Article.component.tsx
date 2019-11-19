@@ -70,6 +70,16 @@ const styles = (theme : any) => ({
     },
     description: {
         whiteSpace: 'pre-line' as 'pre-line'
+    },
+    descriptionWithImage: {
+        minHeight: '250px'
+    },
+    image: {
+        borderRadius: '8px',
+        float: 'right' as 'right',
+        maxWidth: '300px',
+        maxHeight: '250px',
+        margin: '0 0 15px 15px'
     }
 });
 
@@ -306,7 +316,14 @@ class Article extends React.Component<Props> {
                                             ) : null
                                         }
                                     </div>
-                                    <Typography component="p" className={classes.description}>
+                                    <Typography component="p" className={classNames(classes.description, {
+                                        [classes.descriptionWithImage]: !!article.topImage,
+                                    })}>
+                                        {
+                                            article.topImage ?
+                                            <img src={article.topImage} alt={article.title} className={classes.image}></img> :
+                                            null
+                                        }
                                         {article.description}
                                     </Typography>
                                 </CardContent>
