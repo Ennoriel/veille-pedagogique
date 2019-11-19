@@ -27,8 +27,6 @@ export class UserController{
         }
 
         const user = await this.existsUserByEmail(newUser.email);
-        console.log(user)
-        console.log(!!user)
         if (!!user) {
             res.status(400).send({code:"erreur", message: "L'email que vous avez saisi est déjà utilisé."});
             return;
