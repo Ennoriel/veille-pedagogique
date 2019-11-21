@@ -6,15 +6,31 @@ import { ThemeModel } from './../theme/theme.types';
 export class HashtagController {
 
     /**
-     * Retrieve not yet indexed hashtags for a super user to index them
+     * Retrieve hashtags for a super user to index them
+     *      if indexed is true and notIndexed false, only retrieve indexed hashtags
+     *      if indexed is false and notIndexed true, only retrieve not yet indexed hashtags
+     *      otherwise, retrieve all hashtags
      */
-    public getNotYetIndexedHashtags (req: Request, res: Response) {
+    public getHashtags (req: Request, res: Response) {
 
-        const queryParam = {
-            "articleToBeDeleted": false,
-            "themeToBeDeleted": false,
-            "associatedThemes": []
+        let queryParam = {};
+        
+        if (req.query.indexed && !!!req.query.notIndexed) {
+            queryParam = {
+                "$or": [
+                    {"articleToBeDeleted": true},
+                    {"themeToBeDeleted": true},
+                    {"associatedThemes": { $exists: true, $ne: [] }}
+                ]
+            }
+        } else if (!!!req.query.indexed && req.query.notIndexed) {
+            queryParam = {
+                "articleToBeDeleted": false,
+                "themeToBeDeleted": false,
+                "associatedThemes": []
+            }
         }
+        
 
         HashtagModel.find(queryParam)
                     .exec((err, hashtags) => {
