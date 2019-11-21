@@ -13,6 +13,7 @@ import {
     Card,
     CardContent,
     Typography,
+    Button,
 } from '@material-ui/core';
 
 import SaveIcon from '@material-ui/icons/Save';
@@ -21,8 +22,10 @@ import { WithStyleComponent } from 'src/shared/standard.types';
 import classNames from 'classnames';
 
 import { HashtagItem } from './Hashtag.type';
-import { HashtagRepositoryService } from './Hashtag.repositoryService';
 import ThemeInput from 'src/theme/ThemeInput.component';
+
+import { HashtagRepositoryService } from './Hashtag.repositoryService';
+import { ArticleRepositoryService } from 'src/article/Article.repositoryService';
 
 import * as _ from "lodash";
 
@@ -48,7 +51,13 @@ const styles = (theme : any) => ({
     },
     dense: {
         marginTop: "4px"
-    }
+    },
+    buttonWidth: {
+        width: '175px'
+    },
+    gridButton: {
+        padding: "16px"
+    },
 });
 
 interface Props {
@@ -56,10 +65,14 @@ interface Props {
 }
 
 interface State {
-    listeHashtag: Array<HashtagItem>
+    listeHashtag: Array<HashtagItem>,
+    themeSuggestions: Array<string>
+    indexed: boolean,
+    notIndexed: boolean
 }
 
 let hashtagRepositoryService: HashtagRepositoryService;
+let articleRepositoryService: ArticleRepositoryService;
 
 /**
  * Composant d'affichage des hastags
@@ -71,19 +84,45 @@ class Hashtag extends React.Component<Props> {
 
         hashtagRepositoryService = new HashtagRepositoryService;
 
-        this.state = { listeHashtag: [] }
+        this.state = {
+            listeHashtag: [],
+            themeSuggestions: [],
+            indexed: false,
+            notIndexed: true
+        }
 
-        hashtagRepositoryService.getHastags().then(value => {
+        articleRepositoryService = new ArticleRepositoryService;
+
+        this.getSuggestions().then(() => this.loadHashtags());
+
+        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+        this.handleSaveChange = this.handleSaveChange.bind(this);
+        this.handleIndexedHashtagsButton = this.handleIndexedHashtagsButton.bind(this);
+        this.handleNotYetIndexedHashtagsButton = this.handleNotYetIndexedHashtagsButton.bind(this);
+    }
+
+    readonly state: State;
+
+    loadHashtags() {
+        hashtagRepositoryService.getHastags(this.state.indexed, this.state.notIndexed).then(value => {
             this.setState({ listeHashtag: value.data })
         }).catch(error => {
             // TODO gérer l'erreur
         });
-
-        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-        this.handleSaveChange = this.handleSaveChange.bind(this);
     }
 
-    readonly state: State;
+    /**
+     * Initialise les suggestions de thèmes
+     */
+    getSuggestions() {
+        return articleRepositoryService.getThemes().then(themes => {
+            this.setState({
+                themeSuggestions: themes.data
+            });
+        }).catch(error => {
+            // TODO gérer l'erreur
+        });
+    }
 
     /**
      * Mise à jour d'un booléen d'un hashtag
@@ -97,6 +136,7 @@ class Hashtag extends React.Component<Props> {
 
         let liste = this.state.listeHashtag;
         liste[index][booleanToUpdate] = value;
+        liste[index]['saved'] = false;
         this.setState({"listeHashtag": liste});
     }
 
@@ -122,9 +162,26 @@ class Hashtag extends React.Component<Props> {
      */
     handleThemes = (listeThemes: Array<string>, index: number) => {
         let listeHashtag = this.state.listeHashtag;
-        listeHashtag[index]["associatedThemes"] = listeThemes;
 
+        listeHashtag[index]["associatedThemes"] = listeThemes;
+        listeHashtag[index]['saved'] = false;
         this.setState({"listeHashtag": listeHashtag});
+    }
+
+    handleIndexedHashtagsButton() {
+        this.setState({
+            indexed: !this.state.indexed
+        }, () =>
+            this.loadHashtags()
+        );
+    }
+
+    handleNotYetIndexedHashtagsButton() {
+        this.setState({
+            notIndexed: !this.state.notIndexed
+        }, () =>
+            this.loadHashtags()
+        );
     }
 
     render() {
@@ -140,6 +197,28 @@ class Hashtag extends React.Component<Props> {
                             </Typography>
                         </CardContent>
                     </Card>
+                    <Grid container justify='center'>
+                        <Grid item className={classes.gridButton}>
+                            <Button
+                                onClick={this.handleIndexedHashtagsButton}
+                                variant="outlined" 
+                                size="large" 
+                                color={this.state.indexed ? "primary" : "secondary"}
+                                className={classes.buttonWidth}>
+                                    Thèmes indéxés
+                            </Button>
+                        </Grid>
+                        <Grid item className={classes.gridButton}>
+                            <Button
+                                onClick={this.handleNotYetIndexedHashtagsButton}
+                                variant="outlined" 
+                                size="large" 
+                                color={this.state.notIndexed ? "primary" : "secondary"}
+                                className={classes.buttonWidth}>
+                                    Thèmes non indéxés
+                            </Button>
+                        </Grid>
+                    </Grid> 
                     {
                         _.values(this.state.listeHashtag).length ?
                     <div>
@@ -206,6 +285,8 @@ class Hashtag extends React.Component<Props> {
                                                 handleRes={(liste:Array<string>) => this.handleThemes(liste, index)}
                                                 noLabel={true}
                                                 margin="dense"
+                                                suggestions={this.state.themeSuggestions}
+                                                selectedThemes={hashtag.associatedThemes}
                                             />
                                         </TableCell>
                                         <TableCell

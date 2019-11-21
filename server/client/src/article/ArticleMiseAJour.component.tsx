@@ -18,6 +18,9 @@ const styles = (theme : any) => ({
     menu: {
         width: 200,
     },
+    saveButton: {
+        marginTop: '10px',
+    },
 });
 
 export interface Props {
@@ -171,8 +174,10 @@ class ArticleMiseAJour extends React.Component<Props> {
                 <ThemeInput
                     addNewItems={false}
                     handleRes={this.handleThemes}
+                    selectedThemes={this.state.article.themes}
                 />
                 <Button
+                    className={classes.saveButton}
                     onClick={this.handleArticleMaj}
                     variant="outlined" 
                     size="large" 
