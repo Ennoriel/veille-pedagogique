@@ -11,7 +11,7 @@ export class Routes {
         let router = express.Router();
 
         router.route('/hashtag')
-                .get(this.hashtagController.getNotYetIndexedHashtags);
+                .get(this.hashtagController.getHashtags);
 
         router.route('/hashtag/:_id')
                 .put(this.hashtagController.updateHashtagToTheme);

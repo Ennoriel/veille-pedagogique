@@ -17,6 +17,8 @@ interface Props {
     handleRes: (liste: Array<string>) => void;
     noLabel: boolean;
     margin: "normal" | "none" | "dense" | undefined;
+    suggestions?: Array<string>;
+    selectedThemes?: Array<string>;
 }
 
 interface State {
@@ -35,13 +37,13 @@ class ThemeInput extends React.Component<Props> {
         super(props);
         
         this.state = {
-            suggestions: new Array<string>(),
-            selectedThemes: new Array<string>(),
+            suggestions: this.props.suggestions || new Array<string>(),
+            selectedThemes: this.props.selectedThemes || new Array<string>(),
         };
 
         articleRepositoryService = new ArticleRepositoryService;
 
-        this.getSuggestions();
+        this.getSuggestions(this.props.suggestions);
 
         this.handleRes = this.handleRes.bind(this);
     }
@@ -51,14 +53,16 @@ class ThemeInput extends React.Component<Props> {
     /**
      * Initialise les suggestions de thèmes
      */
-    getSuggestions() {
-        articleRepositoryService.getThemes().then(themes => {
-            this.setState({
-                suggestions: themes.data
+    getSuggestions(suggestions?: Array<string>) {
+        if (!!!suggestions) {
+            articleRepositoryService.getThemes().then(themes => {
+                this.setState({
+                    suggestions: themes.data
+                });
+            }).catch(error => {
+                // TODO gérer l'erreur
             });
-        }).catch(error => {
-            // TODO gérer l'erreur
-        });
+        }
     }
 
     handleRes(selectedThemes: Array<string>) {

@@ -14,10 +14,16 @@ export class HashtagRepositoryService  {
 
     /**
      * Récupération des hastags non identifiés
+     * @param indexed whether indexed themes should be retrieved
+     * @param notIndexed whether not yet indexed themes should be retrieved
      */
-    public getHastags() {
+    public getHastags(indexed: boolean, notIndexed: boolean) {
         let config = {
-            headers: {Authorization: store.getState().user.token}
+            headers: {Authorization: store.getState().user.token},
+            params: {
+                indexed,
+                notIndexed
+            }
         }
         return axios.get(URI_HASHTAGS, config);
     }
