@@ -1,5 +1,6 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import * as boolParser from "express-query-boolean";
 import { Routes as ArticleRoutes } from "./article/article.routes";
 import { Routes as UserRoutes } from "./user/user.routes";
 import { Routes as HashtagRoutes } from "./hashtag/hashtag.routes";
@@ -55,6 +56,7 @@ class Server {
         this.app = express();
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
+        this.app.use(boolParser());
         this.app.use(express.static('public'));
 
         this.app.use(this.corsService.corsConfig);
