@@ -34,6 +34,8 @@ export class UserController{
 
         newUser.password = bcrypt.hashSync(newUser.password, 10);
         newUser.right = UserRight.BEARER_FREE;
+        newUser.registrationDate = new Date();
+        newUser.LastLogon = newUser.registrationDate;
     
         newUser.save((err: MongoError, user: User) => {
             if(err){
@@ -186,7 +188,14 @@ export class UserController{
             }
             
             res.set('Authorization', this.getAuthToken(user)).send(this.removeCredentials(user));
-        });
+        }).then(() => {
+
+            UserModel.updateOne(
+                { username: req.body.username },
+                {"LastLogon": new Date()}
+            ).exec().then(()=>{});
+
+        })
     }
     
     /**

@@ -16,6 +16,8 @@ export class User {
     email: string;
     password: string;
     right: UserRight;
+    registrationDate: Date;
+    LastLogon: Date;
 }
 
 /**
@@ -28,8 +30,9 @@ var userSchema = new Schema({
     firstname: String,
     email: {type: mongoose.SchemaTypes.Email, unique: true, require},
     password: String,
-    right: String
-
+    right: String,
+    registrationDate: { type: Date, default: Date.now },
+    LastLogon: { type: Date, default: Date.now },
 });
 
 export enum UserRight {
