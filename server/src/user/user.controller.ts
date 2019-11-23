@@ -189,11 +189,11 @@ export class UserController{
             
             res.set('Authorization', this.getAuthToken(user)).send(this.removeCredentials(user));
         }).then(() => {
-            console.log("1")
+
             UserModel.updateOne(
                 { username: req.body.username },
                 {"LastLogon": new Date()}
-            ).exec().then(()=>{console.log("2")});
+            ).exec().then(()=>{});
 
         })
     }
