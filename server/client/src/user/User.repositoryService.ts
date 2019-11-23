@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosPromise } from 'axios';
+import axios, { AxiosRequestConfig, AxiosPromise, AxiosResponse } from 'axios';
 import { BASE_URI_SERVER } from '../shared/uri.constants';
 import { User } from './User.types';
 import { store } from 'src/redux.services/index.store';
@@ -32,7 +32,7 @@ export class UserRepositoryService  {
         return axios.get(URI_USER_SLASH + _id);
     }
 
-    existsUser(username: String) {
+    existsUser(username: String): Promise<AxiosResponse<{data: Boolean}>> {
         return axios.get(URI_USER_EXISTS_SLASH + username);
     }
 

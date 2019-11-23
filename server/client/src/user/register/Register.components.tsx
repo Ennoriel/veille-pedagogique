@@ -104,8 +104,8 @@ class Register extends React.Component<Props & ClassNames> {
     async handleRegisterClick () {
 
         const isUsernameOk = this.isRequiredTextOk(this.state.user.username)
-                            && await this.isUsernameOk(this.state.user.username);
-        this.setState({usernameHelperText: isUsernameOk ? '' : 'Ce nom de username est déjà pris ou est vide.'})
+                            && !(await this.isUsernameOk(this.state.user.username)).data;
+        this.setState({usernameHelperText: isUsernameOk ? '' : 'Ce username est déjà pris ou est vide.'})
 
         this.setState({
             error: {
