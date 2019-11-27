@@ -1,8 +1,7 @@
 import requests
 from yaml import load as yaml_load, BaseLoader
 from pymongo import MongoClient
-from Tweet import Hashtag
-from hashtag_mongo import HashtagMongo
+from mongo.hashtag_mongo import HashtagMongo
 
 
 def import_indexed_hashtags():
@@ -119,9 +118,9 @@ def connect_mongo_client(url, db, user=None, pwd=None):
 	if bool(user) != bool(pwd):
 		raise Exception("erreur")
 	elif not user:
-		return MongoClient(url)[db]
+		return MongoClient(url, retryWrites=False)[db]
 	else:
-		return MongoClient(make_mongo_url(user, pwd, url, db))[db]
+		return MongoClient(make_mongo_url(user, pwd, url, db), retryWrites=False)[db]
 
 
 def export_hashtags():
@@ -153,15 +152,15 @@ def __init__():
 			  "|== === === === === === === === === === === === === === === ===")
 		choix = input()
 
-		if choix is "1":
+		if choix == "1":
 			reset_db()
-		elif choix is "2":
+		elif choix == "2":
 			dump_db()
-		elif choix is "3":
+		elif choix == "3":
 			import_indexed_hashtags()
-		elif choix is "4":
+		elif choix == "4":
 			export_hashtags()
-		elif choix is "9":
+		elif choix == "9":
 			en_cours = False
 
 

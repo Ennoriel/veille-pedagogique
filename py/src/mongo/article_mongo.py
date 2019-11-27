@@ -10,7 +10,7 @@ class ArticleMongo:
 		self.db = conf["db"]
 		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 
-		self.client = MongoClient(mongo_url)[self.db]["articles"]
+		self.client = MongoClient(mongo_url, retryWrites=False)[self.db]["articles"]
 
 	def gets(self, url: str):
 		"""

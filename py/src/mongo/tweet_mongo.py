@@ -9,7 +9,7 @@ class TweetMongo:
 		self.db = conf["db"]
 		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 
-		self.client = MongoClient(mongo_url)
+		self.client = MongoClient(mongo_url, retryWrites=False)
 
 	def gets(self, id):
 		return self.client[self.db]["tweets"].find({"id": id})
