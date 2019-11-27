@@ -14,7 +14,7 @@ class HashtagMongo:
 		self.db = conf["db"]
 		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 
-		self.client = MongoClient(mongo_url)[self.db]["hashtags"]
+		self.client = MongoClient(mongo_url, retryWrites=False)[self.db]["hashtags"]
 
 	def gets(self, hashtags: List[str]):
 		"""

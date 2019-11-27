@@ -4,12 +4,12 @@
 from threading import Thread
 
 from datetime import datetime
-from Tweet import ApiCusto
+from api_custo import ApiCusto
 from time import sleep
 
-from tweet_mongo import TweetMongo
-from article_mongo import ArticleMongo
-from hashtag_mongo import HashtagMongo
+from mongo.tweet_mongo import TweetMongo
+from mongo.article_mongo import ArticleMongo
+from mongo.hashtag_mongo import HashtagMongo
 
 
 timeout = 1.0
@@ -37,7 +37,7 @@ class DoWork(Thread):
     def run(self):
         print("\n\n")
         print(datetime.now())
-        self.api_custo.fetch_and_parse(fetch_local=False)
+        self.api_custo.fetch_and_parse(fetch_local=True)
         print('- - - - - - - - -')
 
 

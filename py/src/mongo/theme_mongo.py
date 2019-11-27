@@ -11,7 +11,7 @@ class ThemeMongo:
 		self.db = conf["db"]
 		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 
-		self.client = MongoClient(mongo_url)[self.db]["themes"]
+		self.client = MongoClient(mongo_url, retryWrites=False)[self.db]["themes"]
 
 	def update_weight(self, main_theme, second_theme, weight=1):
 		"""
