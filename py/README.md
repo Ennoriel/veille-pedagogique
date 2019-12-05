@@ -20,6 +20,15 @@
     pip install -r requirements.txt
     ```
 
+1. Install nltk punkt dictionnary [help](https://www.nltk.org/data.html)
+
+    ``` Python
+    import nltk
+    nltk.download()
+    ```
+
+Download the punkt dictionnary.
+
 1. Run with the virtual env the main.py script
 
 ***Note:*** in order to solve PyCharm not to recognize source imports, define the src directory as the source root (right click on src directory > Mark directory as > Sources root)
