@@ -74,11 +74,19 @@ def dump_db():
 
 	reset_db(db=db_output)
 
+
 	for db in dbs:
-		print(db)
+		print("traitement de la base de données : " + db)
 		res = list(client_input[db].find())
 		if len(res):
 			client_output[db].insert_many(list(res))
+
+		for name, index_info in client_input[db].index_information().items():
+			keys = index_info['key']
+			del (index_info['ns'])
+			del (index_info['v'])
+			del (index_info['key'])
+			client_output[db].create_index(keys, name=name, **index_info)
 
 
 def reset_db(db=None):
