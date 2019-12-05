@@ -29,7 +29,7 @@ class Article:
 		self.approved_at = None
 		self.full_text = re_sub(' +', ' ', article_content.text)
 
-		self.description = self.full_text[:500] + "... [continuer sur le site de l'auteur]" if len(self.full_text[:500]) > 500 else self.full_text
+		self.description = self.full_text[:500] + "... [continuer sur le site de l'auteur]" if len(self.full_text) > 500 else self.full_text
 
 		self.site_internet = findall("[\\w-]+\.[\\w.-]+", url)[0]
 		self.auteur = article_content.authors
