@@ -4,6 +4,7 @@
     "main": "build/server",
     "scripts": {
         "build": "tsc",
+		"dev": "nodemon",
         "start": "node ./build/server.js",
         "ib": "npm i && npm i --only=dev && npm run build",
         "hot": "ts-node src/server.ts"
