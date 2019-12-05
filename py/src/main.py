@@ -46,7 +46,7 @@ def __main__():
     worker = DoWork()
     while(True):
         # time = datetime.now()
-        if not worker.isAlive():
+        if not worker.is_alive():
             worker = DoWork()
             worker.start()
         sleep(1)
