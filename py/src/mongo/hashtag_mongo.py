@@ -6,15 +6,18 @@ from typing import List
 
 class HashtagMongo:
 
-	def __init__(self):
+	def __init__(self, client):
 		"""
 		Initializes mongo connexion
 		"""
-		conf = yaml_load(open("./../resources/credentials.yaml"), Loader=BaseLoader)["mongodb"]
-		self.db = conf["db"]
-		mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
+		if client:
+			self.client = client["hashtags"]
+		else:
+			conf = yaml_load(open("./../resources/credentials.yaml"), Loader=BaseLoader)["mongodb"]
+			self.db = conf["db"]
+			mongo_url = "mongodb://" + conf["user"] + ":" + conf["pwd"] + "@" + conf["url"] + "/" + self.db
 
-		self.client = MongoClient(mongo_url, retryWrites=False)[self.db]["hashtags"]
+			self.client = MongoClient(mongo_url, retryWrites=False)[self.db]["hashtags"]
 
 	def gets(self, hashtags: List[str]):
 		"""
