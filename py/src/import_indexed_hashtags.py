@@ -5,6 +5,10 @@ from mongo.hashtag_mongo import HashtagMongo
 
 
 def import_indexed_hashtags():
+	"""
+	import indexed hashtags from a file indexed_hashtags.csv
+	:return: None
+	"""
 	headers = {
 		'Authorization': yaml_load(open("./../resources/credentials.yaml"), Loader=BaseLoader)["jeton"]["super_user"]
 	}
@@ -57,6 +61,10 @@ def import_indexed_hashtags():
 
 
 def dump_db():
+	"""
+	dump an existing db in another one. Both db are chosen by keyboard input
+	:return: None
+	"""
 	client_input = get_db_from_user_input("Quelle BDD sauvegarder (dev, prod, dump) ? ")
 	client_output = get_db_from_user_input("Quelle BDD de destination (dev, prod, dump) ? ")
 
@@ -79,6 +87,11 @@ def dump_db():
 
 
 def reset_db(mongo_client=None):
+	"""
+	reset a db. The db is chosen by keyboard input or param.
+	:param mongo_client: mongo client to reset
+	:return: None
+	"""
 	if not mongo_client:
 		mongo_client = get_db_from_user_input("Quelle BDD supprimer (dev, prod, dump) ? ")
 
@@ -97,6 +110,11 @@ def reset_db(mongo_client=None):
 
 
 def get_db_from_user_input(text="Choisissez la BDD (dev, prod, dump) ? "):
+	"""
+	connect to the mongo client chosen by the user
+	:param text: text to display to the user before chosing the db
+	:return: mongo client
+	"""
 	db = input(text)
 
 	conf = yaml_load(open("./../resources/credentials.yaml"), Loader=BaseLoader)["mongodb"]
@@ -114,10 +132,26 @@ def get_db_from_user_input(text="Choisissez la BDD (dev, prod, dump) ? "):
 
 
 def make_mongo_url(user, pwd, url, db):
+	"""
+	makes the mongo url string
+	:param user: user
+	:param pwd: password
+	:param url: url
+	:param db: db
+	:return: mongo url string
+	"""
 	return "mongodb://" + user + ":" + pwd + "@" + url + "/" + db
 
 
 def connect_mongo_client(url, db, user=None, pwd=None):
+	"""
+	connect to a mongo client
+	:param user: user
+	:param pwd: password
+	:param url: url
+	:param db: db
+	:return: mongo client
+	"""
 	if bool(user) != bool(pwd):
 		raise Exception("erreur")
 	elif not user:
@@ -127,6 +161,10 @@ def connect_mongo_client(url, db, user=None, pwd=None):
 
 
 def export_hashtags():
+	"""
+	export hastags of a db in a file hashtag_out.txt
+	:return:
+	"""
 	hashtag_mongo = HashtagMongo(get_db_from_user_input("Choisissez la BDD (dev, prod, dump) ? "))
 	hashtags = hashtag_mongo.gets_all()
 	hashtags = list(hashtags)
@@ -138,6 +176,10 @@ def export_hashtags():
 
 
 def __init__():
+	"""
+	init method. Used to chose which action to do on a db
+	:return: None
+	"""
 	en_cours = True
 
 	while en_cours:
