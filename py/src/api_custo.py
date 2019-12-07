@@ -107,7 +107,7 @@ class ApiCusto:
 					continue
 
 				# Suppression des url qui sont des liens vers d'autres status Twitter
-				if search("^https://twitter.com/\\w+/status/\\d+$", unshorten_url):
+				if search("^https://twitter.com/\\w+/status/\\d{19}", unshorten_url):
 					continue
 
 				# Suppression des url qui sont des urls de sites et non d'articles

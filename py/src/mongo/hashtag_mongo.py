@@ -6,7 +6,7 @@ from typing import List
 
 class HashtagMongo:
 
-	def __init__(self, client):
+	def __init__(self, client=None):
 		"""
 		Initializes mongo connexion
 		"""
