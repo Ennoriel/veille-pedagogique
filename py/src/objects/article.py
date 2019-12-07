@@ -27,7 +27,11 @@ class Article:
 		self.created_at = article_content.publish_date
 		self.indexed_at = datetime.now()
 		self.approved_at = None
-		self.full_text = re_sub(' +', ' ', article_content.text)
+
+		if article_content.source_url == 'https://www.youtube.com':
+			self.full_text = article_content.meta_data['description']
+		else:
+			self.full_text = re_sub(' +', ' ', article_content.text)
 
 		self.description = self.full_text[:500] + "... [continuer sur le site de l'auteur]" if len(self.full_text) > 500 else self.full_text
 
