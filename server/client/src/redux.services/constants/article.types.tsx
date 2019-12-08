@@ -1,3 +1,5 @@
+const ARTICLE_MEDIUM = ['video', 'presse', 'blog', "document"];
+
 export interface articleState {
     [key:string]: ArticleItem
 }
@@ -34,7 +36,7 @@ export class ArticleCritere implements IArticleCritere {
         this.page = 0;
         this.title = '';
         this.description = '';
-        this.medium = ['video', 'blog', 'presse'];
+        this.medium = ARTICLE_MEDIUM;
         this.siteInternet = '';
         this.createdAt;
         this.themes = [];

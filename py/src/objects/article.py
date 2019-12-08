@@ -19,18 +19,24 @@ class Article:
 		# initialize indexed_theme_entries and not_indexed_theme_entries
 		self.isVisible = self.parse_themes(status)
 
-		self.title = article_content.title
 		self.url = url
 		self.language = status.__getattribute__("lang")
-		self.medium = ""
 		self.top_image = article_content.top_img
 		self.created_at = article_content.publish_date
 		self.indexed_at = datetime.now()
 		self.approved_at = None
 
 		if article_content.source_url == 'https://www.youtube.com':
+			self.title = article_content.title
+			self.medium = "video"
 			self.full_text = article_content.meta_data['description']
+		elif url[url.rfind('.'):] in ['.pdf', '.doc', '.docx', '.ppt', '.pptx']:
+			self.title = url[url.rfind('/') + 1:]
+			self.medium = "document"
+			self.full_text = "description non disponible !"
 		else:
+			self.title = article_content.title
+			self.medium = "blog"
 			self.full_text = re_sub(' +', ' ', article_content.text)
 
 		self.description = self.full_text[:500] + "... [continuer sur le site de l'auteur]" if len(self.full_text) > 500 else self.full_text
