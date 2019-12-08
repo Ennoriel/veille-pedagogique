@@ -2,11 +2,13 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
+const ARTICLE_MEDIUM = ['video', 'presse', 'blog', "document"];
+
 var articleSchema = new Schema({
     title: String,
     url: {type: String, trim: true, unique: true},
     language: {type: String},
-    medium: {type: String, enum:['video', 'presse', 'blog']},
+    medium: {type: String, enum: ARTICLE_MEDIUM},
     description: String,
     siteInternet: String,
     themes: [{type: String, unique: true}],
