@@ -85,6 +85,8 @@ const styles = (theme : any) => ({
 
 export interface Props {
     classes?: any;
+    isResearchDisabled?: boolean
+    articleCritere: IArticleCritere;
 }
 
 let articleRepositoryService: ArticleRepositoryService;
@@ -92,6 +94,7 @@ let articles: articleState;
 
 interface State {
     articleCritere: IArticleCritere;
+    localArticles: articleState;
     isBeingUpdated: number;
     redirect: {
         condition: boolean,
@@ -114,7 +117,8 @@ class Article extends React.Component<Props> {
         articleRepositoryService = new ArticleRepositoryService;
 
         this.state = {
-            articleCritere: new ArticleCritere(),
+            articleCritere: this.props.articleCritere || new ArticleCritere(),
+            localArticles: {},
             isBeingUpdated: -1,
             redirect: {
                 condition: false,
@@ -146,8 +150,14 @@ class Article extends React.Component<Props> {
         articleCritere['page'] = store.getState().config.articlePage;
 
         articleRepositoryService.getArticles(articleCritere).then(value => {
-            store.dispatch(IncrementArticlePage());
-            store.dispatch(SaveArticles(value.data))
+            if(this.props.isResearchDisabled) {
+                this.setState({
+                    localArticles: {...value.data}
+                });
+            } else {
+                store.dispatch(IncrementArticlePage());
+                store.dispatch(SaveArticles(value.data));
+            }
         }).catch(error => {
             // TODO gérer l'erreur
         });
@@ -231,11 +241,13 @@ class Article extends React.Component<Props> {
 
     render() {
         const { classes } = this.props;
-        articles = store.getState().article as articleState;
+        articles = this.props.isResearchDisabled ?
+                this.state.localArticles :
+                store.getState().article as articleState;
 
         return (
             <Grid container justify='center'>
-                <Grid item xs={12} lg={8}>
+                <Grid item xs={12} lg={this.props.isResearchDisabled ? 12 : 8}>
                 {!isSuperUser() ? null :
                 <Card className={classes.card}>
                     <CardContent>
@@ -245,9 +257,14 @@ class Article extends React.Component<Props> {
                     </CardContent>
                 </Card>
                 }
-                <ArticleCriteresComponent
-                    handleSearch={this.handleSearch}
-                />
+                {
+                    !this.props.isResearchDisabled ?
+                    <ArticleCriteresComponent
+                        handleSearch={this.handleSearch}
+                    />
+                    :
+                    null
+                }
                 {
                     _.values(articles).length ?
                     <div>
@@ -371,18 +388,23 @@ class Article extends React.Component<Props> {
                                 </span>
                             </Card>
                         )}
-                        <Grid container justify='center'>
-                            <Grid item>
-                                <Button
-                                    onClick={this.handleLoadMoreArticles}
-                                    variant="outlined" 
-                                    size="large" 
-                                    color="primary"
-                                    className={classes.buttonWidth}>
-                                        Load more articles
-                                </Button>
+                        {
+                            !this.props.isResearchDisabled ?
+                            <Grid container justify='center'>
+                                <Grid item>
+                                    <Button
+                                        onClick={this.handleLoadMoreArticles}
+                                        variant="outlined" 
+                                        size="large" 
+                                        color="primary"
+                                        className={classes.buttonWidth}>
+                                            Load more articles
+                                    </Button>
+                                </Grid>
                             </Grid>
-                        </Grid>
+                            :
+                            null
+                        }
                     </div>
                     :
                     <Card>

@@ -13,6 +13,8 @@ import { WithStyleComponent } from 'src/shared/standard.types';
 import * as _ from 'lodash'
 import ThemeGraphComponent from './ThemeGraph.component';
 import { RouteComponentProps } from 'react-router';
+import ArticleComponent from 'src/article/Article.component';
+import { ArticleCritere } from 'src/redux.services/constants/article.types';
 
 const styles = (theme : any) => ({
     root: {
@@ -55,6 +57,8 @@ class Theme extends React.Component<Props> {
 
     render(): JSX.Element {
         const { classes } = this.props;
+        const articleCritere = new ArticleCritere();
+        articleCritere.themes && articleCritere.themes.push(this.state.theme);
 
         return (
             <Grid container justify='center'>
@@ -153,6 +157,23 @@ class Theme extends React.Component<Props> {
                                     </Typography>
                                 </CardContent>
                             </Card>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Card className={classes.card}>
+                                <CardContent>
+                                    <Typography
+                                        variant="h4"
+                                        align="center"
+                                        className={classes.titre}
+                                    >
+                                        Articles associés
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                            <ArticleComponent
+                                isResearchDisabled
+                                articleCritere={articleCritere}
+                            />
                         </Grid>
                     </Grid>
                 </Grid>
